@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hiragana Flash Quiz</title>
+    <title>Japanese Speed Quiz - JLPT Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Sans+JP:wght@700&display=swap');
@@ -32,7 +32,24 @@
             transition: width 0.1s linear;
         }
 
-        /* Custom social link hover states */
+        .mode-card {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .mode-card:hover {
+            transform: translateY(-4px);
+            border-color: #6366f1;
+            box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.1);
+        }
+
+        .n-level-btn {
+            transition: all 0.2s ease;
+        }
+        .n-level-btn.active {
+            background-color: #4f46e5;
+            color: white;
+            border-color: #4f46e5;
+        }
+
         .social-link {
             transition: all 0.2s ease;
         }
@@ -40,51 +57,119 @@
             color: #4f46e5;
             transform: translateY(-1px);
         }
+
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { 
+            -webkit-appearance: none; 
+            margin: 0; 
+        }
+
+        .modal-overlay {
+            background-color: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center justify-center p-4 relative">
 
-    <div id="game-container" class="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-md border border-slate-100 relative z-10">
+    <div id="game-container" class="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-md border border-slate-100 relative z-10 min-h-[600px] flex flex-col">
         <!-- Header -->
-        <div class="flex justify-between items-center mb-8">
-            <div class="text-slate-500 font-semibold uppercase tracking-wider text-xs">Hiragana Blitz</div>
-            <div id="timer-display" class="text-xl font-bold text-indigo-600 tabular-nums">00:30</div>
+        <div id="game-header" class="flex justify-between items-center mb-6">
+            <div class="text-slate-500 font-semibold uppercase tracking-wider text-[10px] sm:text-xs" id="mode-label">Japanese Speed Test by Jinsun</div>
+            <!-- Timer Display Hidden on Home Screen -->
+            <div id="timer-display" class="hidden text-xl font-bold text-indigo-600 tabular-nums">00:30</div>
         </div>
 
-        <!-- Start Screen -->
-        <div id="start-screen" class="text-center space-y-6">
-            <div class="space-y-2">
-                <h1 class="text-3xl font-extrabold text-slate-800">Ready?</h1>
-                <p class="text-slate-500">Type the Romaji as fast as you can.</p>
+        <!-- Mode Selection Home Page -->
+        <div id="home-screen" class="space-y-4 flex-grow flex flex-col">
+            <div class="text-center space-y-2 mb-2">
+                <h1 class="text-3xl font-extrabold text-slate-800">Learn Japanese</h1>
+                <p class="text-slate-500 text-sm">Pick a mode to start your speed trial</p>
             </div>
 
-            <!-- Settings Area -->
-            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 text-left space-y-3">
-                <label class="block text-xs font-bold text-slate-400 uppercase tracking-wide">Round Time (Seconds)</label>
-                <div class="flex items-center gap-4">
-                    <input type="range" id="time-slider" min="10" max="60" step="5" value="30" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600">
-                    <span id="time-val" class="text-lg font-bold text-slate-700 min-w-[2rem]">30</span>
+            <div class="grid gap-3">
+                <button onclick="selectMode('hiragana')" class="mode-card flex items-center p-4 bg-white border-2 border-slate-100 rounded-2xl group">
+                    <div class="w-10 h-10 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center text-xl font-bold group-hover:bg-indigo-600 group-hover:text-white transition-colors">あ</div>
+                    <div class="ml-4 text-left">
+                        <div class="font-bold text-slate-800">Hiragana</div>
+                        <div class="text-xs text-slate-400">Basic phonetic script</div>
+                    </div>
+                </button>
+
+                <button onclick="selectMode('katakana')" class="mode-card flex items-center p-4 bg-white border-2 border-slate-100 rounded-2xl group">
+                    <div class="w-10 h-10 bg-pink-50 text-pink-600 rounded-xl flex items-center justify-center text-xl font-bold group-hover:bg-pink-600 group-hover:text-white transition-colors">ア</div>
+                    <div class="ml-4 text-left">
+                        <div class="font-bold text-slate-800">Katakana</div>
+                        <div class="text-xs text-slate-400">Foreign loan words</div>
+                    </div>
+                </button>
+
+                <button onclick="selectMode('kanji')" class="mode-card flex items-center p-4 bg-white border-2 border-slate-100 rounded-2xl group">
+                    <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center text-xl font-bold group-hover:bg-emerald-600 group-hover:text-white transition-colors">学</div>
+                    <div class="ml-4 text-left">
+                        <div class="font-bold text-slate-800">Kanji</div>
+                        <div class="text-xs text-slate-400">Logographic characters</div>
+                    </div>
+                </button>
+            </div>
+        </div>
+
+        <!-- Configuration Screen -->
+        <div id="start-screen" class="hidden space-y-5 flex-grow flex flex-col justify-center">
+            <div class="text-center space-y-1">
+                <button onclick="showHome()" class="text-indigo-600 text-xs font-bold uppercase hover:underline mb-2 inline-block">← Back to Menu</button>
+                <h1 class="text-2xl font-extrabold text-slate-800" id="difficulty-title">Configuration</h1>
+            </div>
+
+            <div class="space-y-4">
+                <!-- JLPT N-Level Toggle -->
+                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 space-y-3">
+                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wide">Difficulty Level (JLPT)</label>
+                    <div class="grid grid-cols-5 gap-2">
+                        <button onclick="setNLevel(5)" id="n5-btn" class="n-level-btn py-2 text-sm font-bold border-2 border-slate-200 rounded-xl bg-white text-slate-500 active">N5</button>
+                        <button onclick="setNLevel(4)" id="n4-btn" class="n-level-btn py-2 text-sm font-bold border-2 border-slate-200 rounded-xl bg-white text-slate-500">N4</button>
+                        <button onclick="setNLevel(3)" id="n3-btn" class="n-level-btn py-2 text-sm font-bold border-2 border-slate-200 rounded-xl bg-white text-slate-500">N3</button>
+                        <button onclick="setNLevel(2)" id="n2-btn" class="n-level-btn py-2 text-sm font-bold border-2 border-slate-200 rounded-xl bg-white text-slate-500">N2</button>
+                        <button onclick="setNLevel(1)" id="n1-btn" class="n-level-btn py-2 text-sm font-bold border-2 border-slate-200 rounded-xl bg-white text-slate-500">N1</button>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 space-y-3">
+                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wide">Round Time: <span id="time-val" class="text-indigo-600">30</span>s</label>
+                    <input type="range" id="time-slider" min="10" max="120" step="10" value="30" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600">
+                </div>
+
+                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 space-y-3">
+                    <div class="flex justify-between items-center">
+                        <label class="block text-xs font-bold text-slate-400 uppercase tracking-wide">Word Length</label>
+                        <span class="text-[10px] text-slate-400 font-bold uppercase">Max: 15</span>
+                    </div>
+                    <input type="number" id="length-input" min="1" max="15" value="1" 
+                           class="w-full bg-white border border-slate-200 rounded-xl py-2 px-4 text-center text-xl font-bold text-slate-700 focus:border-indigo-500 outline-none">
                 </div>
             </div>
             
-            <div class="flex flex-col gap-3">
-                <button onclick="startGame('easy')" class="w-full py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl font-bold transition-all transform hover:scale-[1.02] active:scale-95 shadow-lg shadow-indigo-200">
-                    Easy (Short Words)
-                </button>
-                <button onclick="startGame('hard')" class="w-full py-4 bg-white border-2 border-slate-200 hover:border-indigo-600 hover:text-indigo-600 text-slate-700 rounded-2xl font-bold transition-all">
-                    Hard (Longer Words)
-                </button>
-            </div>
+            <button onclick="startGame()" class="w-full py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl font-bold transition-all transform hover:scale-[1.02] active:scale-95 shadow-lg shadow-indigo-200">
+                Start Blitz
+            </button>
         </div>
 
-        <!-- Quiz Screen (Hidden by default) -->
-        <div id="quiz-screen" class="hidden text-center space-y-8">
-            <div class="relative h-2 w-full bg-slate-100 rounded-full overflow-hidden">
+        <!-- Quiz Screen -->
+        <div id="quiz-screen" class="hidden text-center space-y-6 flex-grow relative pt-8">
+            <button onclick="promptExit()" class="absolute -top-2 -right-2 p-2 text-slate-300 hover:text-red-500 transition-colors z-20">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </button>
+
+            <div class="relative h-2 w-full bg-slate-100 rounded-full overflow-hidden mb-4">
                 <div id="timer-bar" class="progress-bar absolute top-0 left-0 h-full bg-indigo-500 w-full"></div>
             </div>
 
-            <div id="word-display" class="japanese-text text-7xl font-bold text-slate-900 py-4 select-none">
-                <!-- Word goes here -->
+            <div class="flex flex-col items-center justify-center min-h-[140px]">
+                <div id="hint-display" class="text-indigo-400 text-sm font-semibold italic h-5 mb-1"></div>
+                <div id="word-display" class="japanese-text text-4xl font-bold text-slate-900 select-none break-all leading-tight"></div>
+                <div id="level-badge" class="mt-2 text-[10px] font-bold bg-slate-100 px-2 py-1 rounded text-slate-400 uppercase tracking-widest"></div>
             </div>
 
             <div class="space-y-4">
@@ -94,7 +179,7 @@
                     autocomplete="off" 
                     spellcheck="false"
                     placeholder="Type romaji..."
-                    class="w-full text-center text-2xl py-4 bg-slate-50 border-2 border-slate-200 rounded-2xl focus:border-indigo-500 focus:ring-0 outline-none transition-all placeholder:text-slate-300"
+                    class="w-full text-center text-xl py-4 bg-slate-50 border-2 border-slate-200 rounded-2xl focus:border-indigo-500 focus:ring-0 outline-none transition-all placeholder:text-slate-300"
                 >
                 <div class="flex justify-center items-center gap-2">
                     <span class="text-sm font-medium text-slate-400">Score:</span>
@@ -103,38 +188,52 @@
             </div>
         </div>
 
-        <!-- End Screen (Hidden by default) -->
-        <div id="end-screen" class="hidden text-center space-y-6">
+        <!-- End Screen -->
+        <div id="end-screen" class="hidden text-center space-y-6 flex-grow flex flex-col justify-center">
             <div class="py-4">
                 <div class="text-5xl mb-2">🏆</div>
                 <h2 class="text-2xl font-extrabold text-slate-800">Time's Up!</h2>
-                <div class="mt-4 inline-block px-6 py-2 bg-indigo-50 text-indigo-700 rounded-full font-bold">
-                    Score: <span id="final-score">0</span>
+                <div class="mt-4 flex flex-col items-center gap-2">
+                    <div class="px-6 py-2 bg-indigo-50 text-indigo-700 rounded-full font-bold">
+                        Score: <span id="final-score">0</span>
+                    </div>
+                    <div class="text-slate-400 font-bold uppercase text-[10px] tracking-widest flex gap-4">
+                        <span>Level: <span id="final-level" class="text-slate-600">N5</span></span>
+                        <span>Time: <span id="final-duration" class="text-slate-600">30s</span></span>
+                    </div>
                 </div>
             </div>
-
-            <div class="text-sm text-slate-500 italic" id="feedback-msg"></div>
-
-            <button onclick="resetGame()" class="w-full py-4 bg-slate-800 hover:bg-slate-900 text-white rounded-2xl font-bold transition-all transform hover:scale-[1.02]">
-                Try Again
+            <div class="text-sm text-slate-500 italic px-4" id="feedback-msg"></div>
+            <button onclick="showHome()" class="w-full py-4 bg-slate-800 hover:bg-slate-900 text-white rounded-2xl font-bold transition-all transform hover:scale-[1.02]">
+                Back to Menu
             </button>
         </div>
     </div>
 
-    <!-- Combined Footer Container -->
-    <div class="w-full max-w-4xl mt-8 flex flex-col md:flex-row justify-between items-center md:items-end gap-6 px-4">
-        <!-- Copyright Footer -->
+    <!-- Exit Confirmation Modal -->
+    <div id="exit-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay">
+        <div class="bg-white rounded-3xl p-6 w-full max-w-xs shadow-2xl text-center space-y-6">
+            <div class="space-y-2">
+                <div class="text-3xl">🛑</div>
+                <h3 class="text-xl font-bold text-slate-800">Wait!</h3>
+                <p class="text-slate-500 text-sm">Are you sure you want to exit?</p>
+            </div>
+            <div class="flex flex-col gap-2">
+                <button onclick="confirmExit()" class="py-3 bg-red-500 text-white rounded-xl font-bold hover:bg-red-600">Yes, Exit</button>
+                <button onclick="cancelExit()" class="py-3 bg-slate-100 text-slate-600 rounded-xl font-bold hover:bg-slate-200">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Restored Info & Footer -->
+    <div class="w-full max-w-4xl mt-8 flex flex-col md:flex-row justify-between items-center md:items-end gap-6 px-4 pb-8">
         <footer class="text-slate-400 text-sm font-medium tracking-wide">
             © 2026 じんせいかいはつ
         </footer>
-
-        <!-- Social Links Bottom Right -->
         <div class="flex flex-col items-center md:items-end gap-2">
             <div class="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-300 mb-1">Developer Links</div>
             <div class="flex flex-wrap justify-center md:justify-end gap-x-4 gap-y-2 text-xs font-semibold text-slate-400">
-                <a href="https://jinsunb.github.io/Jinsun/" target="_blank" class="social-link flex items-center gap-1.5">
-                    <span>Website</span>
-                </a>
+                <a href="https://jinsunb.github.io/Jinsun/" target="_blank" class="social-link">Website</a>
                 <a href="https://www.facebook.com/jinsun.bautista" target="_blank" class="social-link">Facebook</a>
                 <a href="https://www.youtube.com/@PocialJ" target="_blank" class="social-link">YouTube (PocialJ)</a>
                 <a href="https://www.youtube.com/@JinSunR_" target="_blank" class="social-link">YouTube (JinSunR)</a>
@@ -143,126 +242,248 @@
     </div>
 
     <script>
-        const words = {
-            easy: [
-                {h: 'ねこ', r: 'neko'}, {h: 'いぬ', r: 'inu'}, {h: 'とり', r: 'tori'},
-                {h: 'すし', r: 'sushi'}, {h: 'あめ', r: 'ame'}, {h: 'うみ', r: 'umi'},
-                {h: 'はな', r: 'hana'}, {h: 'つき', r: 'tsuki'}, {h: 'ゆき', r: 'yuki'},
-                {h: 'やま', r: 'yama'}, {h: 'かさ', r: 'kasa'}, {h: 'さけ', r: 'sake'},
-                {h: 'もり', r: 'mori'}, {h: 'みず', r: 'mizu'}, {h: 'そら', r: 'sora'}
+        const HIRAGANA_BASE = {
+            'あ': 'a', 'い': 'i', 'う': 'u', 'え': 'e', 'お': 'o',
+            'か': 'ka', 'き': 'ki', 'く': 'ku', 'け': 'ke', 'こ': 'ko',
+            'さ': 'sa', 'し': 'shi', 'す': 'su', 'せ': 'se', 'そ': 'so',
+            'た': 'ta', 'ち': 'chi', 'つ': 'tsu', 'て': 'te', 'と': 'to',
+            'な': 'na', 'に': 'ni', 'ぬ': 'nu', 'ね': 'ne', 'の': 'no',
+            'は': 'ha', 'ひ': 'hi', 'ふ': 'fu', 'へ': 'he', 'ほ': 'ho',
+            'ま': 'ma', 'み': 'mi', 'む': 'mu', 'め': 'me', 'も': 'mo',
+            'や': 'ya', 'ゆ': 'yu', 'よ': 'yo',
+            'ら': 'ra', 'り': 'ri', 'る': 'ru', 'れ': 're', 'ろ': 'ro',
+            'わ': 'wa', 'を': 'wo', 'ん': 'n', 'ゔ': 'vu',
+            'が': 'ga', 'ぎ': 'gi', 'ぐ': 'gu', 'げ': 'ge', 'ご': 'go',
+            'ざ': 'za', 'じ': 'ji', 'ず': 'zu', 'ぜ': 'ze', 'ぞ': 'zo',
+            'だ': 'da', 'ぢ': 'ji', 'づ': 'zu', 'で': 'de', 'ど': 'do',
+            'ば': 'ba', 'び': 'bi', 'ぶ': 'bu', 'べ': 'be', 'ぼ': 'bo',
+            'ぱ': 'pa', 'ぴ': 'pi', 'ぷ': 'pu', 'ぺ': 'pe', 'ぽ': 'po'
+        };
+
+        const KATAKANA_BASE = {
+            'ア': 'a', 'イ': 'i', 'ウ': 'u', 'エ': 'e', 'オ': 'o',
+            'カ': 'ka', 'キ': 'ki', 'ク': 'ku', 'ケ': 'ke', 'コ': 'ko',
+            'サ': 'sa', 'シ': 'shi', 'ス': 'su', 'せ': 'se', 'ソ': 'so',
+            'タ': 'ta', 'チ': 'chi', 'ツ': 'tsu', 'テ': 'te', 'ト': 'to',
+            'ナ': 'na', 'ニ': 'ni', 'ヌ': 'nu', 'ネ': 'ne', 'ノ': 'no',
+            'ハ': 'ha', 'ヒ': 'hi', 'フ': 'fu', 'ヘ': 'he', 'ほ': 'ho',
+            'マ': 'ma', 'ミ': 'mi', 'ム': 'mu', 'メ': 'me', 'も': 'mo',
+            'ヤ': 'ya', 'ユ': 'yu', 'よ': 'yo',
+            'ラ': 'ra', 'リ': 'ri', 'ル': 'ru', 'レ': 're', 'ロ': 'ro',
+            'ワ': 'wa', 'ヲ': 'wo', 'ン': 'n', 'ヴ': 'vu',
+            'ガ': 'ga', 'ギ': 'gi', 'グ': 'gu', 'ゲ': 'ge', 'ゴ': 'go',
+            'ザ': 'za', 'ジ': 'ji', 'ズ': 'zu', 'ゼ': 'ze', 'ゾ': 'zo',
+            'だ': 'da', 'ヂ': 'ji', 'ヅ': 'zu', 'デ': 'de', 'ド': 'do',
+            'バ': 'ba', 'ビ': 'bi', 'ブ': 'bu', 'ベ': 'be', 'ボ': 'bo',
+            'パ': 'pa', 'ピ': 'pi', 'プ': 'pu', 'ペ': 'pe', 'ポ': 'po'
+        };
+
+        const KANJI_DATA = {
+            N5: [
+                {h: '一', r: 'ichi', hint: '1'}, {h: '二', r: 'ni', hint: '2'}, {h: '三', r: 'san', hint: '3'},
+                {h: '四', r: 'yon', hint: '4'}, {h: '五', r: 'go', hint: '5'}, {h: '人', r: 'hito', hint: 'Person'},
+                {h: '日本', r: 'nihon', hint: 'Japan'}, {h: '先生', r: 'sensei', hint: 'Teacher'}, {h: '水', r: 'mizu', hint: 'Water'},
+                {h: '山', r: 'yama', hint: 'Mountain'}, {h: '川', r: 'kawa', hint: 'River'}, {h: '火', r: 'hi', hint: 'Fire'}
             ],
-            hard: [
-                {h: 'たべもの', r: 'tabemono'}, {h: 'のみもの', r: 'nomimono'},
-                {h: 'ありがとう', r: 'arigatou'}, {h: 'こんにちは', r: 'konnichiwa'},
-                {h: 'さようなら', r: 'sayounara'}, {h: 'おやすみ', r: 'oyasumi'},
-                {h: 'くるま', r: 'kuruma'}, {h: 'がっこう', r: 'gakkou'},
-                {h: 'せんせい', r: 'sensei'}, {h: 'ともだち', r: 'tomodachi'},
-                {h: 'まんが', r: 'manga'}, {h: 'てんぷら', r: 'tempura'},
-                {h: 'ひらがな', r: 'hiragana'}, {h: 'にほんご', r: 'nihongo'}
+            N4: [
+                {h: '勉強', r: 'benkyou', hint: 'To study'}, {h: '家族', r: 'kazoku', hint: 'Family'}, {h: '仕事', r: 'shigoto', hint: 'Work'},
+                {h: '病院', r: 'byouin', hint: 'Hospital'}, {h: '映画', r: 'eiga', hint: 'Movie'}, {h: '地下鉄', r: 'chikatetsu', hint: 'Subway'},
+                {h: '東京', r: 'toukyou', hint: 'Tokyo'}, {h: '料理', r: 'ryouri', hint: 'Cooking'}, {h: '天気', r: 'tenki', hint: 'Weather'}
+            ],
+            N3: [
+                {h: '世界', r: 'sekai', hint: 'World'}, {h: '経済', r: 'keizai', hint: 'Economy'}, {h: '平和', r: 'heiwa', hint: 'Peace'},
+                {h: '法律', r: 'houritsu', hint: 'Law'}, {h: '技術', r: 'gijutsu', hint: 'Technology'}, {h: '必要', r: 'hitsuyou', hint: 'Necessary'},
+                {h: '社会', r: 'shakai', hint: 'Society'}, {h: '経験', r: 'keiken', hint: 'Experience'}
+            ],
+            N2: [
+                {h: '複雑', r: 'fukuzatsu', hint: 'Complex'}, {h: '環境', r: 'kankyou', hint: 'Environment'}, {h: '影響', r: 'eikyou', hint: 'Influence'},
+                {h: '資源', r: 'shigen', hint: 'Resources'}, {h: '積極的', r: 'sekkiruteki', hint: 'Active/Positive'}, {h: '議論', r: 'giron', hint: 'Argument'}
+            ],
+            N1: [
+                {h: '葛藤', r: 'kattou', hint: 'Conflict'}, {h: '憂鬱', r: 'yuuutsu', hint: 'Melancholy'}, {h: '掌握', r: 'shouaku', hint: 'Grasp'},
+                {h: '綻び', r: 'hokorobi', hint: 'Open seam'}, {h: '概念', r: 'gainen', hint: 'Concept'}, {h: '真髄', r: 'shinzui', hint: 'Essence'}
             ]
         };
 
-        let currentMode = 'easy';
+        let currentNLevel = 5;
+        let selectedCategory = 'hiragana';
         let score = 0;
         let totalTime = 30;
         let timeLeft = 30;
         let timerInterval = null;
         let currentWord = null;
+        let currentPool = [];
+        let isPaused = false;
 
+        const homeScreen = document.getElementById('home-screen');
         const startScreen = document.getElementById('start-screen');
         const quizScreen = document.getElementById('quiz-screen');
         const endScreen = document.getElementById('end-screen');
+        const exitModal = document.getElementById('exit-modal');
         const wordDisplay = document.getElementById('word-display');
+        const hintDisplay = document.getElementById('hint-display');
+        const levelBadge = document.getElementById('level-badge');
         const answerInput = document.getElementById('answer-input');
         const scoreDisplay = document.getElementById('score-display');
         const timerDisplay = document.getElementById('timer-display');
         const timerBar = document.getElementById('timer-bar');
         const finalScore = document.getElementById('final-score');
+        const finalLevel = document.getElementById('final-level');
+        const finalDuration = document.getElementById('final-duration');
         const feedbackMsg = document.getElementById('feedback-msg');
         const timeSlider = document.getElementById('time-slider');
         const timeValDisplay = document.getElementById('time-val');
+        const lengthInput = document.getElementById('length-input');
+        const modeLabel = document.getElementById('mode-label');
 
-        // Handle Settings
+        function setNLevel(level) {
+            currentNLevel = level;
+            document.querySelectorAll('.n-level-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`n${level}-btn`).classList.add('active');
+        }
+
         timeSlider.addEventListener('input', (e) => {
             totalTime = parseInt(e.target.value);
             timeValDisplay.innerText = totalTime;
             timerDisplay.innerText = `00:${totalTime.toString().padStart(2, '0')}`;
         });
 
-        function startGame(mode) {
-            currentMode = mode;
+        lengthInput.addEventListener('change', (e) => {
+            let val = parseInt(e.target.value);
+            if (val < 1) val = 1;
+            if (val > 15) val = 15;
+            e.target.value = val;
+        });
+
+        function buildPool(type, len) {
+            const pool = [];
+            const used = new Set();
+            const charMap = type === 'hiragana' ? HIRAGANA_BASE : KATAKANA_BASE;
+            const chars = Object.keys(charMap);
+
+            if (type === 'kanji') {
+                const basePool = KANJI_DATA[`N${currentNLevel}`] || KANJI_DATA.N5;
+                const filtered = basePool.filter(w => w.h.length === len);
+                if (filtered.length > 0) return filtered;
+                return basePool.sort((a,b) => Math.abs(a.h.length - len) - Math.abs(b.h.length - len)).slice(0, 10);
+            }
+
+            if (len === 1) {
+                for (const char of chars) pool.push({ h: char, r: charMap[char] });
+                return pool;
+            }
+
+            while (pool.length < 50) {
+                let hStr = "", rStr = "";
+                for(let j=0; j<len; j++) {
+                    const char = chars[Math.floor(Math.random() * chars.length)];
+                    hStr += char;
+                    rStr += charMap[char];
+                }
+                if (!used.has(hStr)) {
+                    pool.push({h: hStr, r: rStr});
+                    used.add(hStr);
+                }
+            }
+            return pool;
+        }
+
+        function selectMode(category) {
+            selectedCategory = category;
+            const labels = {hiragana: 'Hiragana Blitz', katakana: 'Katakana Blitz', kanji: 'Kanji Blitz'};
+            modeLabel.innerText = labels[category];
+            homeScreen.classList.add('hidden');
+            startScreen.classList.remove('hidden');
+        }
+
+        function showHome() {
+            clearInterval(timerInterval);
+            modeLabel.innerText = "Japanese Speed Test by Jinsun";
+            timerDisplay.classList.add('hidden'); // Ensure timer is hidden on home
+            
+            startScreen.classList.add('hidden');
+            quizScreen.classList.add('hidden');
+            endScreen.classList.add('hidden');
+            exitModal.classList.add('hidden');
+            homeScreen.classList.remove('hidden');
+            isPaused = false;
+        }
+
+        function startGame() {
+            const targetLength = parseInt(lengthInput.value) || 1;
+            currentPool = buildPool(selectedCategory, targetLength);
+
             score = 0;
             timeLeft = totalTime;
+            isPaused = false;
             
             startScreen.classList.add('hidden');
             quizScreen.classList.remove('hidden');
-            endScreen.classList.add('hidden');
+            timerDisplay.classList.remove('hidden'); // Show timer when game starts
+            levelBadge.innerText = `JLPT N${currentNLevel}`;
             
             updateScore();
             nextWord();
             
             setTimeout(() => answerInput.focus(), 50);
             
+            if (timerInterval) clearInterval(timerInterval);
             timerInterval = setInterval(() => {
-                timeLeft -= 0.1;
-                if (timeLeft <= 0) {
-                    endGame();
-                } else {
-                    updateTimer();
+                if (!isPaused) {
+                    timeLeft -= 0.1;
+                    if (timeLeft <= 0) {
+                        timeLeft = 0; // Force zero
+                        updateTimer();
+                        endGame();
+                    }
+                    else updateTimer();
                 }
             }, 100);
         }
 
+        function promptExit() { isPaused = true; exitModal.classList.remove('hidden'); }
+        function cancelExit() { isPaused = false; exitModal.classList.add('hidden'); answerInput.focus(); }
+        function confirmExit() { showHome(); }
+
         function updateTimer() {
             const displayTime = Math.max(0, Math.ceil(timeLeft));
             timerDisplay.innerText = `00:${displayTime.toString().padStart(2, '0')}`;
-            const percentage = (timeLeft / totalTime) * 100;
-            timerBar.style.width = `${percentage}%`;
+            timerBar.style.width = `${(timeLeft / totalTime) * 100}%`;
         }
 
         function nextWord() {
-            const list = words[currentMode];
+            if (currentPool.length === 0) { endGame(); return; }
             let newWord;
             do {
-                newWord = list[Math.floor(Math.random() * list.length)];
-            } while (newWord === currentWord);
+                newWord = currentPool[Math.floor(Math.random() * currentPool.length)];
+            } while (newWord === currentWord && currentPool.length > 1);
             
             currentWord = newWord;
             wordDisplay.innerText = currentWord.h;
+            hintDisplay.innerText = currentWord.hint ? `"${currentWord.hint}"` : "";
             answerInput.value = '';
         }
 
-        function updateScore() {
-            scoreDisplay.innerText = score;
-        }
+        function updateScore() { scoreDisplay.innerText = score; }
 
         function endGame() {
             clearInterval(timerInterval);
             quizScreen.classList.add('hidden');
+            timerDisplay.classList.add('hidden'); // Hide countdown timer
             endScreen.classList.remove('hidden');
+            
+            // Set end screen stats
             finalScore.innerText = score;
-
-            const wordsPerMin = (score / totalTime) * 60;
-
-            if (wordsPerMin > 40) {
-                feedbackMsg.innerText = "Speed Demon! Your reflexes are incredible.";
-            } else if (wordsPerMin > 20) {
-                feedbackMsg.innerText = "Great pace! You're reading Hiragana very fluently.";
-            } else {
-                feedbackMsg.innerText = "Keep practicing! You'll get faster with every round.";
-            }
-        }
-
-        function resetGame() {
-            endScreen.classList.add('hidden');
-            startScreen.classList.remove('hidden');
-            timerBar.style.width = '100%';
-            timerDisplay.innerText = `00:${totalTime.toString().padStart(2, '0')}`;
+            finalLevel.innerText = `N${currentNLevel}`;
+            finalDuration.innerText = `${totalTime}s`;
+            
+            const wpm = (score / totalTime) * 60;
+            feedbackMsg.innerText = wpm > 30 ? "Amazing speed!" : "Great effort, keep practicing!";
         }
 
         answerInput.addEventListener('input', (e) => {
-            const val = e.target.value.toLowerCase().trim();
-            if (val === currentWord.r) {
+            if (isPaused) return;
+            if (e.target.value.toLowerCase().trim() === currentWord.r) {
                 score++;
                 updateScore();
                 nextWord();
@@ -271,8 +492,7 @@
 
         answerInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
-                const val = answerInput.value.toLowerCase().trim();
-                if (val !== currentWord.r) {
+                if (answerInput.value.toLowerCase().trim() !== currentWord.r) {
                     answerInput.classList.add('shake');
                     setTimeout(() => answerInput.classList.remove('shake'), 400);
                 }
