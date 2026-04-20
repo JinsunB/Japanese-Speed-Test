@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Japanese Speed Test by Jinsun</title>
+    <title>Japanese Speed Quiz - JLPT Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Sans+JP:wght@700&display=swap');
@@ -41,27 +41,16 @@
             box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.1);
         }
 
-        .n-level-btn {
+        .n-level-btn, .word-type-btn, .lb-tab, .social-link {
             transition: all 0.2s ease;
         }
-        .n-level-btn.active {
+        
+        .n-level-btn.active, .word-type-btn.active {
             background-color: #4f46e5;
             color: white;
             border-color: #4f46e5;
         }
 
-        .word-type-btn {
-            transition: all 0.2s ease;
-        }
-        .word-type-btn.active {
-            background-color: #4f46e5;
-            color: white;
-            border-color: #4f46e5;
-        }
-
-        .social-link {
-            transition: all 0.2s ease;
-        }
         .social-link:hover {
             color: #4f46e5;
             transform: translateY(-1px);
@@ -77,15 +66,125 @@
             background-color: rgba(15, 23, 42, 0.6);
             backdrop-filter: blur(4px);
         }
+        
+        .avatar-option {
+            transition: all 0.2s ease;
+        }
+        .avatar-option.selected {
+            background-color: #4f46e5;
+            transform: scale(1.1);
+            border-color: #4f46e5;
+            box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.4);
+        }
+
+        .crop-mask {
+            box-shadow: 0 0 0 9999px rgba(15, 23, 42, 0.8);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        /* RGB Owner Aura Custom CSS */
+        @keyframes rgb-aura-anim {
+            0% { box-shadow: 0 0 8px #a855f7, inset 0 0 4px #a855f7; border-color: #a855f7; }
+            33% { box-shadow: 0 0 8px #ec4899, inset 0 0 4px #ec4899; border-color: #ec4899; }
+            66% { box-shadow: 0 0 8px #ef4444, inset 0 0 4px #ef4444; border-color: #ef4444; }
+            100% { box-shadow: 0 0 8px #a855f7, inset 0 0 4px #a855f7; border-color: #a855f7; }
+        }
+        .owner-aura {
+            animation: rgb-aura-anim 2s infinite linear;
+            border-width: 2px;
+        }
+        .owner-bg {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.08), rgba(236, 72, 153, 0.08), rgba(239, 68, 68, 0.08));
+        }
+        .owner-badge {
+            background: linear-gradient(to right, #a855f7, #ec4899, #ef4444);
+            color: white;
+        }
     </style>
 </head>
-<body class="min-h-screen flex flex-col items-center justify-center p-4 relative">
+<body class="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-x-hidden">
+
+    <!-- Top Left Controls (Friends & Admin) -->
+    <div class="absolute top-4 left-4 z-50 flex flex-col gap-2 items-start">
+        <button id="friends-btn" onclick="openFriendsModal()" class="hidden px-4 py-2 bg-white text-indigo-600 font-bold rounded-xl shadow-sm border border-slate-200 hover:border-indigo-300 hover:shadow-md transition-all flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
+              <path d="M4.5 6.375a4.125 4.125 0 1 1 8.25 0 4.125 4.125 0 0 1-8.25 0ZM14.25 8.625a3.375 3.375 0 1 1 6.75 0 3.375 3.375 0 0 1-6.75 0ZM1.5 19.125a7.125 7.125 0 0 1 14.25 0v.003l-.001.119a.75.75 0 0 1-.363.63 13.067 13.067 0 0 1-6.761 1.873c-2.472 0-4.786-.684-6.76-1.873a.75.75 0 0 1-.364-.63l-.001-.122ZM17.25 19.128l-.001.144a2.25 2.25 0 0 1-.233.96 10.088 10.088 0 0 0 5.06-1.01.75.75 0 0 0 .42-.643 4.875 4.875 0 0 0-6.957-4.611 8.586 8.586 0 0 1 1.71 5.157v.003Z" />
+            </svg>
+            Friends
+        </button>
+
+        <!-- Admin Toggle (Hidden by Default) -->
+        <div id="admin-panel" class="hidden flex flex-col gap-2">
+            <div class="flex items-center gap-2 bg-slate-900 border border-slate-700 px-3 py-1.5 rounded-full shadow-lg transition-all">
+                <span class="text-xs font-bold text-slate-300">Admin UI</span>
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" id="admin-toggle" class="sr-only peer" onchange="toggleAdminMode()">
+                    <div class="w-7 h-4 bg-slate-600 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-emerald-500"></div>
+                </label>
+            </div>
+            <button id="admin-add-btn" onclick="openAdminAddModal()" class="hidden w-full text-xs bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-1.5 px-3 rounded-full shadow-lg transition-all text-center border border-indigo-500">
+                + Add Score
+            </button>
+        </div>
+    </div>
+
+    <!-- Top Right Auth Section -->
+    <div class="absolute top-4 right-4 z-50">
+        <!-- Logged Out View -->
+        <button id="login-btn" onclick="openAuthModal()" class="px-4 py-2 bg-white text-indigo-600 font-bold rounded-xl shadow-sm border border-slate-200 hover:border-indigo-300 hover:shadow-md transition-all flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
+                <path fill-rule="evenodd" d="M7.5 3.75A1.5 1.5 0 0 0 6 5.25v13.5a1.5 1.5 0 0 0 1.5 1.5h6a1.5 1.5 0 0 0 1.5-1.5V15a.75.75 0 0 1 1.5 0v3.75a3 3 0 0 1-3 3h-6a3 3 0 0 1-3-3V5.25a3 3 0 0 1 3-3h6a3 3 0 0 1 3 3V9A.75.75 0 0 1 15 9V5.25a1.5 1.5 0 0 0-1.5-1.5h-6Zm10.72 4.72a.75.75 0 0 1 1.06 0l3 3a.75.75 0 0 1 0 1.06l-3 3a.75.75 0 1 1-1.06-1.06l1.72-1.72H9a.75.75 0 0 1 0-1.5h10.94l-1.72-1.72a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+            </svg>
+            Login
+        </button>
+
+        <!-- Logged In View -->
+        <div id="user-profile-menu" class="hidden relative group">
+            <button class="flex items-center gap-3 p-1.5 bg-white rounded-full shadow-sm border border-slate-200 hover:border-indigo-300 hover:shadow-md transition-all">
+                <div id="nav-avatar" class="w-8 h-8 rounded-full bg-indigo-50 border border-slate-200 flex items-center justify-center text-xl overflow-hidden">👤</div>
+                <span id="nav-name" class="font-bold text-slate-700 pr-3 text-sm">User</span>
+            </button>
+            <div class="absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-xl border border-slate-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 overflow-hidden origin-top-right">
+                <div class="p-4 border-b border-slate-50 bg-slate-50 space-y-2">
+                    <div id="nav-username" class="text-xs font-bold text-slate-400 truncate">@username</div>
+                    <!-- EXP Bar inside Nav -->
+                    <div class="space-y-1">
+                        <div class="flex justify-between items-end text-[10px] font-bold text-indigo-600">
+                            <span id="nav-level-text" class="text-xs bg-indigo-100 px-1.5 rounded">Lv. 1</span>
+                            <span id="nav-exp-text" class="text-slate-400">0 / 100 XP</span>
+                        </div>
+                        <div class="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden">
+                            <div id="nav-exp-bar" class="h-full bg-indigo-500 w-0 transition-all duration-500"></div>
+                        </div>
+                    </div>
+                </div>
+                <button onclick="viewProfile(currentUser.uid)" class="w-full text-left px-4 py-3 text-sm font-bold text-slate-700 hover:bg-slate-50 transition-colors border-b border-slate-50 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 text-slate-400">
+                        <path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clip-rule="evenodd" />
+                    </svg>
+                    Your Profile
+                </button>
+                <button onclick="openSettingsModal()" class="w-full text-left px-4 py-3 text-sm font-bold text-slate-700 hover:bg-slate-50 transition-colors border-b border-slate-50 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 text-slate-400">
+                        <path fill-rule="evenodd" d="M11.078 2.25c-.917 0-1.699.663-1.85 1.567L9.05 4.889c-.02.12-.115.26-.297.348a7.493 7.493 0 0 0-.986.57c-.166.115-.334.126-.45.083L6.3 5.508a1.875 1.875 0 0 0-2.282.819l-.922 1.597a1.875 1.875 0 0 0 .432 2.385l.84.692c.095.078.17.229.154.43a7.598 7.598 0 0 0 0 1.139c.015.2-.059.352-.153.43l-.841.692a1.875 1.875 0 0 0-.432 2.385l.922 1.597a1.875 1.875 0 0 0 2.282.818l1.019-.382c.115-.043.283-.031.45.082.312.214.641.405.985.57.182.088.277.228.297.35l.178 1.071c.151.904.933 1.567 1.85 1.567h1.844c.916 0 1.699-.663 1.85-1.567l.178-1.072c.02-.12.114-.26.297-.349.344-.165.673-.356.985-.57.167-.114.335-.125.45-.082l1.02.382a1.875 1.875 0 0 0 2.28-.819l.923-1.597a1.875 1.875 0 0 0-.432-2.385l-.84-.692c-.095-.078-.17-.229-.154-.43a7.614 7.614 0 0 0 0-1.139c-.016-.2.059-.352.153-.43l.84-.692c.708-.582.891-1.59.433-2.385l-.922-1.597a1.875 1.875 0 0 0-2.282-.818l-1.02.382c-.114.043-.282.031-.449-.083a7.49 7.49 0 0 0-.985-.57c-.183-.087-.277-.227-.297-.348l-.179-1.072a1.875 1.875 0 0 0-1.85-1.567h-1.843ZM12 15.75a3.75 3.75 0 1 0 0-7.5 3.75 3.75 0 0 0 0 7.5Z" clip-rule="evenodd" />
+                    </svg>
+                    Settings
+                </button>
+                <button onclick="logout()" class="w-full text-left px-4 py-3 text-sm font-bold text-red-500 hover:bg-red-50 transition-colors flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
+                        <path fill-rule="evenodd" d="M16.5 3.75a1.5 1.5 0 0 1 1.5 1.5v13.5a1.5 1.5 0 0 1-1.5 1.5h-6a1.5 1.5 0 0 1-1.5-1.5V15a.75.75 0 0 0-1.5 0v3.75a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3V5.25a3 3 0 0 0-3-3h-6a3 3 0 0 0-3 3V9A.75.75 0 1 0 9 9V5.25a1.5 1.5 0 0 1 1.5-1.5h6ZM5.78 8.47a.75.75 0 0 0-1.06 0l-3 3a.75.75 0 0 0 0 1.06l3 3a.75.75 0 0 0 1.06-1.06l-1.72-1.72H15a.75.75 0 0 0 0-1.5H4.06l1.72-1.72a.75.75 0 0 0 0-1.06Z" clip-rule="evenodd" />
+                    </svg>
+                    Sign Out
+                </button>
+            </div>
+        </div>
+    </div>
 
     <div id="game-container" class="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-md border border-slate-100 relative z-10 min-h-[600px] flex flex-col">
         <!-- Header -->
         <div id="game-header" class="flex justify-between items-center mb-6">
             <div class="text-slate-500 font-semibold uppercase tracking-wider text-[10px] sm:text-xs" id="mode-label">Japanese Speed Test by Jinsun</div>
-            <!-- Timer Display Hidden on Home Screen -->
             <div id="timer-display" class="hidden text-xl font-bold text-indigo-600 tabular-nums">00:30</div>
         </div>
 
@@ -121,12 +220,46 @@
                     </div>
                 </button>
             </div>
+
+            <!-- Leaderboard Button -->
+            <button onclick="showLeaderboard()" class="mt-2 w-full py-4 bg-amber-50 text-amber-600 border-2 border-amber-100 hover:bg-amber-100 hover:border-amber-200 rounded-2xl font-bold transition-all flex items-center justify-center gap-2 transform hover:scale-[1.02] active:scale-95">
+                <span class="text-xl">🏆</span> View Leaderboard
+            </button>
+        </div>
+
+        <!-- Leaderboard Screen -->
+        <div id="leaderboard-screen" class="hidden space-y-5 flex-grow flex flex-col">
+            <div class="text-center space-y-1 mt-2">
+                <button onclick="showHome()" class="inline-flex items-center justify-center gap-1.5 py-1.5 px-3 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-full text-[10px] font-bold uppercase tracking-wider transition-colors mb-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3.5 h-3.5">
+                        <path fill-rule="evenodd" d="M17 10a.75.75 0 0 1-.75.75H5.612l4.158 3.96a.75.75 0 1 1-1.04 1.08l-5.5-5.25a.75.75 0 0 1 0-1.08l5.5-5.25a.75.75 0 1 1 1.04 1.08L5.612 9.25H16.25A.75.75 0 0 1 17 10Z" clip-rule="evenodd" />
+                    </svg>
+                    Back to Menu
+                </button>
+                <h1 class="text-2xl font-extrabold text-slate-800">High Scores</h1>
+            </div>
+
+            <!-- Tabs -->
+            <div class="flex bg-slate-100 p-1 rounded-xl">
+                <button onclick="setLeaderboardTab('hiragana')" id="tab-hiragana" class="lb-tab flex-1 py-2 text-sm font-bold rounded-lg text-slate-500">Hiragana</button>
+                <button onclick="setLeaderboardTab('katakana')" id="tab-katakana" class="lb-tab flex-1 py-2 text-sm font-bold rounded-lg text-slate-500">Katakana</button>
+                <button onclick="setLeaderboardTab('kanji')" id="tab-kanji" class="lb-tab flex-1 py-2 text-sm font-bold rounded-lg text-slate-500">Kanji</button>
+            </div>
+
+            <div id="leaderboard-full-list" class="space-y-3 flex-grow overflow-y-auto max-h-[400px] pb-4 pr-1">
+                <!-- Scores injected here -->
+            </div>
         </div>
 
         <!-- Configuration Screen -->
         <div id="start-screen" class="hidden space-y-5 flex-grow flex flex-col justify-center">
             <div class="text-center space-y-1">
-                <button onclick="showHome()" class="text-indigo-600 text-xs font-bold uppercase hover:underline mb-2 inline-block">← Back to Menu</button>
+                <button onclick="showHome()" class="inline-flex items-center justify-center gap-1.5 py-1.5 px-3 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-full text-[10px] font-bold uppercase tracking-wider transition-colors mb-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3.5 h-3.5">
+                        <path fill-rule="evenodd" d="M17 10a.75.75 0 0 1-.75.75H5.612l4.158 3.96a.75.75 0 1 1-1.04 1.08l-5.5-5.25a.75.75 0 0 1 0-1.08l5.5-5.25a.75.75 0 1 1 1.04 1.08L5.612 9.25H16.25A.75.75 0 0 1 17 10Z" clip-rule="evenodd" />
+                    </svg>
+                    Back to Menu
+                </button>
                 <h1 class="text-2xl font-extrabold text-slate-800" id="difficulty-title">Configuration</h1>
             </div>
 
@@ -209,19 +342,48 @@
         <!-- End Screen -->
         <div id="end-screen" class="hidden text-center space-y-6 flex-grow flex flex-col justify-center">
             <div class="py-4">
-                <div class="text-5xl mb-2">🏆</div>
-                <h2 class="text-2xl font-extrabold text-slate-800">Time's Up!</h2>
-                <div class="mt-4 flex flex-col items-center gap-2">
-                    <div class="px-6 py-2 bg-indigo-50 text-indigo-700 rounded-full font-bold">
-                        Score: <span id="final-score">0</span>
+                <div class="text-5xl mb-2" id="end-emoji">🏆</div>
+                <h2 class="text-2xl font-extrabold text-slate-800" id="end-title">Time's Up!</h2>
+                
+                <div class="mt-6 w-full max-w-xs mx-auto bg-slate-50 rounded-2xl p-5 text-left space-y-3 border border-slate-100 shadow-inner">
+                    <div class="flex justify-between text-sm text-slate-500 font-medium">
+                        <span>Words Typed</span>
+                        <span id="end-raw-score" class="font-bold text-slate-800">0</span>
                     </div>
-                    <div class="text-slate-400 font-bold uppercase text-[10px] tracking-widest flex gap-4">
-                        <span>Level: <span id="final-level" class="text-slate-600">N5</span></span>
-                        <span>Time: <span id="final-duration" class="text-slate-600">30s</span></span>
+                    <div class="flex justify-between text-sm text-slate-500 font-medium">
+                        <span>Length Bonus (<span id="end-length-val">1</span>)</span>
+                        <span id="end-length-bonus" class="font-bold text-emerald-500">+0</span>
+                    </div>
+                    <div class="flex justify-between text-sm text-slate-500 font-medium">
+                        <span>Time Bonus (<span id="end-time-val">30</span>s)</span>
+                        <span id="end-time-bonus" class="font-bold text-emerald-500">+0</span>
+                    </div>
+                    <div class="h-px w-full bg-slate-200 my-3"></div>
+                    <div class="flex justify-between items-center text-lg font-bold text-indigo-600">
+                        <span>Final Score</span>
+                        <span id="final-score" class="text-2xl">0</span>
+                    </div>
+                    
+                    <!-- EXP Notification -->
+                    <div id="exp-notification" class="hidden text-center text-xs font-bold text-amber-500 bg-amber-50 py-1.5 rounded-lg border border-amber-100 mt-2">
+                        +0 EXP
                     </div>
                 </div>
+
+                <div class="mt-4 text-slate-400 font-bold uppercase text-[10px] tracking-widest flex justify-center gap-4">
+                    <span>Level: <span id="final-level" class="text-slate-600">N5</span></span>
+                    <span>Time: <span id="final-duration" class="text-slate-600">30s</span></span>
+                </div>
             </div>
-            <div class="text-sm text-slate-500 italic px-4" id="feedback-msg"></div>
+            
+            <div class="text-sm font-bold px-4" id="feedback-msg"></div>
+
+            <!-- Guest Login Prompt -->
+            <div id="guest-login-prompt" class="hidden mt-2 p-4 bg-indigo-50 border border-indigo-100 rounded-2xl">
+                <p class="text-xs text-indigo-600 font-bold mb-2">Want to claim your spot on the leaderboard?</p>
+                <button onclick="openAuthModal()" class="w-full py-2 bg-indigo-600 text-white rounded-xl font-bold text-sm hover:bg-indigo-700 transition-all shadow-sm">Log in to save your score</button>
+            </div>
+
             <button onclick="showHome()" class="w-full py-4 bg-slate-800 hover:bg-slate-900 text-white rounded-2xl font-bold transition-all transform hover:scale-[1.02]">
                 Back to Menu
             </button>
@@ -243,7 +405,324 @@
         </div>
     </div>
 
-    <!-- Restored Info & Footer -->
+    <!-- Dynamic Profile Modal (Reusable for viewing self or others) -->
+    <div id="profile-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 modal-overlay">
+        <div class="bg-white rounded-3xl p-8 w-full max-w-sm shadow-2xl relative">
+            <button onclick="closeProfileModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-2xl leading-none">&times;</button>
+            
+            <div class="flex flex-col items-center mt-2 space-y-3">
+                <div id="profile-modal-avatar" class="w-24 h-24 rounded-full bg-slate-100 border-4 border-white shadow-lg flex items-center justify-center text-5xl overflow-hidden">👤</div>
+                <div class="text-center">
+                    <h3 id="profile-modal-dn" class="text-2xl font-extrabold text-slate-800 leading-tight">Player</h3>
+                    <p id="profile-modal-un" class="text-slate-400 text-sm font-medium">@username</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 mt-6">
+                <div class="bg-indigo-50 p-3 rounded-2xl text-center border border-indigo-100">
+                    <div class="text-[10px] text-indigo-400 font-bold uppercase tracking-widest mb-1">Current Level</div>
+                    <div id="profile-modal-level" class="text-2xl font-black text-indigo-600">1</div>
+                </div>
+                <div class="bg-slate-50 p-3 rounded-2xl text-center border border-slate-100">
+                    <div class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-1">Games Played</div>
+                    <div id="profile-modal-games" class="text-2xl font-black text-slate-600">0</div>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <div class="flex justify-between text-[10px] font-bold text-slate-500 mb-1">
+                    <span>Total EXP</span>
+                    <span id="profile-modal-exp">0</span>
+                </div>
+            </div>
+
+            <!-- My Bio (Editable) -->
+            <div id="bio-edit-section" class="mt-6 space-y-2 hidden">
+                <label class="text-xs font-bold text-slate-400 uppercase">About Me (Bio)</label>
+                <textarea id="profile-modal-bio" placeholder="Write something about yourself..." class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm font-medium text-slate-700 focus:border-indigo-500 outline-none resize-none h-20"></textarea>
+                <button onclick="saveBio()" class="w-full py-2.5 bg-slate-800 text-white rounded-xl font-bold text-sm hover:bg-slate-900 transition-all">Save Bio</button>
+                <div id="bio-msg" class="hidden text-center text-xs font-bold text-emerald-500 mt-1">Bio saved!</div>
+            </div>
+
+            <!-- Read Only Bio (Viewing Others) -->
+            <div id="bio-view-section" class="mt-6 space-y-2 hidden">
+                <label class="text-xs font-bold text-slate-400 uppercase">Bio</label>
+                <p id="profile-modal-bio-text" class="text-sm font-medium text-slate-700 bg-slate-50 p-3 rounded-xl border border-slate-100 min-h-[3rem]">No bio yet.</p>
+                <button id="profile-modal-friend-btn" class="hidden w-full py-2.5 bg-indigo-600 text-white rounded-xl font-bold text-sm hover:bg-indigo-700 transition-all mt-4">
+                    Add Friend
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Friends Modal -->
+    <div id="friends-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay">
+        <div class="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl relative max-h-[85vh] flex flex-col">
+            <button onclick="closeFriendsModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-2xl leading-none">&times;</button>
+            
+            <div class="text-center space-y-1 mb-4 shrink-0">
+                <h3 class="text-xl font-extrabold text-slate-800">Your Friends</h3>
+                <p class="text-slate-500 text-xs">Search by username to add them</p>
+            </div>
+
+            <div class="flex gap-2 mb-4 shrink-0">
+                <div class="relative flex-grow">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 font-bold">@</span>
+                    <input type="text" id="friend-search-input" placeholder="username" class="w-full bg-slate-50 border border-slate-200 rounded-xl py-2 pl-7 pr-3 text-sm font-medium text-slate-700 focus:border-indigo-500 outline-none">
+                </div>
+                <button onclick="searchAndAddFriend()" class="px-4 py-2 bg-indigo-600 text-white text-sm font-bold rounded-xl hover:bg-indigo-700 transition-colors">Add</button>
+            </div>
+
+            <!-- Scrollable Friends List -->
+            <div id="friends-list" class="space-y-2 overflow-y-auto flex-grow pr-1 min-h-[200px]">
+                <div class="text-center text-slate-400 py-10 text-xs font-bold bg-slate-50 rounded-xl border border-slate-100">Loading...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Auth Modal -->
+    <div id="auth-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay">
+        <div class="bg-white rounded-3xl p-8 w-full max-w-sm shadow-2xl space-y-6 relative">
+            <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-2xl leading-none">&times;</button>
+            
+            <div class="text-center space-y-2">
+                <h3 class="text-2xl font-extrabold text-slate-800">Welcome</h3>
+                <p class="text-slate-500 text-sm">Sign in to save your high scores</p>
+            </div>
+
+            <div id="auth-error" class="hidden bg-red-50 text-red-500 text-xs font-bold p-3 rounded-xl border border-red-100 text-center"></div>
+
+            <div class="space-y-3">
+                <input type="email" id="auth-email" placeholder="Email address" class="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 font-medium text-slate-700 focus:border-indigo-500 outline-none transition-colors placeholder:text-slate-400">
+                <input type="password" id="auth-password" placeholder="Password" class="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 font-medium text-slate-700 focus:border-indigo-500 outline-none transition-colors placeholder:text-slate-400">
+            </div>
+
+            <div class="flex gap-2">
+                <button onclick="handleEmailLogin()" class="flex-1 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold transition-all shadow-md shadow-indigo-200">Sign In</button>
+                <button onclick="handleEmailSignUp()" class="flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold transition-all border border-slate-200">Sign Up</button>
+            </div>
+
+            <div class="relative flex items-center py-2">
+                <div class="flex-grow border-t border-slate-200"></div>
+                <span class="flex-shrink-0 mx-4 text-slate-400 text-xs font-bold uppercase">Or</span>
+                <div class="flex-grow border-t border-slate-200"></div>
+            </div>
+
+            <button onclick="handleGoogleLogin()" class="w-full py-3 bg-white border-2 border-slate-100 hover:bg-slate-50 text-slate-700 rounded-xl font-bold transition-all flex items-center justify-center gap-3">
+                <svg class="w-5 h-5" viewBox="0 0 24 24">
+                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                </svg>
+                Continue with Google
+            </button>
+        </div>
+    </div>
+
+    <!-- Account Setup Modal -->
+    <div id="setup-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay">
+        <div class="bg-white rounded-3xl p-8 w-full max-w-sm shadow-2xl space-y-6">
+            <div class="text-center space-y-2">
+                <div class="text-4xl mb-2">✨</div>
+                <h3 class="text-xl font-extrabold text-slate-800">Setup your profile</h3>
+                <p class="text-slate-500 text-sm">Choose how you appear on the leaderboard</p>
+            </div>
+
+            <div class="space-y-4">
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase">Select Avatar</label>
+                    <div class="grid grid-cols-5 gap-3" id="avatar-grid">
+                        <button onclick="triggerCustomAvatarUpload()" class="avatar-option h-12 text-xl bg-slate-50 border-2 border-slate-100 rounded-xl flex items-center justify-center hover:bg-indigo-50 hover:border-indigo-200 relative overflow-hidden group" id="setup-custom-avatar-btn">
+                            <span class="z-10 group-hover:hidden">📷</span>
+                            <span class="z-10 hidden group-hover:block text-xs font-bold text-indigo-600">Up</span>
+                        </button>
+                        <button onclick="selectAvatar('🦊', this)" class="avatar-option h-12 text-2xl bg-slate-50 border-2 border-slate-100 rounded-xl flex items-center justify-center hover:bg-indigo-50 hover:border-indigo-200">🦊</button>
+                        <button onclick="selectAvatar('🐱', this)" class="avatar-option h-12 text-2xl bg-slate-50 border-2 border-slate-100 rounded-xl flex items-center justify-center hover:bg-indigo-50 hover:border-indigo-200">🐱</button>
+                        <button onclick="selectAvatar('🐼', this)" class="avatar-option h-12 text-2xl bg-slate-50 border-2 border-slate-100 rounded-xl flex items-center justify-center hover:bg-indigo-50 hover:border-indigo-200">🐼</button>
+                        <button onclick="selectAvatar('🐸', this)" class="avatar-option h-12 text-2xl bg-slate-50 border-2 border-slate-100 rounded-xl flex items-center justify-center hover:bg-indigo-50 hover:border-indigo-200">🐸</button>
+                        <button onclick="selectAvatar('🦉', this)" class="avatar-option h-12 text-2xl bg-slate-50 border-2 border-slate-100 rounded-xl flex items-center justify-center hover:bg-indigo-50 hover:border-indigo-200">🦉</button>
+                        <button onclick="selectAvatar('🐲', this)" class="avatar-option h-12 text-2xl bg-slate-50 border-2 border-slate-100 rounded-xl flex items-center justify-center hover:bg-indigo-50 hover:border-indigo-200">🐲</button>
+                        <button onclick="selectAvatar('🦄', this)" class="avatar-option h-12 text-2xl bg-slate-50 border-2 border-slate-100 rounded-xl flex items-center justify-center hover:bg-indigo-50 hover:border-indigo-200">🦄</button>
+                        <button onclick="selectAvatar('🐙', this)" class="avatar-option h-12 text-2xl bg-slate-50 border-2 border-slate-100 rounded-xl flex items-center justify-center hover:bg-indigo-50 hover:border-indigo-200">🐙</button>
+                        <button onclick="selectAvatar('👻', this)" class="avatar-option h-12 text-2xl bg-slate-50 border-2 border-slate-100 rounded-xl flex items-center justify-center hover:bg-indigo-50 hover:border-indigo-200">👻</button>
+                    </div>
+                </div>
+
+                <div class="space-y-3">
+                    <input type="text" id="setup-username" placeholder="Username (e.g. jinsun_b)" class="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 font-medium text-slate-700 focus:border-indigo-500 outline-none transition-colors placeholder:text-slate-400">
+                    <input type="text" id="setup-displayname" placeholder="Display Name (e.g. Jinsun)" class="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 font-medium text-slate-700 focus:border-indigo-500 outline-none transition-colors placeholder:text-slate-400">
+                </div>
+            </div>
+
+            <button onclick="saveSetupProfile()" class="w-full py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl font-bold transition-all shadow-lg shadow-indigo-200">
+                Complete Setup
+            </button>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 modal-overlay">
+        <div class="bg-white rounded-3xl p-8 w-full max-w-sm shadow-2xl space-y-6 relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closeSettingsModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-2xl leading-none">&times;</button>
+            
+            <div class="text-center space-y-1">
+                <h3 class="text-2xl font-extrabold text-slate-800">Settings</h3>
+                <p class="text-slate-500 text-xs">Manage your profile</p>
+            </div>
+
+            <!-- Change Avatar -->
+            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div id="settings-avatar-preview" class="w-12 h-12 rounded-full bg-white border border-slate-200 flex items-center justify-center text-2xl overflow-hidden">👤</div>
+                    <div>
+                        <div class="text-sm font-bold text-slate-700">Profile Picture</div>
+                        <div class="text-[10px] text-slate-400 uppercase tracking-wide">Change anytime</div>
+                    </div>
+                </div>
+                <button onclick="triggerCustomAvatarUpload()" class="px-3 py-1.5 bg-indigo-100 text-indigo-700 text-xs font-bold rounded-lg hover:bg-indigo-200 transition-colors">Edit</button>
+            </div>
+
+            <!-- Change Display Name -->
+            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 space-y-3">
+                <div class="flex justify-between items-start">
+                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wide">Display Name</label>
+                    <span id="dn-cooldown-text" class="text-[10px] text-amber-500 font-bold bg-amber-50 px-2 py-0.5 rounded hidden">Cooldown</span>
+                </div>
+                <div class="flex gap-2">
+                    <input type="text" id="settings-displayname" class="flex-grow bg-white border border-slate-200 rounded-xl py-2 px-3 text-sm font-medium text-slate-700 focus:border-indigo-500 outline-none">
+                    <button id="save-dn-btn" onclick="saveNewDisplayName()" class="px-4 py-2 bg-indigo-600 text-white text-sm font-bold rounded-xl hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">Save</button>
+                </div>
+                <p class="text-[10px] text-slate-400">Can be changed once every hour.</p>
+            </div>
+
+            <!-- Change Username -->
+            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 space-y-3">
+                <div class="flex justify-between items-start">
+                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wide">Username</label>
+                    <span id="un-cooldown-text" class="text-[10px] text-amber-500 font-bold bg-amber-50 px-2 py-0.5 rounded hidden">Cooldown</span>
+                </div>
+                <div class="flex gap-2">
+                    <input type="text" id="settings-username" class="flex-grow bg-white border border-slate-200 rounded-xl py-2 px-3 text-sm font-medium text-slate-700 focus:border-indigo-500 outline-none">
+                    <button id="save-un-btn" onclick="saveNewUsername()" class="px-4 py-2 bg-indigo-600 text-white text-sm font-bold rounded-xl hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">Save</button>
+                </div>
+                <p class="text-[10px] text-slate-400">Can be changed once every 7 days.</p>
+            </div>
+            
+            <div id="settings-msg" class="hidden text-center text-xs font-bold p-2 rounded-lg"></div>
+        </div>
+    </div>
+
+    <!-- Hidden File Input for Avatar -->
+    <input type="file" id="avatar-upload-input" accept="image/png, image/jpeg, image/webp" class="hidden">
+
+    <!-- Custom Image Cropper Modal -->
+    <div id="cropper-modal" class="hidden fixed inset-0 z-[70] flex items-center justify-center p-4 modal-overlay">
+        <div class="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl space-y-6">
+            <div class="text-center space-y-1">
+                <h3 class="text-xl font-extrabold text-slate-800">Adjust Avatar</h3>
+                <p class="text-slate-500 text-xs">Drag to pan, slider to zoom</p>
+            </div>
+
+            <div class="relative w-64 h-64 mx-auto bg-slate-900 rounded-lg overflow-hidden flex items-center justify-center select-none" id="cropper-container">
+                <img id="cropper-img" class="absolute origin-center cursor-grab active:cursor-grabbing max-w-none" draggable="false" style="transform: translate(0px, 0px) scale(1);">
+                <div class="absolute inset-0 crop-mask"></div>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <span class="text-slate-400 text-sm">➖</span>
+                <input type="range" id="cropper-zoom" min="0.5" max="3" step="0.05" value="1" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600">
+                <span class="text-slate-400 text-sm">➕</span>
+            </div>
+
+            <div class="flex gap-2">
+                <button onclick="saveCroppedImage()" class="flex-1 py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700">Crop & Save</button>
+                <button onclick="closeCropper()" class="flex-1 py-3 bg-slate-100 text-slate-600 rounded-xl font-bold hover:bg-slate-200">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Edit Modal -->
+    <div id="admin-edit-modal" class="hidden fixed inset-0 z-[70] flex items-center justify-center p-4 modal-overlay">
+        <div class="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl space-y-4 border-2 border-indigo-500 relative">
+            <div class="text-center space-y-1 mb-4">
+                <h3 class="text-xl font-extrabold text-indigo-700">Admin Edit</h3>
+                <p class="text-slate-500 text-xs">Override player statistics</p>
+            </div>
+            
+            <div class="space-y-3">
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 uppercase">Best Score</label>
+                    <input type="number" id="admin-edit-score" class="w-full bg-slate-50 border border-slate-200 rounded-xl py-2 px-3 text-slate-700 font-bold focus:border-indigo-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 uppercase">Level (Recalculates EXP)</label>
+                    <input type="number" id="admin-edit-level" min="1" class="w-full bg-slate-50 border border-slate-200 rounded-xl py-2 px-3 text-slate-700 font-bold focus:border-indigo-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 uppercase">Games Played</label>
+                    <input type="number" id="admin-edit-games" class="w-full bg-slate-50 border border-slate-200 rounded-xl py-2 px-3 text-slate-700 font-bold focus:border-indigo-500 outline-none">
+                </div>
+            </div>
+
+            <div class="flex gap-2 mt-4">
+                <button onclick="saveAdminEdit()" class="flex-1 py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700">Save Changes</button>
+                <button onclick="closeAdminEditModal()" class="flex-1 py-3 bg-slate-100 text-slate-600 rounded-xl font-bold hover:bg-slate-200">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Add Score Modal -->
+    <div id="admin-add-modal" class="hidden fixed inset-0 z-[70] flex items-center justify-center p-4 modal-overlay">
+        <div class="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl space-y-3 border-2 border-emerald-500 relative max-h-[90vh] overflow-y-auto">
+            <div class="text-center space-y-1 mb-2">
+                <h3 class="text-xl font-extrabold text-emerald-600">Add / Restore Score</h3>
+                <p class="text-slate-500 text-xs">Inject a score manually into the DB</p>
+            </div>
+            
+            <div class="space-y-2">
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase">User ID (UID)</label>
+                    <input type="text" id="admin-add-uid" placeholder="e.g. 8xJ9... (Get from Auth)" class="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 px-3 text-sm font-bold focus:border-emerald-500 outline-none">
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase">Category</label>
+                        <select id="admin-add-category" class="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 px-2 text-sm font-bold focus:border-emerald-500 outline-none">
+                            <option value="hiragana">Hiragana</option>
+                            <option value="katakana">Katakana</option>
+                            <option value="kanji">Kanji</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase">Mode Label</label>
+                        <input type="text" id="admin-add-mode" placeholder="e.g. Kanji N5" class="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 px-2 text-sm font-bold focus:border-emerald-500 outline-none">
+                    </div>
+                </div>
+                <div class="grid grid-cols-3 gap-2">
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase">Score</label>
+                        <input type="number" id="admin-add-score" value="0" class="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 px-2 text-sm font-bold focus:border-emerald-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase">Time(s)</label>
+                        <input type="number" id="admin-add-time" value="30" class="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 px-2 text-sm font-bold focus:border-emerald-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase">Length</label>
+                        <input type="number" id="admin-add-length" value="1" class="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 px-2 text-sm font-bold focus:border-emerald-500 outline-none">
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex gap-2 mt-4">
+                <button onclick="saveAdminAdd()" class="flex-1 py-3 bg-emerald-500 text-white rounded-xl font-bold hover:bg-emerald-600">Inject Score</button>
+                <button onclick="closeAdminAddModal()" class="flex-1 py-3 bg-slate-100 text-slate-600 rounded-xl font-bold hover:bg-slate-200">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
     <div class="w-full max-w-4xl mt-8 flex flex-col md:flex-row justify-between items-center md:items-end gap-6 px-4 pb-8">
         <footer class="text-slate-400 text-sm font-medium tracking-wide">
             © 2026 じんせいかいはつ
@@ -259,7 +738,33 @@
         </div>
     </div>
 
-    <script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, getDocs, query, where, updateDoc, deleteDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAZcZxzohW1Ije8dVdkqWMQaErGy-sXnjE",
+            authDomain: "japanese-speed-test.firebaseapp.com",
+            projectId: "japanese-speed-test",
+            storageBucket: "japanese-speed-test.firebasestorage.app",
+            messagingSenderId: "704765267880",
+            appId: "1:704765267880:web:f77ecad0f23de87b61179d",
+            measurementId: "G-7C1R1FCKRW"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const googleProvider = new GoogleAuthProvider();
+
+        const ADMIN_EMAIL = "pocialj@gmail.com";
+        let currentUser = null;
+        let selectedAvatarEmoji = '🦊';
+        let isAdminMode = false;
+
         const HIRAGANA_BASE = {
             'あ': 'a', 'い': 'i', 'う': 'u', 'え': 'e', 'お': 'o',
             'か': 'ka', 'き': 'ki', 'く': 'ku', 'け': 'ke', 'こ': 'ko',
@@ -274,7 +779,7 @@
             'が': 'ga', 'ぎ': 'gi', 'ぐ': 'gu', 'げ': 'ge', 'ご': 'go',
             'ざ': 'za', 'じ': 'ji', 'ず': 'zu', 'ぜ': 'ze', 'ぞ': 'zo',
             'だ': 'da', 'ぢ': 'ji', 'づ': 'zu', 'で': 'de', 'ど': 'do',
-            'ば': 'ba', 'び': 'bi', 'ぶ': 'bu', 'べ': 'be', 'ぼ': 'bo',
+            'ば': 'ba', 'び': 'bi', 'ぶ': 'ぶ', 'べ': 'be', 'ぼ': 'bo',
             'ぱ': 'pa', 'ぴ': 'pi', 'ぷ': 'pu', 'ぺ': 'pe', 'ぽ': 'po'
         };
 
@@ -328,21 +833,76 @@
                 subjects: [
                     {h: 'いぬ', r: 'inu'}, {h: 'ねこ', r: 'neko'}, {h: 'わたし', r: 'watashi'},
                     {h: 'あなた', r: 'anata'}, {h: 'せんせい', r: 'sensei'}, {h: 'おとこのこ', r: 'otokonoko'},
-                    {h: 'おんなのこ', r: 'onnanoko'}, {h: 'ともだち', r: 'tomodachi'}
+                    {h: 'おんなのこ', r: 'onnanoko'}, {h: 'ともだち', r: 'tomodachi'}, {h: 'ちち', r: 'chichi'},
+                    {h: 'はは', r: 'haha'}, {h: 'あに', r: 'ani'}, {h: 'あね', r: 'ane'}, {h: 'おとうと', r: 'otouto'},
+                    {h: 'いもうと', r: 'imouto'}, {h: 'かぞく', r: 'kazoku'}, {h: 'ひと', r: 'hito'},
+                    {h: 'おとこ', r: 'otoko'}, {h: 'おんな', r: 'onna'}, {h: 'がくせい', r: 'gakusei'},
+                    {h: 'いしゃ', r: 'isha'}, {h: 'とり', r: 'tori'}, {h: 'さかな', r: 'sakana'},
+                    {h: 'うま', r: 'uma'}, {h: 'うし', r: 'ushi'}, {h: 'ぶた', r: 'buta'},
+                    {h: 'きつね', r: 'kitsune'}, {h: 'たぬき', r: 'tanuki'}, {h: 'おじいさん', r: 'ojiisan'},
+                    {h: 'おばあさん', r: 'obaasan'}, {h: 'あかちゃん', r: 'akachan'}, {h: 'けいさつ', r: 'keisatsu'},
+                    {h: 'がか', r: 'gaka'}, {h: 'かしゅ', r: 'kashu'}, {h: 'だいく', r: 'daiku'}
                 ],
-                objects: [
-                    {h: 'すし', r: 'sushi'}, {h: 'みず', r: 'mizu'}, {h: 'ほん', r: 'hon'},
-                    {h: 'てがみ', r: 'tegami'}, {h: 'くるま', r: 'kuruma'}, {h: 'たべもの', r: 'tabemono'},
-                    {h: 'のみもの', r: 'nomimono'}, {h: 'じてんしゃ', r: 'jitensha'}
+                food: [
+                    {h: 'すし', r: 'sushi'}, {h: 'たべもの', r: 'tabemono'}, {h: 'にく', r: 'niku'},
+                    {h: 'やさい', r: 'yasai'}, {h: 'くだもの', r: 'kudamono'}, {h: 'ぱん', r: 'pan'},
+                    {h: 'たまご', r: 'tamago'}, {h: 'りんご', r: 'ringo'}, {h: 'みかん', r: 'mikan'},
+                    {h: 'いちご', r: 'ichigo'}, {h: 'おにぎり', r: 'onigiri'}, {h: 'うどん', r: 'udon'}
                 ],
-                verbs_transitive: [
-                    {h: 'かう', r: 'kau'}, {h: 'みる', r: 'miru'}, {h: 'よむ', r: 'yomu'},
-                    {h: 'のむ', r: 'nomu'}, {h: 'たべる', r: 'taberu'}, {h: 'なおす', r: 'naosu'},
-                    {h: 'つくる', r: 'tsukuru'}, {h: 'あらう', r: 'arau'}
+                drinks: [
+                    {h: 'みず', r: 'mizu'}, {h: 'のみもの', r: 'nomimono'}, {h: 'おちゃ', r: 'ocha'},
+                    {h: 'ぎゅうにゅう', r: 'gyuunyuu'}
+                ],
+                readable: [
+                    {h: 'ほん', r: 'hon'}, {h: 'てがみ', r: 'tegami'}, {h: 'しんぶん', r: 'shinbun'},
+                    {h: 'ざっし', r: 'zasshi'}, {h: 'かみ', r: 'kami'}, {h: 'えほん', r: 'ehon'}
+                ],
+                items: [
+                    {h: 'くるま', r: 'kuruma'}, {h: 'じてんしゃ', r: 'jitensha'}, {h: 'とけい', r: 'tokei'},
+                    {h: 'かばん', r: 'kaban'}, {h: 'くつ', r: 'kutsu'}, {h: 'ふく', r: 'fuku'},
+                    {h: 'えんぴつ', r: 'enpitsu'}, {h: 'かぎ', r: 'kagi'}, {h: 'けしごむ', r: 'keshigomu'},
+                    {h: 'はさみ', r: 'hasami'}, {h: 'つくえ', r: 'tsukue'}, {h: 'いす', r: 'isu'},
+                    {h: 'かがみ', r: 'kagami'}, {h: 'でんわ', r: 'denwa'}, {h: 'おかね', r: 'okane'}
+                ],
+                places_doors: [
+                    {h: 'いえ', r: 'ie'}, {h: 'へや', r: 'heya'}, {h: 'まど', r: 'mado'}, {h: 'と', r: 'to'},
+                    {h: 'がっこう', r: 'gakkou'}, {h: 'えき', r: 'eki'}, {h: 'びょういん', r: 'byouin'}
+                ],
+                adj_general: [
+                    {h: 'おおきい', r: 'ookii'}, {h: 'ちいさい', r: 'chiisai'}, {h: 'あたらしい', r: 'atarashii'}, 
+                    {h: 'ふるい', r: 'furui'}, {h: 'あかい', r: 'akai'}, {h: 'あおい', r: 'aoi'},
+                    {h: 'はやい', r: 'hayai'}, {h: 'おそい', r: 'osoi'}, {h: 'たかい', r: 'takai'},
+                    {h: 'ひくい', r: 'hikui'}, {h: 'やすい', r: 'yasui'}, {h: 'あかるい', r: 'akarui'},
+                    {h: 'くらい', r: 'kurai'}, {h: 'たのしい', r: 'tanoshii'}, {h: 'しろい', r: 'shiroi'}
+                ],
+                adj_food: [
+                    {h: 'おいしい', r: 'oishii'}, {h: 'つめたい', r: 'tsumetai'}, 
+                    {h: 'あたたかい', r: 'atatakai'}, {h: 'あまい', r: 'amai'}, {h: 'からい', r: 'karai'}
+                ],
+                verbs_food: [
+                    {h: 'たべる', r: 'taberu'}, {h: 'かう', r: 'kau'}, {h: 'つくる', r: 'tsukuru'}
+                ],
+                verbs_drinks: [
+                    {h: 'のむ', r: 'nomu'}, {h: 'かう', r: 'kau'}, {h: 'つくる', r: 'tsukuru'}
+                ],
+                verbs_readable: [
+                    {h: 'よむ', r: 'yomu'}, {h: 'かく', r: 'kaku'}, {h: 'かう', r: 'kau'}
+                ],
+                verbs_items: [
+                    {h: 'かう', r: 'kau'}, {h: 'みる', r: 'miru'}, {h: 'さがす', r: 'sagasu'}, 
+                    {h: 'つかう', r: 'tsukau'}, {h: 'あらう', r: 'arau'}, {h: 'もつ', r: 'motsu'}
+                ],
+                verbs_doors: [
+                    {h: 'あける', r: 'akeru'}, {h: 'しめる', r: 'shimeru'}, {h: 'みる', r: 'miru'}
                 ],
                 verbs_intransitive: [
                     {h: 'ねる', r: 'neru'}, {h: 'なく', r: 'naku'}, {h: 'おきる', r: 'okiru'},
-                    {h: 'はしる', r: 'hashiru'}, {h: 'あるく', r: 'aruku'}, {h: 'あそぶ', r: 'asobu'}
+                    {h: 'はしる', r: 'hashiru'}, {h: 'あるく', r: 'aruku'}, {h: 'あそぶ', r: 'asobu'},
+                    {h: 'いく', r: 'iku'}, {h: 'くる', r: 'kuru'}, {h: 'かえる', r: 'kaeru'},
+                    {h: 'およぐ', r: 'oyogu'}, {h: 'とぶ', r: 'tobu'}, {h: 'すわる', r: 'suwaru'},
+                    {h: 'たつ', r: 'tatsu'}, {h: 'おわる', r: 'owaru'}, {h: 'はじまる', r: 'hajimaru'},
+                    {h: 'わかる', r: 'wakaru'}, {h: 'やすむ', r: 'yasumu'}, {h: 'うたう', r: 'utau'},
+                    {h: 'はなす', r: 'hanasu'}, {h: 'きく', r: 'kiku'}, {h: 'まつ', r: 'matsu'}
                 ],
                 p_wa: {h: 'は', r: 'ha'},
                 p_o: {h: 'を', r: 'wo'}
@@ -351,21 +911,75 @@
                 subjects: [
                     {h: 'イヌ', r: 'inu'}, {h: 'ネコ', r: 'neko'}, {h: 'ワタシ', r: 'watashi'},
                     {h: 'アナタ', r: 'anata'}, {h: 'センセイ', r: 'sensei'}, {h: 'オトコノコ', r: 'otokonoko'},
-                    {h: 'オンナノコ', r: 'onnanoko'}, {h: 'トモダチ', r: 'tomodachi'}
+                    {h: 'オンナノコ', r: 'onnanoko'}, {h: 'トモダチ', r: 'tomodachi'}, {h: 'チチ', r: 'chichi'},
+                    {h: 'ハハ', r: 'haha'}, {h: 'アニ', r: 'ani'}, {h: 'アネ', r: 'ane'}, {h: 'オトウト', r: 'otouto'},
+                    {h: 'イモウト', r: 'imouto'}, {h: 'カゾク', r: 'kazoku'}, {h: 'ヒト', r: 'hito'},
+                    {h: 'オトコ', r: 'otoko'}, {h: 'オンナ', r: 'onna'}, {h: 'ガクセイ', r: 'gakusei'},
+                    {h: 'イシャ', r: 'isha'}, {h: 'トリ', r: 'tori'}, {h: 'サカナ', r: 'sakana'},
+                    {h: 'ウマ', r: 'uma'}, {h: 'ウシ', r: 'ushi'}, {h: 'ブタ', r: 'buta'},
+                    {h: 'ライオン', r: 'raion'}, {h: 'トラ', r: 'tora'}, {h: 'コアラ', r: 'koara'}
                 ],
-                objects: [
-                    {h: 'スシ', r: 'sushi'}, {h: 'ミズ', r: 'mizu'}, {h: 'ホン', r: 'hon'},
-                    {h: 'テガミ', r: 'tegami'}, {h: 'クルマ', r: 'kuruma'}, {h: 'タベモノ', r: 'tabemono'},
-                    {h: 'ノミモノ', r: 'nomimono'}, {h: 'ジテンシャ', r: 'jitensha'}
+                food: [
+                    {h: 'スシ', r: 'sushi'}, {h: 'タベモノ', r: 'tabemono'}, {h: 'ニク', r: 'niku'},
+                    {h: 'ヤサイ', r: 'yasai'}, {h: 'クダモノ', r: 'kudamono'}, {h: 'パン', r: 'pan'},
+                    {h: 'タマゴ', r: 'tamago'}, {h: 'ケーキ', r: 'keeki'}, {h: 'ハンバーガー', r: 'hanbaagaa'},
+                    {h: 'ピザ', r: 'piza'}, {h: 'チーズ', r: 'chiizu'}, {h: 'サラダ', r: 'sarada'}
                 ],
-                verbs_transitive: [
-                    {h: 'カウ', r: 'kau'}, {h: 'ミル', r: 'miru'}, {h: 'ヨム', r: 'yomu'},
-                    {h: 'ノム', r: 'nomu'}, {h: 'タベル', r: 'taberu'}, {h: 'ナオス', r: 'naosu'},
-                    {h: 'ツクル', r: 'tsukuru'}, {h: 'アラウ', r: 'arau'}
+                drinks: [
+                    {h: 'ミズ', r: 'mizu'}, {h: 'ノミモノ', r: 'nomimono'}, {h: 'オチャ', r: 'ocha'},
+                    {h: 'ジュース', r: 'juusu'}, {h: 'ビール', r: 'biiru'}, {h: 'ワイン', r: 'wain'},
+                    {h: 'ミルク', r: 'miruku'}, {h: 'コーヒー', r: 'koohii'}
+                ],
+                readable: [
+                    {h: 'ホン', r: 'hon'}, {h: 'テガミ', r: 'tegami'}, {h: 'シンブン', r: 'shinbun'},
+                    {h: 'ザッシ', r: 'zasshi'}, {h: 'ノート', r: 'nooto'}, {h: 'メニュー', r: 'menyuu'}
+                ],
+                items: [
+                    {h: 'クルマ', r: 'kuruma'}, {h: 'ジテンシャ', r: 'jitensha'}, {h: 'トケイ', r: 'tokei'},
+                    {h: 'カバン', r: 'kaban'}, {h: 'クツ', r: 'kutsu'}, {h: 'フク', r: 'fuku'},
+                    {h: 'エンピツ', r: 'enpitsu'}, {h: 'カギ', r: 'kagi'}, {h: 'ペン', r: 'pen'},
+                    {h: 'バス', r: 'basu'}, {h: 'カメラ', r: 'kamera'}, {h: 'スマホ', r: 'sumaho'},
+                    {h: 'パソコン', r: 'pasokon'}, {h: 'テレビ', r: 'terebi'}, {h: 'ラジオ', r: 'rajio'},
+                    {h: 'ギター', r: 'gitaa'}, {h: 'ピアノ', r: 'piano'}, {h: 'ベッド', r: 'beddo'},
+                    {h: 'ソファ', r: 'sofa'}, {h: 'テーブル', r: 'teeburu'}, {h: 'トイレ', r: 'toire'}
+                ],
+                places_doors: [
+                    {h: 'イエ', r: 'ie'}, {h: 'ヘヤ', r: 'heya'}, {h: 'マド', r: 'mado'}, {h: 'ト', r: 'to'},
+                    {h: 'ドア', r: 'doa'}, {h: 'ホテル', r: 'hoteru'}, {h: 'レストラン', r: 'resutoran'},
+                    {h: 'スーパー', r: 'suupaa'}
+                ],
+                adj_general: [
+                    {h: 'オオキイ', r: 'ookii'}, {h: 'チイサイ', r: 'chiisai'}, {h: 'アタラシイ', r: 'atarashii'}, 
+                    {h: 'フルイ', r: 'furui'}, {h: 'アカイ', r: 'akai'}, {h: 'アオイ', r: 'aoi'},
+                    {h: 'ハヤイ', r: 'hayai'}, {h: 'オソイ', r: 'osoi'}, {h: 'タカイ', r: 'takai'}
+                ],
+                adj_food: [
+                    {h: 'オイシイ', r: 'oishii'}, {h: 'ツメタイ', r: 'tsumetai'}, 
+                    {h: 'アタタカイ', r: 'atatakai'}, {h: 'アマイ', r: 'amai'}
+                ],
+                verbs_food: [
+                    {h: 'タベル', r: 'taberu'}, {h: 'カウ', r: 'kau'}, {h: 'ツクル', r: 'tsukuru'}
+                ],
+                verbs_drinks: [
+                    {h: 'ノム', r: 'nomu'}, {h: 'カウ', r: 'kau'}, {h: 'ツクル', r: 'tsukuru'}
+                ],
+                verbs_readable: [
+                    {h: 'ヨム', r: 'yomu'}, {h: 'カク', r: 'kaku'}, {h: 'カウ', r: 'kau'}
+                ],
+                verbs_items: [
+                    {h: 'カウ', r: 'kau'}, {h: 'ミル', r: 'miru'}, {h: 'サガス', r: 'sagasu'}, 
+                    {h: 'ツカウ', r: 'tsukau'}, {h: 'アラウ', r: 'arau'}, {h: 'モツ', r: 'motsu'}
+                ],
+                verbs_doors: [
+                    {h: 'アケル', r: 'akeru'}, {h: 'シメル', r: 'shimeru'}, {h: 'ミル', r: 'miru'}
                 ],
                 verbs_intransitive: [
                     {h: 'ネル', r: 'neru'}, {h: 'ナク', r: 'naku'}, {h: 'オキル', r: 'okiru'},
-                    {h: 'ハシル', r: 'hashiru'}, {h: 'アルク', r: 'aruku'}, {h: 'アソブ', r: 'asobu'}
+                    {h: 'ハシル', r: 'hashiru'}, {h: 'アルク', r: 'aruku'}, {h: 'アソブ', r: 'asobu'},
+                    {h: 'イク', r: 'iku'}, {h: 'クル', r: 'kuru'}, {h: 'カエル', r: 'kaeru'},
+                    {h: 'オヨグ', r: 'oyogu'}, {h: 'トブ', r: 'tobu'}, {h: 'スワル', r: 'suwaru'},
+                    {h: 'タツ', r: 'tatsu'}, {h: 'オワル', r: 'owaru'}, {h: 'ハジマル', r: 'hajimaru'},
+                    {h: 'ワカル', r: 'wakaru'}, {h: 'ヤスム', r: 'yasumu'}
                 ],
                 p_wa: {h: 'ハ', r: 'ha'},
                 p_o: {h: 'ヲ', r: 'wo'}
@@ -382,11 +996,31 @@
         let currentWord = null;
         let currentPool = [];
         let isPaused = false;
+        let globalLeaderboard = [];
+        let activeLeaderboardTab = 'hiragana';
+
+        // Auth UI Elements
+        const authModal = document.getElementById('auth-modal');
+        const setupModal = document.getElementById('setup-modal');
+        const settingsModal = document.getElementById('settings-modal');
+        const profileModal = document.getElementById('profile-modal');
+        const friendsModal = document.getElementById('friends-modal');
+        const cropperModal = document.getElementById('cropper-modal');
+        const authError = document.getElementById('auth-error');
+        const loginBtn = document.getElementById('login-btn');
+        const userProfileMenu = document.getElementById('user-profile-menu');
+        const navAvatar = document.getElementById('nav-avatar');
+        const navName = document.getElementById('nav-name');
+        const navUsername = document.getElementById('nav-username');
+        const adminPanel = document.getElementById('admin-panel');
+        const friendsBtn = document.getElementById('friends-btn');
 
         const homeScreen = document.getElementById('home-screen');
         const startScreen = document.getElementById('start-screen');
         const quizScreen = document.getElementById('quiz-screen');
         const endScreen = document.getElementById('end-screen');
+        const leaderboardScreen = document.getElementById('leaderboard-screen');
+        const leaderboardFullList = document.getElementById('leaderboard-full-list');
         const exitModal = document.getElementById('exit-modal');
         const wordDisplay = document.getElementById('word-display');
         const hintDisplay = document.getElementById('hint-display');
@@ -396,9 +1030,17 @@
         const timerDisplay = document.getElementById('timer-display');
         const timerBar = document.getElementById('timer-bar');
         const finalScore = document.getElementById('final-score');
+        const endRawScore = document.getElementById('end-raw-score');
+        const endLengthVal = document.getElementById('end-length-val');
+        const endLengthBonus = document.getElementById('end-length-bonus');
+        const endTimeVal = document.getElementById('end-time-val');
+        const endTimeBonus = document.getElementById('end-time-bonus');
         const finalLevel = document.getElementById('final-level');
         const finalDuration = document.getElementById('final-duration');
         const feedbackMsg = document.getElementById('feedback-msg');
+        const guestLoginPrompt = document.getElementById('guest-login-prompt');
+        const endEmoji = document.getElementById('end-emoji');
+        const endTitle = document.getElementById('end-title');
         const timeSlider = document.getElementById('time-slider');
         const timeValDisplay = document.getElementById('time-val');
         const lengthInput = document.getElementById('length-input');
@@ -429,6 +1071,650 @@
             e.target.value = val;
         });
 
+        function toggleAdminMode() {
+            isAdminMode = document.getElementById('admin-toggle').checked;
+            const addBtn = document.getElementById('admin-add-btn');
+            
+            if (isAdminMode) addBtn.classList.remove('hidden');
+            else addBtn.classList.add('hidden');
+            
+            if (!leaderboardScreen.classList.contains('hidden')) {
+                updateLeaderboardUI();
+            }
+        }
+
+        let editingAdminDocId = null;
+        let editingAdminUserId = null;
+
+        async function openAdminEditModal(docId, userId, score, level) {
+            editingAdminDocId = docId;
+            editingAdminUserId = userId;
+            document.getElementById('admin-edit-score').value = score;
+            document.getElementById('admin-edit-level').value = level;
+            document.getElementById('admin-edit-games').value = "Loading...";
+
+            document.getElementById('admin-edit-modal').classList.remove('hidden');
+
+            try {
+                const userDoc = await getDoc(doc(db, "users", userId));
+                if (userDoc.exists()) {
+                    document.getElementById('admin-edit-games').value = userDoc.data().gamesPlayed || 0;
+                } else {
+                    document.getElementById('admin-edit-games').value = 0;
+                }
+            } catch(e) { console.error(e); }
+        }
+
+        function closeAdminEditModal() {
+            document.getElementById('admin-edit-modal').classList.add('hidden');
+        }
+
+        async function saveAdminEdit() {
+            const newScore = parseInt(document.getElementById('admin-edit-score').value) || 0;
+            const newLevel = parseInt(document.getElementById('admin-edit-level').value) || 1;
+            const newGames = parseInt(document.getElementById('admin-edit-games').value) || 0;
+
+            // Recalculate EXP exactly to match the new level
+            const newExp = Math.pow(newLevel - 1, 2) * 20;
+
+            try {
+                const updatePayload = {
+                    score: newScore,
+                    level: newLevel
+                };
+                
+                if (currentUser && editingAdminUserId === currentUser.uid) {
+                    updatePayload.email = currentUser.email;
+                }
+
+                await updateDoc(doc(db, "leaderboard", editingAdminDocId), updatePayload);
+                await updateDoc(doc(db, "users", editingAdminUserId), { level: newLevel, exp: newExp, gamesPlayed: newGames });
+                await updateLeaderboardProfile({ level: newLevel }, editingAdminUserId);
+                
+                closeAdminEditModal();
+                await fetchLeaderboard();
+                updateLeaderboardUI();
+            } catch(e) {
+                console.error(e);
+                alert("Failed to update user stats.");
+            }
+        }
+
+        function openAdminAddModal() { document.getElementById('admin-add-modal').classList.remove('hidden'); }
+        function closeAdminAddModal() { document.getElementById('admin-add-modal').classList.add('hidden'); }
+
+        async function saveAdminAdd() {
+            const uid = document.getElementById('admin-add-uid').value.trim();
+            const category = document.getElementById('admin-add-category').value;
+            const mode = document.getElementById('admin-add-mode').value.trim();
+            const score = parseInt(document.getElementById('admin-add-score').value) || 0;
+            const time = parseInt(document.getElementById('admin-add-time').value) || 30;
+            const length = parseInt(document.getElementById('admin-add-length').value) || 1;
+
+            if (!uid || !mode) return alert("Fill out User ID and Mode Label");
+
+            try {
+                const userDoc = await getDoc(doc(db, "users", uid));
+                if (!userDoc.exists()) return alert("Error: User UID not found in database.");
+                const userData = userDoc.data();
+
+                const scoreDocId = `${uid}_${mode.replace(/[^a-zA-Z0-9]/g, '')}`;
+                let insertEmail = "restored@admin.com";
+                if (currentUser && uid === currentUser.uid) insertEmail = currentUser.email;
+                
+                await setDoc(doc(db, "leaderboard", scoreDocId), {
+                    userId: uid,
+                    email: insertEmail,
+                    displayName: userData.displayName || 'Restored Player',
+                    avatar: userData.avatar || '👤',
+                    level: userData.level || 1,
+                    score: score,
+                    mode: mode,
+                    category: category,
+                    time: time,
+                    length: length,
+                    timestamp: new Date().toISOString()
+                });
+
+                closeAdminAddModal();
+                await fetchLeaderboard();
+                updateLeaderboardUI();
+                alert("Score Restored/Injected Successfully!");
+            } catch(e) {
+                console.error(e);
+                alert("Failed to add score.");
+            }
+        }
+
+        async function deleteScore(docId) {
+            if (!confirm("Are you sure you want to delete this score?")) return;
+            try {
+                await deleteDoc(doc(db, "leaderboard", docId));
+                await fetchLeaderboard();
+                updateLeaderboardUI();
+            } catch (e) {
+                console.error("Delete failed:", e);
+                alert("Failed to delete score.");
+            }
+        }
+
+        // --- LEVEL & EXP LOGIC ---
+        function calculateLevelInfo(exp) {
+            exp = exp || 0;
+            const level = Math.floor(Math.sqrt(exp / 20)) + 1;
+            const currentLevelExp = Math.pow(level - 1, 2) * 20;
+            const nextLevelExp = Math.pow(level, 2) * 20;
+            const progress = ((exp - currentLevelExp) / (nextLevelExp - currentLevelExp)) * 100;
+            return { level, progress, currentLevelExp, nextLevelExp, exp };
+        }
+
+        function updateNavLevelUI(userData) {
+            const info = calculateLevelInfo(userData.exp);
+            document.getElementById('nav-level-text').innerText = `Lv. ${info.level}`;
+            document.getElementById('nav-exp-text').innerText = `${info.exp} / ${info.nextLevelExp} XP`;
+            document.getElementById('nav-exp-bar').style.width = `${Math.min(100, Math.max(0, info.progress))}%`;
+        }
+
+        // --- AUTHENTICATION LOGIC ---
+        function openAuthModal() {
+            authError.classList.add('hidden');
+            document.getElementById('auth-email').value = '';
+            document.getElementById('auth-password').value = '';
+            authModal.classList.remove('hidden');
+        }
+        function closeAuthModal() { authModal.classList.add('hidden'); }
+        function showAuthError(msg) { authError.innerText = msg; authError.classList.remove('hidden'); }
+
+        function getAvatarHTML(avatarData) {
+            if (!avatarData) return '👤';
+            if (avatarData.startsWith('data:image')) {
+                return `<img src="${avatarData}" class="w-full h-full object-cover rounded-full" />`;
+            }
+            return avatarData;
+        }
+
+        async function handleEmailLogin() {
+            const email = document.getElementById('auth-email').value;
+            const password = document.getElementById('auth-password').value;
+            if(!email || !password) return showAuthError("Please fill all fields");
+            try { await signInWithEmailAndPassword(auth, email, password); closeAuthModal(); } 
+            catch (error) { showAuthError(error.message.replace("Firebase: ", "")); }
+        }
+
+        async function handleEmailSignUp() {
+            const email = document.getElementById('auth-email').value;
+            const password = document.getElementById('auth-password').value;
+            if(!email || !password) return showAuthError("Please fill all fields");
+            try { await createUserWithEmailAndPassword(auth, email, password); closeAuthModal(); } 
+            catch (error) { showAuthError(error.message.replace("Firebase: ", "")); }
+        }
+
+        async function handleGoogleLogin() {
+            try { await signInWithPopup(auth, googleProvider); closeAuthModal(); } 
+            catch (error) { showAuthError(error.message.replace("Firebase: ", "")); }
+        }
+
+        async function logout() {
+            await signOut(auth);
+            userProfileMenu.classList.add('hidden');
+            loginBtn.classList.remove('hidden');
+            adminPanel.classList.add('hidden');
+            friendsBtn.classList.add('hidden');
+        }
+
+        // --- ACCOUNT SETUP LOGIC ---
+        function selectAvatar(emoji, btnElement) {
+            selectedAvatarEmoji = emoji;
+            document.querySelectorAll('.avatar-option').forEach(btn => btn.classList.remove('selected'));
+            btnElement.classList.add('selected');
+        }
+
+        async function saveSetupProfile() {
+            const username = document.getElementById('setup-username').value.trim();
+            const displayName = document.getElementById('setup-displayname').value.trim();
+            if(!username || !displayName) return alert("Please fill in Username and Display Name");
+            try {
+                await updateProfile(auth.currentUser, { displayName: displayName });
+                const newDocData = {
+                    username: username,
+                    displayName: displayName,
+                    avatar: selectedAvatarEmoji,
+                    createdAt: new Date().toISOString(),
+                    lastUsernameChange: Date.now(),
+                    lastDisplayNameChange: Date.now(),
+                    exp: 0,
+                    gamesPlayed: 0,
+                    friends: []
+                };
+                await setDoc(doc(db, "users", auth.currentUser.uid), newDocData);
+                navAvatar.innerHTML = getAvatarHTML(selectedAvatarEmoji);
+                navName.innerText = displayName;
+                navUsername.innerText = `@${username}`;
+                updateNavLevelUI(newDocData);
+                setupModal.classList.add('hidden');
+            } catch (error) { alert("Error saving profile: " + error.message); }
+        }
+
+        // --- PROFILE MODAL (Viewing Self or Others) ---
+        async function viewProfile(uid) {
+            if (!uid) return;
+            
+            // Check if viewing profile while logged out
+            if (!currentUser) {
+                alert("Please log in to view player profiles!");
+                return;
+            }
+
+            try {
+                const userDoc = await getDoc(doc(db, "users", uid));
+                if (!userDoc.exists()) return alert("User not found.");
+                const data = userDoc.data();
+                const info = calculateLevelInfo(data.exp);
+                
+                document.getElementById('profile-modal-avatar').innerHTML = getAvatarHTML(data.avatar);
+                document.getElementById('profile-modal-dn').innerText = data.displayName || 'Player';
+                document.getElementById('profile-modal-un').innerText = `@${data.username || 'user'}`;
+                document.getElementById('profile-modal-level').innerText = info.level;
+                document.getElementById('profile-modal-games').innerText = data.gamesPlayed || 0;
+                document.getElementById('profile-modal-exp').innerText = data.exp || 0;
+
+                const isMe = currentUser && currentUser.uid === uid;
+                const editSec = document.getElementById('bio-edit-section');
+                const viewSec = document.getElementById('bio-view-section');
+                const friendBtn = document.getElementById('profile-modal-friend-btn');
+                
+                if (isMe) {
+                    editSec.classList.remove('hidden');
+                    viewSec.classList.add('hidden');
+                    document.getElementById('profile-modal-bio').value = data.bio || '';
+                    document.getElementById('bio-msg').classList.add('hidden');
+                } else {
+                    editSec.classList.add('hidden');
+                    viewSec.classList.remove('hidden');
+                    document.getElementById('profile-modal-bio-text').innerText = data.bio || 'No bio yet.';
+                    
+                    // Check friend status
+                    const myDoc = await getDoc(doc(db, "users", currentUser.uid));
+                    const myData = myDoc.exists() ? myDoc.data() : {};
+                    const isFriend = myData.friends && myData.friends.includes(uid);
+                    
+                    friendBtn.classList.remove('hidden');
+                    friendBtn.innerText = isFriend ? 'Remove Friend' : 'Add Friend';
+                    friendBtn.className = isFriend ? 
+                        "w-full py-2.5 bg-red-100 text-red-600 rounded-xl font-bold text-sm hover:bg-red-200 transition-all mt-4" : 
+                        "w-full py-2.5 bg-indigo-600 text-white rounded-xl font-bold text-sm hover:bg-indigo-700 transition-all mt-4";
+                    
+                    friendBtn.onclick = () => toggleFriend(uid, isFriend);
+                }
+
+                profileModal.classList.remove('hidden');
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        // Keep existing openProfileModal hooked to current user
+        function openProfileModal() {
+            if (!currentUser) return;
+            userProfileMenu.classList.add('hidden');
+            viewProfile(currentUser.uid);
+        }
+
+        function closeProfileModal() { profileModal.classList.add('hidden'); }
+
+        async function saveBio() {
+            if (!currentUser) return;
+            const bioText = document.getElementById('profile-modal-bio').value.trim();
+            try {
+                await setDoc(doc(db, "users", currentUser.uid), { bio: bioText }, { merge: true });
+                document.getElementById('bio-msg').classList.remove('hidden');
+                setTimeout(() => document.getElementById('bio-msg').classList.add('hidden'), 3000);
+            } catch (e) { console.error("Failed to save bio", e); }
+        }
+
+        // --- FRIENDS LOGIC ---
+        function openFriendsModal() {
+            friendsModal.classList.remove('hidden');
+            document.getElementById('friend-search-input').value = '';
+            loadFriendsList();
+        }
+
+        function closeFriendsModal() {
+            friendsModal.classList.add('hidden');
+        }
+
+        async function searchAndAddFriend() {
+            const input = document.getElementById('friend-search-input').value.trim().replace('@', '');
+            if (!input || !currentUser) return;
+            
+            if (loadedUserData && input.toLowerCase() === loadedUserData.username.toLowerCase()) {
+                return alert("You can't add yourself!");
+            }
+
+            try {
+                const q = query(collection(db, "users"), where("username", "==", input));
+                const snap = await getDocs(q);
+                if (snap.empty) return alert("User not found!");
+                
+                const friendUid = snap.docs[0].id;
+                await updateDoc(doc(db, "users", currentUser.uid), { friends: arrayUnion(friendUid) });
+                
+                document.getElementById('friend-search-input').value = '';
+                loadFriendsList();
+            } catch(e) {
+                console.error(e);
+                alert("Failed to add friend.");
+            }
+        }
+
+        async function toggleFriend(targetUid, isCurrentlyFriend) {
+            if (!currentUser) return;
+            try {
+                const myRef = doc(db, "users", currentUser.uid);
+                if (isCurrentlyFriend) {
+                    await updateDoc(myRef, { friends: arrayRemove(targetUid) });
+                } else {
+                    await updateDoc(myRef, { friends: arrayUnion(targetUid) });
+                }
+                
+                // Refresh views if open
+                if (!profileModal.classList.contains('hidden')) viewProfile(targetUid);
+                if (!friendsModal.classList.contains('hidden')) loadFriendsList();
+                
+            } catch(e) {
+                console.error("Failed to toggle friend", e);
+            }
+        }
+
+        async function loadFriendsList() {
+            if (!currentUser) return;
+            const listEl = document.getElementById('friends-list');
+            listEl.innerHTML = '<div class="text-center text-slate-400 py-6 text-xs font-bold">Loading friends...</div>';
+
+            try {
+                const myDoc = await getDoc(doc(db, "users", currentUser.uid));
+                const friends = myDoc.data().friends || [];
+
+                if (friends.length === 0) {
+                    listEl.innerHTML = '<div class="text-center text-slate-400 py-10 text-xs font-bold bg-slate-50 rounded-xl border border-slate-100">No friends yet. Add someone by their @username!</div>';
+                    return;
+                }
+
+                let html = '';
+                const friendPromises = friends.map(uid => getDoc(doc(db, "users", uid)));
+                const friendDocs = await Promise.all(friendPromises);
+
+                friendDocs.forEach(fDoc => {
+                    if (fDoc.exists()) {
+                        const fData = fDoc.data();
+                        const fInfo = calculateLevelInfo(fData.exp);
+                        html += `
+                        <div class="flex justify-between items-center bg-slate-50 p-3 rounded-xl border border-slate-100 hover:border-indigo-200 transition-colors">
+                            <div class="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity flex-grow" onclick="viewProfile('${fDoc.id}')">
+                                <div class="w-10 h-10 rounded-full overflow-hidden bg-white border border-slate-200 text-xl flex items-center justify-center flex-shrink-0">
+                                    ${getAvatarHTML(fData.avatar)}
+                                </div>
+                                <div>
+                                    <div class="font-bold text-slate-700 text-sm leading-tight">${fData.displayName || 'Player'}</div>
+                                    <div class="text-[10px] text-slate-400 font-medium">@${fData.username || 'user'} <span class="mx-1">•</span> <span class="text-indigo-500 font-bold">Lv.${fInfo.level}</span></div>
+                                </div>
+                            </div>
+                            <button onclick="toggleFriend('${fDoc.id}', true)" class="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors ml-2" title="Remove Friend">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+                                  <path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM2.615 16.428a1.224 1.224 0 0 1-.569-1.175 6.002 6.002 0 0 1 11.908 0c.058.467-.172.92-.57 1.174A9.953 9.953 0 0 1 8 18a9.953 9.953 0 0 1-5.385-1.572ZM16.25 5.75a.75.75 0 0 0-1.5 0v2.5h-2.5a.75.75 0 0 0 0 1.5h2.5v2.5a.75.75 0 0 0 1.5 0v-2.5h2.5a.75.75 0 0 0 0-1.5h-2.5v-2.5Z" />
+                                </svg>
+                            </button>
+                        </div>`;
+                    }
+                });
+                listEl.innerHTML = html;
+            } catch(e) {
+                console.error(e);
+                listEl.innerHTML = '<div class="text-center text-red-400 py-4 text-xs font-bold">Failed to load friends.</div>';
+            }
+        }
+
+        // --- CROPPER LOGIC ---
+        const avatarUploadInput = document.getElementById('avatar-upload-input');
+        const cropperImg = document.getElementById('cropper-img');
+        const cropperZoom = document.getElementById('cropper-zoom');
+        let dragState = { isDragging: false, startX: 0, startY: 0, panX: 0, panY: 0, scale: 1 };
+
+        function triggerCustomAvatarUpload() { avatarUploadInput.click(); }
+
+        avatarUploadInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                cropperImg.src = event.target.result;
+                cropperImg.onload = () => {
+                    dragState = { isDragging: false, startX: 0, startY: 0, panX: 0, panY: 0, scale: 1 };
+                    const containerSize = 256;
+                    const scaleX = containerSize / cropperImg.naturalWidth;
+                    const scaleY = containerSize / cropperImg.naturalHeight;
+                    dragState.scale = Math.max(scaleX, scaleY);
+                    dragState.panX = (containerSize - (cropperImg.naturalWidth * dragState.scale)) / 2;
+                    dragState.panY = (containerSize - (cropperImg.naturalHeight * dragState.scale)) / 2;
+                    cropperZoom.value = dragState.scale;
+                    cropperZoom.min = dragState.scale * 0.5;
+                    cropperZoom.max = dragState.scale * 5;
+                    updateCropperTransform();
+                    cropperModal.classList.remove('hidden');
+                    avatarUploadInput.value = '';
+                };
+            };
+            reader.readAsDataURL(file);
+        });
+
+        function updateCropperTransform() { cropperImg.style.transform = `translate(${dragState.panX}px, ${dragState.panY}px) scale(${dragState.scale})`; }
+
+        cropperZoom.addEventListener('input', (e) => {
+            const newScale = parseFloat(e.target.value);
+            const containerSize = 256;
+            const centerOffsetX = (containerSize / 2) - dragState.panX;
+            const centerOffsetY = (containerSize / 2) - dragState.panY;
+            const scaleRatio = newScale / dragState.scale;
+            dragState.panX = (containerSize / 2) - (centerOffsetX * scaleRatio);
+            dragState.panY = (containerSize / 2) - (centerOffsetY * scaleRatio);
+            dragState.scale = newScale;
+            updateCropperTransform();
+        });
+
+        const cropperContainer = document.getElementById('cropper-container');
+        cropperContainer.addEventListener('pointerdown', (e) => {
+            dragState.isDragging = true; dragState.startX = e.clientX - dragState.panX; dragState.startY = e.clientY - dragState.panY;
+            cropperImg.classList.add('cursor-grabbing');
+        });
+        window.addEventListener('pointermove', (e) => {
+            if (!dragState.isDragging) return;
+            dragState.panX = e.clientX - dragState.startX; dragState.panY = e.clientY - dragState.startY;
+            updateCropperTransform();
+        });
+        window.addEventListener('pointerup', () => { dragState.isDragging = false; cropperImg.classList.remove('cursor-grabbing'); });
+
+        function closeCropper() { cropperModal.classList.add('hidden'); }
+
+        async function saveCroppedImage() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 200; canvas.height = 200;
+            const ctx = canvas.getContext('2d');
+            const containerSize = 256;
+            const offX = dragState.panX, offY = dragState.panY;
+            const sx = -offX / dragState.scale, sy = -offY / dragState.scale;
+            const sw = containerSize / dragState.scale, sh = containerSize / dragState.scale;
+
+            ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, 200, 200);
+            ctx.drawImage(cropperImg, sx, sy, sw, sh, 0, 0, 200, 200);
+            
+            const base64Image = canvas.toDataURL('image/jpeg', 0.8);
+            selectedAvatarEmoji = base64Image;
+            
+            const setupCustomBtn = document.getElementById('setup-custom-avatar-btn');
+            if (setupCustomBtn) {
+                document.querySelectorAll('.avatar-option').forEach(btn => btn.classList.remove('selected'));
+                setupCustomBtn.classList.add('selected');
+                setupCustomBtn.innerHTML = getAvatarHTML(base64Image);
+            }
+            
+            if (currentUser && !setupModal.classList.contains('hidden') === false) {
+                try {
+                    await setDoc(doc(db, "users", auth.currentUser.uid), { avatar: base64Image }, { merge: true });
+                    await updateLeaderboardProfile({ avatar: base64Image });
+                    navAvatar.innerHTML = getAvatarHTML(base64Image);
+                    document.getElementById('settings-avatar-preview').innerHTML = getAvatarHTML(base64Image);
+                    showSettingsMessage("Avatar updated successfully!", "success");
+                } catch (error) { showSettingsMessage("Failed to save avatar.", "error"); }
+            }
+            closeCropper();
+        }
+
+        // --- SETTINGS LOGIC ---
+        let loadedUserData = null;
+        const ONE_HOUR = 60 * 60 * 1000;
+        const ONE_WEEK = 7 * 24 * 60 * 60 * 1000;
+
+        async function updateLeaderboardProfile(updates, targetUid = null) {
+            const uid = targetUid || (currentUser ? currentUser.uid : null);
+            if (!uid) return;
+            try {
+                const q = query(collection(db, "leaderboard"), where("userId", "==", uid));
+                const snapshot = await getDocs(q);
+                const updatePromises = [];
+                snapshot.forEach((docSnap) => { updatePromises.push(updateDoc(docSnap.ref, updates)); });
+                await Promise.all(updatePromises);
+                
+                globalLeaderboard.forEach(entry => {
+                    if (entry.userId === uid) {
+                        if (updates.avatar) entry.avatar = updates.avatar;
+                        if (updates.displayName) entry.displayName = updates.displayName;
+                        if (updates.level) entry.level = updates.level;
+                    }
+                });
+            } catch (error) { console.error("Failed to update leaderboard profile:", error); }
+        }
+
+        function formatTimeLeft(ms) {
+            const days = Math.floor(ms / (1000 * 60 * 60 * 24));
+            if (days > 0) return `${days} day${days > 1 ? 's' : ''} left`;
+            const hours = Math.floor(ms / (1000 * 60 * 60));
+            if (hours > 0) return `${hours} hr${hours > 1 ? 's' : ''} left`;
+            const mins = Math.floor(ms / (1000 * 60));
+            return `${Math.max(1, mins)} min${mins > 1 ? 's' : ''} left`;
+        }
+
+        async function openSettingsModal() {
+            if (!currentUser) return;
+            try {
+                const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+                if (userDoc.exists()) {
+                    loadedUserData = userDoc.data();
+                    document.getElementById('settings-username').value = loadedUserData.username || '';
+                    document.getElementById('settings-displayname').value = loadedUserData.displayName || '';
+                    document.getElementById('settings-avatar-preview').innerHTML = getAvatarHTML(loadedUserData.avatar);
+                    
+                    const now = Date.now();
+                    const unLastChange = loadedUserData.lastUsernameChange || 0;
+                    const dnLastChange = loadedUserData.lastDisplayNameChange || 0;
+                    
+                    const unSaveBtn = document.getElementById('save-un-btn');
+                    const unCooldownText = document.getElementById('un-cooldown-text');
+                    if (now - unLastChange < ONE_WEEK) {
+                        unSaveBtn.disabled = true; unCooldownText.innerText = formatTimeLeft(ONE_WEEK - (now - unLastChange));
+                        unCooldownText.classList.remove('hidden');
+                    } else { unSaveBtn.disabled = false; unCooldownText.classList.add('hidden'); }
+                    
+                    const dnSaveBtn = document.getElementById('save-dn-btn');
+                    const dnCooldownText = document.getElementById('dn-cooldown-text');
+                    if (now - dnLastChange < ONE_HOUR) {
+                        dnSaveBtn.disabled = true; dnCooldownText.innerText = formatTimeLeft(ONE_HOUR - (now - dnLastChange));
+                        dnCooldownText.classList.remove('hidden');
+                    } else { dnSaveBtn.disabled = false; dnCooldownText.classList.add('hidden'); }
+                    
+                    document.getElementById('settings-msg').classList.add('hidden');
+                    settingsModal.classList.remove('hidden');
+                }
+            } catch (e) { console.error(e); }
+        }
+
+        function closeSettingsModal() { settingsModal.classList.add('hidden'); }
+
+        function showSettingsMessage(msg, type) {
+            const msgEl = document.getElementById('settings-msg');
+            msgEl.innerText = msg;
+            msgEl.className = `text-xs font-bold p-2 rounded-lg mt-4 ${type === 'error' ? 'bg-red-50 text-red-600 border border-red-100' : 'bg-emerald-50 text-emerald-600 border border-emerald-100'}`;
+            msgEl.classList.remove('hidden');
+            setTimeout(() => msgEl.classList.add('hidden'), 3000);
+        }
+
+        async function saveNewUsername() {
+            const newUn = document.getElementById('settings-username').value.trim();
+            if (!newUn) return;
+            if (newUn === loadedUserData.username) return showSettingsMessage("Username is the same.", "error");
+            try {
+                const now = Date.now();
+                await setDoc(doc(db, "users", currentUser.uid), { username: newUn, lastUsernameChange: now }, { merge: true });
+                loadedUserData.username = newUn; loadedUserData.lastUsernameChange = now;
+                navUsername.innerText = `@${newUn}`;
+                showSettingsMessage("Username updated!", "success");
+                openSettingsModal();
+            } catch(e) { showSettingsMessage("Failed to update.", "error"); }
+        }
+
+        async function saveNewDisplayName() {
+            const newDn = document.getElementById('settings-displayname').value.trim();
+            if (!newDn) return;
+            if (newDn === loadedUserData.displayName) return showSettingsMessage("Display name is the same.", "error");
+            try {
+                const now = Date.now();
+                await updateProfile(auth.currentUser, { displayName: newDn });
+                await setDoc(doc(db, "users", currentUser.uid), { displayName: newDn, lastDisplayNameChange: now }, { merge: true });
+                await updateLeaderboardProfile({ displayName: newDn });
+                loadedUserData.displayName = newDn; loadedUserData.lastDisplayNameChange = now;
+                navName.innerText = newDn;
+                showSettingsMessage("Display name updated!", "success");
+                openSettingsModal();
+            } catch(e) { showSettingsMessage("Failed to update.", "error"); }
+        }
+
+        // Auth State Listener
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                loginBtn.classList.add('hidden');
+                userProfileMenu.classList.remove('hidden');
+                friendsBtn.classList.remove('hidden');
+                
+                if (user.email && user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
+                    adminPanel.classList.remove('hidden');
+                } else {
+                    adminPanel.classList.add('hidden');
+                }
+                
+                const userDoc = await getDoc(doc(db, "users", user.uid));
+                if (userDoc.exists()) {
+                    const userData = userDoc.data();
+                    loadedUserData = userData; // Store for friend username validation
+                    navAvatar.innerHTML = getAvatarHTML(userData.avatar);
+                    navName.innerText = userData.displayName || user.displayName || 'Player';
+                    navUsername.innerText = `@${userData.username || 'user'}`;
+                    updateNavLevelUI(userData);
+                } else {
+                    setupModal.classList.remove('hidden');
+                    document.querySelectorAll('.avatar-option')[1].classList.add('selected');
+                }
+            } else {
+                currentUser = null;
+                isAdminMode = false;
+                loadedUserData = null;
+                userProfileMenu.classList.add('hidden');
+                loginBtn.classList.remove('hidden');
+                adminPanel.classList.add('hidden');
+                friendsBtn.classList.add('hidden');
+            }
+        });
+
+
         function buildPool(type, len) {
             const pool = [];
             const used = new Set();
@@ -437,6 +1723,31 @@
 
             if (type === 'kanji') {
                 const basePool = KANJI_DATA[`N${currentNLevel}`] || KANJI_DATA.N5;
+                let failsafe = 0;
+                
+                while (pool.length < 50 && failsafe < 1000) {
+                    failsafe++;
+                    let hStr = "", rStr = "", hintStr = "";
+                    let currentLen = 0;
+                    
+                    while (currentLen < len) {
+                        const remaining = len - currentLen;
+                        const validWords = basePool.filter(w => w.h.length <= remaining);
+                        if (validWords.length === 0) break;
+                        
+                        const w = validWords[Math.floor(Math.random() * validWords.length)];
+                        hStr += w.h; rStr += w.r;
+                        hintStr += (hintStr ? " + " : "") + w.hint;
+                        currentLen += w.h.length;
+                    }
+                    
+                    if (currentLen === len && !used.has(hStr)) {
+                        pool.push({h: hStr, r: rStr, hint: hintStr});
+                        used.add(hStr);
+                    }
+                }
+                
+                if (pool.length > 0) return pool;
                 const filtered = basePool.filter(w => w.h.length === len);
                 if (filtered.length > 0) return filtered;
                 return basePool.sort((a,b) => Math.abs(a.h.length - len) - Math.abs(b.h.length - len)).slice(0, 10);
@@ -446,43 +1757,55 @@
                 const g = GRAMMAR[type];
                 let allSentences = [];
                 
-                // Add single words
-                allSentences.push(...g.subjects, ...g.objects, ...g.verbs_transitive, ...g.verbs_intransitive);
+                const allObjects = [...g.food, ...g.drinks, ...g.readable, ...g.items, ...g.places_doors];
+                const allTransitiveVerbs = [...g.verbs_food, ...g.verbs_drinks, ...g.verbs_readable, ...g.verbs_items, ...g.verbs_doors];
                 
-                // Add Subject + wa + Verb (Intransitive)
-                g.subjects.forEach(s => {
-                    g.verbs_intransitive.forEach(v => {
-                        allSentences.push({ h: s.h + g.p_wa.h + v.h, r: s.r + g.p_wa.r + v.r });
-                    });
-                });
+                allSentences.push(...g.subjects, ...allObjects, ...allTransitiveVerbs, ...g.verbs_intransitive);
+                
+                const categories = [
+                    {obj: g.food, v: g.verbs_food, adj: g.adj_food},
+                    {obj: g.drinks, v: g.verbs_drinks, adj: g.adj_food},
+                    {obj: g.readable, v: g.verbs_readable, adj: g.adj_general},
+                    {obj: g.items, v: g.verbs_items, adj: g.adj_general},
+                    {obj: g.places_doors, v: g.verbs_doors, adj: g.adj_general}
+                ];
 
-                // Add Subject + wa + Object + wo + Verb (Transitive)
-                g.subjects.forEach(s => {
-                    g.objects.forEach(o => {
-                        g.verbs_transitive.forEach(v => {
+                for (let i = 0; i < 2000; i++) {
+                    const s = g.subjects[Math.floor(Math.random() * g.subjects.length)];
+                    if (Math.random() < 0.2) {
+                        const v = g.verbs_intransitive[Math.floor(Math.random() * g.verbs_intransitive.length)];
+                        allSentences.push({ h: s.h + g.p_wa.h + v.h, r: s.r + g.p_wa.r + v.r });
+                    } else {
+                        const cat = categories[Math.floor(Math.random() * categories.length)];
+                        const o = cat.obj[Math.floor(Math.random() * cat.obj.length)];
+                        const v = cat.v[Math.floor(Math.random() * cat.v.length)];
+                        if (Math.random() < 0.5) {
+                            const adj = cat.adj[Math.floor(Math.random() * cat.adj.length)];
+                            allSentences.push({
+                                h: s.h + g.p_wa.h + adj.h + o.h + g.p_o.h + v.h,
+                                r: s.r + g.p_wa.r + adj.r + o.r + g.p_o.r + v.r
+                            });
+                        } else {
                             allSentences.push({
                                 h: s.h + g.p_wa.h + o.h + g.p_o.h + v.h,
                                 r: s.r + g.p_wa.r + o.r + g.p_o.r + v.r
                             });
-                        });
-                    });
-                });
-
-                // Get unique items
-                const uniqueMap = new Map(allSentences.map(item => [item.h, item]));
-                const uniqueSentences = Array.from(uniqueMap.values());
-
-                // Filter by exact length requested
-                let filtered = uniqueSentences.filter(w => w.h.length === len);
-                
-                // Fallback: If no exact length exists, find the closest available length
-                if (filtered.length === 0) {
-                    const sortedByClosest = uniqueSentences.sort((a,b) => Math.abs(a.h.length - len) - Math.abs(b.h.length - len));
-                    const closestLen = sortedByClosest[0].h.length;
-                    filtered = uniqueSentences.filter(w => w.h.length === closestLen);
+                        }
+                    }
                 }
 
-                // Shuffle and pick up to 50 items
+                const uniqueMap = new Map();
+                allSentences.forEach(item => uniqueMap.set(item.h, item));
+                const uniqueSentences = Array.from(uniqueMap.values());
+
+                let filtered = uniqueSentences.filter(w => w.h.length === len);
+                if (filtered.length < 30) {
+                    const wider = uniqueSentences.filter(w => Math.abs(w.h.length - len) <= 2);
+                    wider.forEach(item => { if (!filtered.some(f => f.h === item.h)) filtered.push(item); });
+                }
+                if (filtered.length < 30) {
+                    filtered = uniqueSentences.sort((a,b) => Math.abs(a.h.length - len) - Math.abs(b.h.length - len)).slice(0, 50);
+                }
                 return filtered.sort(() => Math.random() - 0.5).slice(0, 50);
             }
 
@@ -495,8 +1818,7 @@
                 let hStr = "", rStr = "";
                 for(let j=0; j<len; j++) {
                     const char = chars[Math.floor(Math.random() * chars.length)];
-                    hStr += char;
-                    rStr += charMap[char];
+                    hStr += char; rStr += charMap[char];
                 }
                 if (!used.has(hStr)) {
                     pool.push({h: hStr, r: rStr});
@@ -523,15 +1845,114 @@
             startScreen.classList.remove('hidden');
         }
 
+        async function fetchLeaderboard() {
+            try {
+                const querySnapshot = await getDocs(collection(db, "leaderboard"));
+                let fetchedScores = [];
+                querySnapshot.forEach((doc) => {
+                    fetchedScores.push({ ...doc.data(), id: doc.id });
+                });
+                fetchedScores.sort((a, b) => b.score - a.score);
+                globalLeaderboard = fetchedScores;
+            } catch (error) { console.error("Error fetching leaderboard: ", error); }
+        }
+
+        async function showLeaderboard() {
+            homeScreen.classList.add('hidden');
+            leaderboardScreen.classList.remove('hidden');
+            
+            leaderboardFullList.innerHTML = `<div class="text-center text-slate-400 py-10 text-sm font-medium">Loading scores...</div>`;
+            await fetchLeaderboard();
+            setLeaderboardTab(selectedCategory); 
+        }
+
+        function setLeaderboardTab(tab) {
+            activeLeaderboardTab = tab;
+            document.querySelectorAll('.lb-tab').forEach(btn => {
+                btn.classList.remove('bg-white', 'text-indigo-600', 'shadow-sm');
+                btn.classList.add('text-slate-500');
+            });
+            const activeBtn = document.getElementById(`tab-${tab}`);
+            if (activeBtn) {
+                activeBtn.classList.remove('text-slate-500');
+                activeBtn.classList.add('bg-white', 'text-indigo-600', 'shadow-sm');
+            }
+            updateLeaderboardUI();
+        }
+
+        function updateLeaderboardUI() {
+            const filteredLeaderboard = globalLeaderboard.filter(entry => entry.category === activeLeaderboardTab);
+
+            if (filteredLeaderboard.length === 0) {
+                leaderboardFullList.innerHTML = `<div class="text-center text-slate-400 py-10 text-sm font-medium bg-slate-50 rounded-2xl border border-slate-100 mt-4">No scores yet in this category. Be the first to rank up!</div>`;
+                return;
+            }
+            
+            leaderboardFullList.innerHTML = filteredLeaderboard.map((entry, i) => {
+                let rankDisplay = i + 1;
+                let rankClass = 'bg-slate-50 text-slate-400 text-sm border border-slate-200';
+                
+                if (i === 0) { rankDisplay = '🥇'; rankClass = 'bg-amber-100 text-amber-600 text-xl border-amber-200'; } 
+                else if (i === 1) { rankDisplay = '🥈'; rankClass = 'bg-slate-200 text-slate-600 text-xl border-slate-300'; } 
+                else if (i === 2) { rankDisplay = '🥉'; rankClass = 'bg-orange-100 text-orange-700 text-xl border-orange-200'; }
+
+                const isMe = currentUser && entry.userId === currentUser.uid;
+                const isOwnerEntry = (entry.email && entry.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) || 
+                                     (isMe && currentUser.email && currentUser.email.toLowerCase() === ADMIN_EMAIL.toLowerCase());
+                
+                let containerClass = 'bg-white p-4 rounded-2xl border border-slate-100 transition-transform transform hover:-translate-y-1 hover:shadow-md cursor-pointer';
+                if (i === 0) containerClass = 'bg-white p-4 rounded-2xl border border-amber-200 shadow-sm transition-transform transform hover:-translate-y-1 hover:shadow-md cursor-pointer';
+                if (isMe && !isOwnerEntry) containerClass = 'bg-indigo-50/30 p-4 rounded-2xl border border-indigo-300 transition-transform transform hover:-translate-y-1 hover:shadow-md cursor-pointer';
+                if (isOwnerEntry) containerClass = 'owner-bg p-4 rounded-2xl border-none shadow-sm transition-transform transform hover:-translate-y-1 hover:shadow-md cursor-pointer';
+
+                let adminControlsHtml = '';
+                if (isAdminMode && currentUser?.email && currentUser.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
+                    adminControlsHtml = `
+                        <button onclick="event.stopPropagation(); openAdminEditModal('${entry.id}', '${entry.userId}', ${entry.score}, ${entry.level || 1})" class="text-xs bg-indigo-100 hover:bg-indigo-200 text-indigo-700 px-2 py-1 rounded font-bold ml-2 transition-colors">Edit</button>
+                        <button onclick="event.stopPropagation(); deleteScore('${entry.id}')" class="text-xs bg-red-100 hover:bg-red-200 text-red-600 px-2 py-1 rounded font-bold ml-1 transition-colors">Del</button>
+                    `;
+                }
+
+                // Call viewProfile when clicking the whole card. Use event.stopPropagation() on buttons inside if needed.
+                return `
+                <div class="flex justify-between items-center ${containerClass} relative group" onclick="viewProfile('${entry.userId}')">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full flex-shrink-0 ${rankClass} flex items-center justify-center font-bold">
+                            ${rankDisplay}
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="text-2xl w-11 h-11 rounded-full border border-slate-200 flex items-center justify-center bg-slate-50 flex-shrink-0 ${isOwnerEntry ? 'owner-aura p-0 overflow-hidden' : 'overflow-hidden'}">
+                                ${getAvatarHTML(entry.avatar)}
+                            </div>
+                            <div>
+                                <div class="font-bold text-slate-700 flex items-center gap-1.5 flex-wrap group-hover:text-indigo-600 transition-colors">
+                                    <span class="${isOwnerEntry ? 'owner-badge px-1.5 py-0.5 rounded text-[10px] uppercase font-black tracking-widest' : ''}">${isOwnerEntry ? '[OWNER]' : ''}</span>
+                                    <span class="${isOwnerEntry ? 'font-extrabold text-slate-900' : ''}">${entry.displayName || 'Player'}</span>
+                                    <span class="text-[10px] bg-indigo-50 text-indigo-500 border border-indigo-100 px-1.5 py-0.5 rounded font-bold ml-1 tracking-wider">Lv.${entry.level || 1}</span>
+                                </div>
+                                <div class="text-[10px] text-slate-400 uppercase tracking-wider mt-0.5">${entry.mode} • ${entry.time}s • Len: ${entry.length}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-1">
+                        <div class="text-indigo-600 font-black text-xl ml-2 group-hover:scale-110 transition-transform">${entry.score}</div>
+                        ${adminControlsHtml}
+                    </div>
+                </div>
+                `;
+            }).join('');
+        }
+
         function showHome() {
             clearInterval(timerInterval);
             modeLabel.innerText = "Japanese Speed Test by Jinsun";
-            timerDisplay.classList.add('hidden'); // Ensure timer is hidden on home
+            timerDisplay.classList.add('hidden');
             
             startScreen.classList.add('hidden');
             quizScreen.classList.add('hidden');
             endScreen.classList.add('hidden');
             exitModal.classList.add('hidden');
+            leaderboardScreen.classList.add('hidden');
             homeScreen.classList.remove('hidden');
             isPaused = false;
         }
@@ -546,7 +1967,7 @@
             
             startScreen.classList.add('hidden');
             quizScreen.classList.remove('hidden');
-            timerDisplay.classList.remove('hidden'); // Show timer when game starts
+            timerDisplay.classList.remove('hidden'); 
             
             if (selectedCategory === 'kanji') {
                 levelBadge.innerText = `JLPT N${currentNLevel}`;
@@ -568,7 +1989,7 @@
                 if (!isPaused) {
                     timeLeft -= 0.1;
                     if (timeLeft <= 0) {
-                        timeLeft = 0; // Force zero
+                        timeLeft = 0;
                         updateTimer();
                         endGame();
                     }
@@ -590,9 +2011,8 @@
         function nextWord() {
             if (currentPool.length === 0) { endGame(); return; }
             let newWord;
-            do {
-                newWord = currentPool[Math.floor(Math.random() * currentPool.length)];
-            } while (newWord === currentWord && currentPool.length > 1);
+            do { newWord = currentPool[Math.floor(Math.random() * currentPool.length)]; } 
+            while (newWord === currentWord && currentPool.length > 1);
             
             currentWord = newWord;
             wordDisplay.innerText = currentWord.h;
@@ -602,33 +2022,112 @@
             } else {
                 hintDisplay.innerText = "";
             }
-            
             answerInput.value = '';
         }
 
         function updateScore() { scoreDisplay.innerText = score; }
 
-        function endGame() {
+        async function endGame() {
             clearInterval(timerInterval);
             quizScreen.classList.add('hidden');
-            timerDisplay.classList.add('hidden'); // Hide countdown timer
+            timerDisplay.classList.add('hidden');
             endScreen.classList.remove('hidden');
             
-            // Set end screen stats
-            finalScore.innerText = score;
+            const lengthPts = parseInt(lengthInput.value) || 1;
+            const timePts = 39 - (totalTime / 10) * 3; 
+            const finalScoreVal = score > 0 ? score + lengthPts + timePts : 0;
+            
+            endRawScore.innerText = score;
+            endLengthVal.innerText = lengthPts;
+            endLengthBonus.innerText = score > 0 ? `+${lengthPts}` : '+0';
+            endTimeVal.innerText = totalTime;
+            endTimeBonus.innerText = score > 0 ? `+${timePts}` : '+0';
+            finalScore.innerText = finalScoreVal;
+            
+            let modeName = selectedCategory === 'kanji' ? `Kanji N${currentNLevel}` : (selectedCategory === 'hiragana' ? 'Hiragana' : 'Katakana');
+            if (wordType === 'real' && selectedCategory !== 'kanji') modeName += ' (Vocab)';
             finalLevel.innerText = selectedCategory === 'kanji' ? `N${currentNLevel}` : (wordType === 'real' ? 'Vocab' : 'Random');
             finalDuration.innerText = `${totalTime}s`;
             
-            const wpm = (score / totalTime) * 60;
-            feedbackMsg.innerText = wpm > 30 ? "Amazing speed!" : "Great effort, keep practicing!";
+            let isHighScore = false;
+            const expNotif = document.getElementById('exp-notification');
+
+            if (!currentUser) {
+                guestLoginPrompt.classList.remove('hidden');
+                expNotif.classList.add('hidden');
+                feedbackMsg.innerText = score === 0 ? "You didn't type any words! No points awarded." : "Great effort! Log in to save it.";
+                feedbackMsg.className = "text-sm font-bold px-4 text-slate-500";
+                endEmoji.innerText = '🏆';
+                endTitle.innerText = "Time's Up!";
+                endTitle.className = "text-2xl font-extrabold text-slate-800";
+            } else {
+                guestLoginPrompt.classList.add('hidden');
+                
+                try {
+                    const userRef = doc(db, "users", currentUser.uid);
+                    const userDoc = await getDoc(userRef);
+                    const userData = userDoc.exists() ? userDoc.data() : { exp: 0, gamesPlayed: 0 };
+                    
+                    const earnedExp = finalScoreVal;
+                    userData.exp = (userData.exp || 0) + earnedExp;
+                    userData.gamesPlayed = (userData.gamesPlayed || 0) + 1;
+                    const levelInfo = calculateLevelInfo(userData.exp);
+                    
+                    if (earnedExp > 0) {
+                        expNotif.innerText = `+${earnedExp} EXP Gained!`;
+                        expNotif.classList.remove('hidden');
+                    } else { expNotif.classList.add('hidden'); }
+
+                    await setDoc(userRef, { exp: userData.exp, level: levelInfo.level, gamesPlayed: userData.gamesPlayed }, { merge: true });
+                    updateNavLevelUI({ exp: userData.exp });
+                    await updateLeaderboardProfile({ level: levelInfo.level });
+
+                    if (finalScoreVal > 0) {
+                        const scoreDocId = `${currentUser.uid}_${modeName.replace(/[^a-zA-Z0-9]/g, '')}`;
+                        const scoreRef = doc(db, "leaderboard", scoreDocId);
+                        const existingDoc = await getDoc(scoreRef);
+                        
+                        if (!existingDoc.exists() || finalScoreVal > existingDoc.data().score) {
+                            isHighScore = true;
+                            await setDoc(scoreRef, {
+                                userId: currentUser.uid,
+                                email: currentUser.email,
+                                displayName: userData.displayName || currentUser.displayName || 'Player',
+                                avatar: userData.avatar || '👤',
+                                level: levelInfo.level,
+                                score: finalScoreVal,
+                                mode: modeName,
+                                category: selectedCategory,
+                                time: totalTime,
+                                length: lengthPts,
+                                timestamp: new Date().toISOString()
+                            });
+                        }
+                    }
+                } catch (error) { console.error("Error saving data:", error); }
+                
+                if (isHighScore && score > 0) {
+                    endEmoji.innerText = '👑';
+                    endTitle.innerText = "New High Score!";
+                    endTitle.className = "text-2xl font-extrabold text-amber-500";
+                    feedbackMsg.innerText = "Your score was saved to the leaderboard!";
+                    feedbackMsg.className = "text-sm font-bold px-4 text-amber-500";
+                } else {
+                    endEmoji.innerText = '🏆';
+                    endTitle.innerText = "Time's Up!";
+                    endTitle.className = "text-2xl font-extrabold text-slate-800";
+                    const wpm = (score / totalTime) * 60;
+                    feedbackMsg.innerText = score === 0 ? "You didn't type any words! No points awarded." : 
+                                            (wpm > 30 ? "Amazing speed!" : "Great effort, keep practicing!");
+                    feedbackMsg.className = "text-sm font-bold px-4 text-slate-500";
+                }
+            }
         }
 
         answerInput.addEventListener('input', (e) => {
             if (isPaused) return;
             if (e.target.value.toLowerCase().trim() === currentWord.r) {
-                score++;
-                updateScore();
-                nextWord();
+                score++; updateScore(); nextWord();
             }
         });
 
@@ -640,6 +2139,21 @@
                 }
             }
         });
+
+        window.setNLevel = setNLevel; window.setWordType = setWordType; window.selectMode = selectMode; 
+        window.showLeaderboard = showLeaderboard; window.setLeaderboardTab = setLeaderboardTab; window.showHome = showHome;
+        window.startGame = startGame; window.promptExit = promptExit; window.cancelExit = cancelExit; window.confirmExit = confirmExit;
+        window.openAuthModal = openAuthModal; window.closeAuthModal = closeAuthModal; window.handleEmailLogin = handleEmailLogin; 
+        window.handleEmailSignUp = handleEmailSignUp; window.handleGoogleLogin = handleGoogleLogin; window.logout = logout;
+        window.selectAvatar = selectAvatar; window.saveSetupProfile = saveSetupProfile; window.openSettingsModal = openSettingsModal; 
+        window.closeSettingsModal = closeSettingsModal; window.saveNewUsername = saveNewUsername; window.saveNewDisplayName = saveNewDisplayName;
+        window.triggerCustomAvatarUpload = triggerCustomAvatarUpload; window.closeCropper = closeCropper; window.saveCroppedImage = saveCroppedImage; 
+        window.toggleAdminMode = toggleAdminMode; window.deleteScore = deleteScore; window.openProfileModal = openProfileModal;
+        window.closeProfileModal = closeProfileModal; window.saveBio = saveBio; window.openAdminEditModal = openAdminEditModal; 
+        window.closeAdminEditModal = closeAdminEditModal; window.saveAdminEdit = saveAdminEdit; window.openAdminAddModal = openAdminAddModal;
+        window.closeAdminAddModal = closeAdminAddModal; window.saveAdminAdd = saveAdminAdd; window.viewProfile = viewProfile;
+        window.openFriendsModal = openFriendsModal; window.closeFriendsModal = closeFriendsModal; window.searchAndAddFriend = searchAndAddFriend;
+        window.toggleFriend = toggleFriend;
     </script>
 </body>
 </html>
