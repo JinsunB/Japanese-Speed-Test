@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hiragana Flash Quiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Sans+JP:wght@700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+
+        .japanese-text {
+            font-family: 'Noto Sans JP', sans-serif;
+        }
+
+        .shake {
+            animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+        }
+
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+
+        .progress-bar {
+            transition: width 0.1s linear;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <div id="game-container" class="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-md border border-slate-100">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-8">
+            <div class="text-slate-500 font-semibold uppercase tracking-wider text-xs">Hiragana Blitz</div>
+            <div id="timer-display" class="text-xl font-bold text-indigo-600 tabular-nums">00:30</div>
+        </div>
+
+        <!-- Start Screen -->
+        <div id="start-screen" class="text-center space-y-6">
+            <div class="space-y-2">
+                <h1 class="text-3xl font-extrabold text-slate-800">Ready?</h1>
+                <p class="text-slate-500">Type the Romaji as fast as you can.</p>
+            </div>
+            
+            <div class="flex flex-col gap-3">
+                <button onclick="startGame('easy')" class="w-full py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl font-bold transition-all transform hover:scale-[1.02] active:scale-95 shadow-lg shadow-indigo-200">
+                    Easy (Short Words)
+                </button>
+                <button onclick="startGame('hard')" class="w-full py-4 bg-white border-2 border-slate-200 hover:border-indigo-600 hover:text-indigo-600 text-slate-700 rounded-2xl font-bold transition-all">
+                    Hard (Longer Words)
+                </button>
+            </div>
+        </div>
+
+        <!-- Quiz Screen (Hidden by default) -->
+        <div id="quiz-screen" class="hidden text-center space-y-8">
+            <div class="relative h-2 w-full bg-slate-100 rounded-full overflow-hidden">
+                <div id="timer-bar" class="progress-bar absolute top-0 left-0 h-full bg-indigo-500 w-full"></div>
+            </div>
+
+            <div id="word-display" class="japanese-text text-7xl font-bold text-slate-900 py-4 select-none">
+                <!-- Word goes here -->
+            </div>
+
+            <div class="space-y-4">
+                <input 
+                    type="text" 
+                    id="answer-input" 
+                    autocomplete="off" 
+                    spellcheck="false"
+                    autofocus
+                    placeholder="Type romaji..."
+                    class="w-full text-center text-2xl py-4 bg-slate-50 border-2 border-slate-200 rounded-2xl focus:border-indigo-500 focus:ring-0 outline-none transition-all placeholder:text-slate-300"
+                >
+                <div class="flex justify-center items-center gap-2">
+                    <span class="text-sm font-medium text-slate-400">Score:</span>
+                    <span id="score-display" class="text-xl font-bold text-slate-800">0</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- End Screen (Hidden by default) -->
+        <div id="end-screen" class="hidden text-center space-y-6">
+            <div class="py-4">
+                <div class="text-5xl mb-2">🏆</div>
+                <h2 class="text-2xl font-extrabold text-slate-800">Time's Up!</h2>
+                <div class="mt-4 inline-block px-6 py-2 bg-indigo-50 text-indigo-700 rounded-full font-bold">
+                    Score: <span id="final-score">0</span>
+                </div>
+            </div>
+
+            <div class="text-sm text-slate-500 italic" id="feedback-msg"></div>
+
+            <button onclick="resetGame()" class="w-full py-4 bg-slate-800 hover:bg-slate-900 text-white rounded-2xl font-bold transition-all transform hover:scale-[1.02]">
+                Try Again
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const words = {
+            easy: [
+                {h: 'ねこ', r: 'neko'}, {h: 'いぬ', r: 'inu'}, {h: 'とり', r: 'tori'},
+                {h: 'すし', r: 'sushi'}, {h: 'あめ', r: 'ame'}, {h: 'うみ', r: 'umi'},
+                {h: 'はな', r: 'hana'}, {h: 'つき', r: 'tsuki'}, {h: 'ゆき', r: 'yuki'},
+                {h: 'やま', r: 'yama'}, {h: 'かさ', r: 'kasa'}, {h: 'さけ', r: 'sake'},
+                {h: 'もり', r: 'mori'}, {h: 'みず', r: 'mizu'}, {h: 'そら', r: 'sora'}
+            ],
+            hard: [
+                {h: 'たべもの', r: 'tabemono'}, {h: 'のみもの', r: 'nomimono'},
+                {h: 'ありがとう', r: 'arigatou'}, {h: 'こんにちは', r: 'konnichiwa'},
+                {h: 'さようなら', r: 'sayounara'}, {h: 'おやすみ', r: 'oyasumi'},
+                {h: 'くるま', r: 'kuruma'}, {h: 'がっこう', r: 'gakkou'},
+                {h: 'せんせい', r: 'sensei'}, {h: 'ともだち', r: 'tomodachi'},
+                {h: 'まんが', r: 'manga'}, {h: 'てんぷら', r: 'tempura'},
+                {h: 'ひらがな', r: 'hiragana'}, {h: 'にほんご', r: 'nihongo'}
+            ]
+        };
+
+        let currentMode = 'easy';
+        let score = 0;
+        let timeLeft = 30;
+        let timerInterval = null;
+        let currentWord = null;
+
+        const startScreen = document.getElementById('start-screen');
+        const quizScreen = document.getElementById('quiz-screen');
+        const endScreen = document.getElementById('end-screen');
+        const wordDisplay = document.getElementById('word-display');
+        const answerInput = document.getElementById('answer-input');
+        const scoreDisplay = document.getElementById('score-display');
+        const timerDisplay = document.getElementById('timer-display');
+        const timerBar = document.getElementById('timer-bar');
+        const finalScore = document.getElementById('final-score');
+        const feedbackMsg = document.getElementById('feedback-msg');
+
+        function startGame(mode) {
+            currentMode = mode;
+            score = 0;
+            timeLeft = 30;
+            
+            startScreen.classList.add('hidden');
+            quizScreen.classList.remove('hidden');
+            endScreen.classList.add('hidden');
+            
+            updateScore();
+            nextWord();
+            
+            answerInput.focus();
+            
+            timerInterval = setInterval(() => {
+                timeLeft -= 0.1;
+                if (timeLeft <= 0) {
+                    endGame();
+                } else {
+                    updateTimer();
+                }
+            }, 100);
+        }
+
+        function updateTimer() {
+            const displayTime = Math.max(0, Math.ceil(timeLeft));
+            timerDisplay.innerText = `00:${displayTime.toString().padStart(2, '0')}`;
+            const percentage = (timeLeft / 30) * 100;
+            timerBar.style.width = `${percentage}%`;
+        }
+
+        function nextWord() {
+            const list = words[currentMode];
+            let newWord;
+            do {
+                newWord = list[Math.floor(Math.random() * list.length)];
+            } while (newWord === currentWord);
+            
+            currentWord = newWord;
+            wordDisplay.innerText = currentWord.h;
+            answerInput.value = '';
+        }
+
+        function updateScore() {
+            scoreDisplay.innerText = score;
+        }
+
+        function endGame() {
+            clearInterval(timerInterval);
+            quizScreen.classList.add('hidden');
+            endScreen.classList.remove('hidden');
+            finalScore.innerText = score;
+
+            if (score > 15) {
+                feedbackMsg.innerText = "Speed Demon! You're basically a native speaker now.";
+            } else if (score > 8) {
+                feedbackMsg.innerText = "Not bad at all. Keep pushing that speed!";
+            } else {
+                feedbackMsg.innerText = "Keep practicing! Slow is smooth, smooth is fast.";
+            }
+        }
+
+        function resetGame() {
+            endScreen.classList.add('hidden');
+            startScreen.classList.remove('hidden');
+            timerBar.style.width = '100%';
+            timerDisplay.innerText = '00:30';
+        }
+
+        answerInput.addEventListener('input', (e) => {
+            const val = e.target.value.toLowerCase().trim();
+            if (val === currentWord.r) {
+                score++;
+                updateScore();
+                nextWord();
+            }
+        });
+
+        // Trigger shake if they press enter and it's wrong
+        answerInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                const val = answerInput.value.toLowerCase().trim();
+                if (val !== currentWord.r) {
+                    answerInput.classList.add('shake');
+                    setTimeout(() => answerInput.classList.remove('shake'), 400);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
