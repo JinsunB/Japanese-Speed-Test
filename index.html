@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Japanese Speed Test</title>
+    <title>Japanese Speed Quiz - JLPT Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Sans+JP:wght@700&display=swap');
@@ -45,6 +45,15 @@
             transition: all 0.2s ease;
         }
         .n-level-btn.active {
+            background-color: #4f46e5;
+            color: white;
+            border-color: #4f46e5;
+        }
+
+        .word-type-btn {
+            transition: all 0.2s ease;
+        }
+        .word-type-btn.active {
             background-color: #4f46e5;
             color: white;
             border-color: #4f46e5;
@@ -123,7 +132,7 @@
 
             <div class="space-y-4">
                 <!-- JLPT N-Level Toggle -->
-                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 space-y-3">
+                <div id="n-level-section" class="bg-slate-50 p-4 rounded-2xl border border-slate-100 space-y-3 hidden">
                     <label class="block text-xs font-bold text-slate-400 uppercase tracking-wide">Difficulty Level (JLPT)</label>
                     <div class="grid grid-cols-5 gap-2">
                         <button onclick="setNLevel(5)" id="n5-btn" class="n-level-btn py-2 text-sm font-bold border-2 border-slate-200 rounded-xl bg-white text-slate-500 active">N5</button>
@@ -131,6 +140,15 @@
                         <button onclick="setNLevel(3)" id="n3-btn" class="n-level-btn py-2 text-sm font-bold border-2 border-slate-200 rounded-xl bg-white text-slate-500">N3</button>
                         <button onclick="setNLevel(2)" id="n2-btn" class="n-level-btn py-2 text-sm font-bold border-2 border-slate-200 rounded-xl bg-white text-slate-500">N2</button>
                         <button onclick="setNLevel(1)" id="n1-btn" class="n-level-btn py-2 text-sm font-bold border-2 border-slate-200 rounded-xl bg-white text-slate-500">N1</button>
+                    </div>
+                </div>
+
+                <!-- Word Type Toggle -->
+                <div id="word-type-section" class="bg-slate-50 p-4 rounded-2xl border border-slate-100 space-y-3">
+                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wide">Word Type</label>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button onclick="setWordType('random')" id="type-random-btn" class="word-type-btn py-2 text-sm font-bold border-2 border-slate-200 rounded-xl bg-white text-slate-500 active">Random</button>
+                        <button onclick="setWordType('real')" id="type-real-btn" class="word-type-btn py-2 text-sm font-bold border-2 border-slate-200 rounded-xl bg-white text-slate-500">Real Words</button>
                     </div>
                 </div>
 
@@ -305,8 +323,58 @@
             ]
         };
 
+        const GRAMMAR = {
+            hiragana: {
+                subjects: [
+                    {h: 'いぬ', r: 'inu'}, {h: 'ねこ', r: 'neko'}, {h: 'わたし', r: 'watashi'},
+                    {h: 'あなた', r: 'anata'}, {h: 'せんせい', r: 'sensei'}, {h: 'おとこのこ', r: 'otokonoko'},
+                    {h: 'おんなのこ', r: 'onnanoko'}, {h: 'ともだち', r: 'tomodachi'}
+                ],
+                objects: [
+                    {h: 'すし', r: 'sushi'}, {h: 'みず', r: 'mizu'}, {h: 'ほん', r: 'hon'},
+                    {h: 'てがみ', r: 'tegami'}, {h: 'くるま', r: 'kuruma'}, {h: 'たべもの', r: 'tabemono'},
+                    {h: 'のみもの', r: 'nomimono'}, {h: 'じてんしゃ', r: 'jitensha'}
+                ],
+                verbs_transitive: [
+                    {h: 'かう', r: 'kau'}, {h: 'みる', r: 'miru'}, {h: 'よむ', r: 'yomu'},
+                    {h: 'のむ', r: 'nomu'}, {h: 'たべる', r: 'taberu'}, {h: 'なおす', r: 'naosu'},
+                    {h: 'つくる', r: 'tsukuru'}, {h: 'あらう', r: 'arau'}
+                ],
+                verbs_intransitive: [
+                    {h: 'ねる', r: 'neru'}, {h: 'なく', r: 'naku'}, {h: 'おきる', r: 'okiru'},
+                    {h: 'はしる', r: 'hashiru'}, {h: 'あるく', r: 'aruku'}, {h: 'あそぶ', r: 'asobu'}
+                ],
+                p_wa: {h: 'は', r: 'ha'},
+                p_o: {h: 'を', r: 'wo'}
+            },
+            katakana: {
+                subjects: [
+                    {h: 'イヌ', r: 'inu'}, {h: 'ネコ', r: 'neko'}, {h: 'ワタシ', r: 'watashi'},
+                    {h: 'アナタ', r: 'anata'}, {h: 'センセイ', r: 'sensei'}, {h: 'オトコノコ', r: 'otokonoko'},
+                    {h: 'オンナノコ', r: 'onnanoko'}, {h: 'トモダチ', r: 'tomodachi'}
+                ],
+                objects: [
+                    {h: 'スシ', r: 'sushi'}, {h: 'ミズ', r: 'mizu'}, {h: 'ホン', r: 'hon'},
+                    {h: 'テガミ', r: 'tegami'}, {h: 'クルマ', r: 'kuruma'}, {h: 'タベモノ', r: 'tabemono'},
+                    {h: 'ノミモノ', r: 'nomimono'}, {h: 'ジテンシャ', r: 'jitensha'}
+                ],
+                verbs_transitive: [
+                    {h: 'カウ', r: 'kau'}, {h: 'ミル', r: 'miru'}, {h: 'ヨム', r: 'yomu'},
+                    {h: 'ノム', r: 'nomu'}, {h: 'タベル', r: 'taberu'}, {h: 'ナオス', r: 'naosu'},
+                    {h: 'ツクル', r: 'tsukuru'}, {h: 'アラウ', r: 'arau'}
+                ],
+                verbs_intransitive: [
+                    {h: 'ネル', r: 'neru'}, {h: 'ナク', r: 'naku'}, {h: 'オキル', r: 'okiru'},
+                    {h: 'ハシル', r: 'hashiru'}, {h: 'アルク', r: 'aruku'}, {h: 'アソブ', r: 'asobu'}
+                ],
+                p_wa: {h: 'ハ', r: 'ha'},
+                p_o: {h: 'ヲ', r: 'wo'}
+            }
+        };
+
         let currentNLevel = 5;
         let selectedCategory = 'hiragana';
+        let wordType = 'random';
         let score = 0;
         let totalTime = 30;
         let timeLeft = 30;
@@ -342,6 +410,12 @@
             document.getElementById(`n${level}-btn`).classList.add('active');
         }
 
+        function setWordType(type) {
+            wordType = type;
+            document.querySelectorAll('.word-type-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`type-${type}-btn`).classList.add('active');
+        }
+
         timeSlider.addEventListener('input', (e) => {
             totalTime = parseInt(e.target.value);
             timeValDisplay.innerText = totalTime;
@@ -368,6 +442,50 @@
                 return basePool.sort((a,b) => Math.abs(a.h.length - len) - Math.abs(b.h.length - len)).slice(0, 10);
             }
 
+            if (wordType === 'real' && type !== 'kanji') {
+                const g = GRAMMAR[type];
+                let allSentences = [];
+                
+                // Add single words
+                allSentences.push(...g.subjects, ...g.objects, ...g.verbs_transitive, ...g.verbs_intransitive);
+                
+                // Add Subject + wa + Verb (Intransitive)
+                g.subjects.forEach(s => {
+                    g.verbs_intransitive.forEach(v => {
+                        allSentences.push({ h: s.h + g.p_wa.h + v.h, r: s.r + g.p_wa.r + v.r });
+                    });
+                });
+
+                // Add Subject + wa + Object + wo + Verb (Transitive)
+                g.subjects.forEach(s => {
+                    g.objects.forEach(o => {
+                        g.verbs_transitive.forEach(v => {
+                            allSentences.push({
+                                h: s.h + g.p_wa.h + o.h + g.p_o.h + v.h,
+                                r: s.r + g.p_wa.r + o.r + g.p_o.r + v.r
+                            });
+                        });
+                    });
+                });
+
+                // Get unique items
+                const uniqueMap = new Map(allSentences.map(item => [item.h, item]));
+                const uniqueSentences = Array.from(uniqueMap.values());
+
+                // Filter by exact length requested
+                let filtered = uniqueSentences.filter(w => w.h.length === len);
+                
+                // Fallback: If no exact length exists, find the closest available length
+                if (filtered.length === 0) {
+                    const sortedByClosest = uniqueSentences.sort((a,b) => Math.abs(a.h.length - len) - Math.abs(b.h.length - len));
+                    const closestLen = sortedByClosest[0].h.length;
+                    filtered = uniqueSentences.filter(w => w.h.length === closestLen);
+                }
+
+                // Shuffle and pick up to 50 items
+                return filtered.sort(() => Math.random() - 0.5).slice(0, 50);
+            }
+
             if (len === 1) {
                 for (const char of chars) pool.push({ h: char, r: charMap[char] });
                 return pool;
@@ -392,6 +510,15 @@
             selectedCategory = category;
             const labels = {hiragana: 'Hiragana Blitz', katakana: 'Katakana Blitz', kanji: 'Kanji Blitz'};
             modeLabel.innerText = labels[category];
+            
+            if (category === 'kanji') {
+                document.getElementById('n-level-section').classList.remove('hidden');
+                document.getElementById('word-type-section').classList.add('hidden');
+            } else {
+                document.getElementById('n-level-section').classList.add('hidden');
+                document.getElementById('word-type-section').classList.remove('hidden');
+            }
+
             homeScreen.classList.add('hidden');
             startScreen.classList.remove('hidden');
         }
@@ -420,7 +547,16 @@
             startScreen.classList.add('hidden');
             quizScreen.classList.remove('hidden');
             timerDisplay.classList.remove('hidden'); // Show timer when game starts
-            levelBadge.innerText = `JLPT N${currentNLevel}`;
+            
+            if (selectedCategory === 'kanji') {
+                levelBadge.innerText = `JLPT N${currentNLevel}`;
+                levelBadge.classList.remove('hidden');
+            } else if (wordType === 'real') {
+                levelBadge.innerText = `Vocabulary`;
+                levelBadge.classList.remove('hidden');
+            } else {
+                levelBadge.classList.add('hidden');
+            }
             
             updateScore();
             nextWord();
@@ -460,7 +596,13 @@
             
             currentWord = newWord;
             wordDisplay.innerText = currentWord.h;
-            hintDisplay.innerText = currentWord.hint ? `"${currentWord.hint}"` : "";
+            
+            if (selectedCategory === 'kanji' && currentWord.hint) {
+                hintDisplay.innerText = `"${currentWord.hint}"`;
+            } else {
+                hintDisplay.innerText = "";
+            }
+            
             answerInput.value = '';
         }
 
@@ -474,7 +616,7 @@
             
             // Set end screen stats
             finalScore.innerText = score;
-            finalLevel.innerText = `N${currentNLevel}`;
+            finalLevel.innerText = selectedCategory === 'kanji' ? `N${currentNLevel}` : (wordType === 'real' ? 'Vocab' : 'Random');
             finalDuration.innerText = `${totalTime}s`;
             
             const wpm = (score / totalTime) * 60;
