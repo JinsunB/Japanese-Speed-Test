@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Japanese Speed Test</title>
+    <title>Japanese Speed Quiz - JLPT Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Sans+JP:wght@700&display=swap');
@@ -19,10 +19,10 @@
         }
 
         /* Beautiful Scrollbar Polish */
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; border: 2px solid transparent; background-clip: padding-box; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; border: 2px solid transparent; background-clip: padding-box; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
         .shake {
             animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
@@ -145,55 +145,55 @@
         html.dark ::-webkit-scrollbar-thumb:hover { background: #64748b; }
     </style>
 </head>
-<body class="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-x-hidden">
+<body class="min-h-screen flex flex-col items-center justify-center p-4 pt-20 sm:pt-4 relative overflow-x-hidden">
 
     <!-- Top Left Controls (Friends & Admin) -->
-    <div class="absolute top-4 left-4 z-50 flex flex-col gap-2 items-start">
-        <button id="friends-btn" onclick="openFriendsModal()" class="hidden px-4 py-2 bg-white text-indigo-600 font-bold rounded-xl shadow-sm border border-slate-200 hover:border-indigo-300 hover:shadow-md transition-all flex items-center gap-2 active:scale-95">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
+    <div class="absolute top-4 left-4 z-50 flex flex-col gap-2 items-start max-w-[45vw]">
+        <button id="friends-btn" onclick="openFriendsModal()" class="hidden px-3 sm:px-4 py-2 bg-white text-indigo-600 font-bold rounded-xl shadow-sm border border-slate-200 hover:border-indigo-300 hover:shadow-md transition-all flex items-center gap-1.5 sm:gap-2 active:scale-95 text-xs sm:text-base">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 sm:w-5 sm:h-5">
               <path d="M4.5 6.375a4.125 4.125 0 1 1 8.25 0 4.125 4.125 0 0 1-8.25 0ZM14.25 8.625a3.375 3.375 0 1 1 6.75 0 3.375 3.375 0 0 1-6.75 0ZM1.5 19.125a7.125 7.125 0 0 1 14.25 0v.003l-.001.119a.75.75 0 0 1-.363.63 13.067 13.067 0 0 1-6.761 1.873c-2.472 0-4.786-.684-6.76-1.873a.75.75 0 0 1-.364-.63l-.001-.122ZM17.25 19.128l-.001.144a2.25 2.25 0 0 1-.233.96 10.088 10.088 0 0 0 5.06-1.01.75.75 0 0 0 .42-.643 4.875 4.875 0 0 0-6.957-4.611 8.586 8.586 0 0 1 1.71 5.157v.003Z" />
             </svg>
-            Friends
+            <span class="hidden sm:inline">Friends</span>
         </button>
 
         <!-- Admin Toggle (Hidden by Default) -->
-        <div id="admin-panel" class="hidden flex flex-col gap-2">
-            <div class="flex items-center gap-2 bg-slate-900 border border-slate-700 px-3 py-1.5 rounded-full shadow-lg transition-all">
-                <span class="text-xs font-bold text-slate-300">Admin UI</span>
+        <div id="admin-panel" class="hidden flex flex-col gap-2 w-full">
+            <div class="flex items-center justify-between gap-2 bg-slate-900 border border-slate-700 px-3 py-1.5 rounded-full shadow-lg transition-all w-max">
+                <span class="text-[10px] sm:text-xs font-bold text-slate-300">Admin</span>
                 <label class="relative inline-flex items-center cursor-pointer">
                     <input type="checkbox" id="admin-toggle" class="sr-only peer" onchange="toggleAdminMode()">
-                    <div class="w-7 h-4 bg-slate-600 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-emerald-500"></div>
+                    <div class="w-6 sm:w-7 h-3.5 sm:h-4 bg-slate-600 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-2.5 sm:after:h-3 after:w-2.5 sm:after:w-3 after:transition-all peer-checked:bg-emerald-500"></div>
                 </label>
             </div>
-            <button id="admin-add-btn" onclick="openAdminAddModal()" class="hidden w-full text-xs bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-1.5 px-3 rounded-full shadow-lg transition-all text-center border border-indigo-500 active:scale-95">
+            <button id="admin-add-btn" onclick="openAdminAddModal()" class="hidden w-full text-[10px] sm:text-xs bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-1.5 px-2 sm:px-3 rounded-full shadow-lg transition-all text-center border border-indigo-500 active:scale-95">
                 + Add Score
             </button>
-            <button id="admin-badge-btn" onclick="openAdminBadgesModal()" class="hidden w-full text-xs bg-purple-600 hover:bg-purple-700 text-white font-bold py-1.5 px-3 rounded-full shadow-lg transition-all text-center border border-purple-500 active:scale-95">
+            <button id="admin-badge-btn" onclick="openAdminBadgesModal()" class="hidden w-full text-[10px] sm:text-xs bg-purple-600 hover:bg-purple-700 text-white font-bold py-1.5 px-2 sm:px-3 rounded-full shadow-lg transition-all text-center border border-purple-500 active:scale-95">
                 Customize Badges
             </button>
-            <button id="admin-dev-btn" onclick="openAdminDevModal()" class="hidden w-full text-xs bg-blue-600 hover:bg-blue-700 text-white font-bold py-1.5 px-3 rounded-full shadow-lg transition-all text-center border border-blue-500 active:scale-95">
-                Manage Developers
+            <button id="admin-dev-btn" onclick="openAdminDevModal()" class="hidden w-full text-[10px] sm:text-xs bg-blue-600 hover:bg-blue-700 text-white font-bold py-1.5 px-2 sm:px-3 rounded-full shadow-lg transition-all text-center border border-blue-500 active:scale-95">
+                Manage Devs
             </button>
-            <button id="admin-delete-user-btn" onclick="openAdminDeleteUserModal()" class="hidden w-full text-xs bg-red-600 hover:bg-red-700 text-white font-bold py-1.5 px-3 rounded-full shadow-lg transition-all text-center border border-red-500 active:scale-95">
-                Delete User Data
+            <button id="admin-delete-user-btn" onclick="openAdminDeleteUserModal()" class="hidden w-full text-[10px] sm:text-xs bg-red-600 hover:bg-red-700 text-white font-bold py-1.5 px-2 sm:px-3 rounded-full shadow-lg transition-all text-center border border-red-500 active:scale-95">
+                Delete User
             </button>
         </div>
     </div>
 
     <!-- Top Right Auth Section -->
-    <div class="absolute top-4 right-4 z-50 flex items-center gap-2">
+    <div class="absolute top-4 right-4 z-50 flex items-center gap-2 max-w-[50vw] justify-end">
         
         <!-- Notifications Bell -->
-        <div id="notif-btn" class="hidden relative flex items-center justify-center cursor-pointer p-2 rounded-full hover:bg-slate-200 transition-colors active:scale-95" onclick="openNotificationsModal()">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 text-slate-500">
+        <div id="notif-btn" class="hidden relative flex items-center justify-center cursor-pointer p-1.5 sm:p-2 rounded-full hover:bg-slate-200 transition-colors active:scale-95" onclick="openNotificationsModal()">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 sm:w-6 sm:h-6 text-slate-500">
                 <path fill-rule="evenodd" d="M5.25 9a6.75 6.75 0 0 1 13.5 0v.75c0 2.123.8 4.057 2.118 5.52a.75.75 0 0 1-.297 1.206c-1.544.57-3.16.99-4.831 1.243a3.75 3.75 0 1 1-7.48 0 24.585 24.585 0 0 1-4.831-1.244.75.75 0 0 1-.298-1.205A8.217 8.217 0 0 0 5.25 9.75V9Zm4.502 8.9a2.25 2.25 0 1 0 4.496 0 25.057 25.057 0 0 1-4.496 0Z" clip-rule="evenodd" />
             </svg>
-            <div id="notif-badge" class="hidden absolute top-1 right-1 w-4 h-4 bg-red-500 rounded-full border-2 border-white flex items-center justify-center text-[8px] font-black text-white">0</div>
+            <div id="notif-badge" class="hidden absolute top-0.5 right-0.5 sm:top-1 sm:right-1 w-3.5 h-3.5 sm:w-4 sm:h-4 bg-red-500 rounded-full border-2 border-white flex items-center justify-center text-[7px] sm:text-[8px] font-black text-white dark:border-slate-800">0</div>
         </div>
 
         <!-- Logged Out View -->
-        <button id="login-btn" onclick="openAuthModal()" class="px-4 py-2 bg-white text-indigo-600 font-bold rounded-xl shadow-sm border border-slate-200 hover:border-indigo-300 hover:shadow-md transition-all flex items-center gap-2 active:scale-95">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
+        <button id="login-btn" onclick="openAuthModal()" class="px-3 sm:px-4 py-2 bg-white text-indigo-600 font-bold rounded-xl shadow-sm border border-slate-200 hover:border-indigo-300 hover:shadow-md transition-all flex items-center gap-1.5 sm:gap-2 active:scale-95 text-xs sm:text-base">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 sm:w-5 sm:h-5">
                 <path fill-rule="evenodd" d="M7.5 3.75A1.5 1.5 0 0 0 6 5.25v13.5a1.5 1.5 0 0 0 1.5 1.5h6a1.5 1.5 0 0 0 1.5-1.5V15a.75.75 0 0 1 1.5 0v3.75a3 3 0 0 1-3 3h-6a3 3 0 0 1-3-3V5.25a3 3 0 0 1 3-3h6a3 3 0 0 1 3 3V9A.75.75 0 0 1 15 9V5.25a1.5 1.5 0 0 0-1.5-1.5h-6Zm10.72 4.72a.75.75 0 0 1 1.06 0l3 3a.75.75 0 0 1 0 1.06l-3 3a.75.75 0 1 1-1.06-1.06l1.72-1.72H9a.75.75 0 0 1 0-1.5h10.94l-1.72-1.72a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
             </svg>
             Login
@@ -201,17 +201,17 @@
 
         <!-- Logged In View -->
         <div id="user-profile-menu" class="hidden relative group">
-            <button class="flex items-center gap-3 p-1.5 bg-white rounded-full shadow-sm border border-slate-200 hover:border-indigo-300 hover:shadow-md transition-all active:scale-95">
-                <div id="nav-avatar" class="w-8 h-8 rounded-full bg-indigo-50 border border-slate-200 flex items-center justify-center text-xl overflow-hidden relative">👤</div>
-                <span id="nav-name" class="font-bold text-slate-700 pr-3 text-sm">User</span>
+            <button class="flex items-center gap-2 sm:gap-3 p-1 sm:p-1.5 bg-white rounded-full shadow-sm border border-slate-200 hover:border-indigo-300 hover:shadow-md transition-all active:scale-95 max-w-[150px] sm:max-w-xs">
+                <div id="nav-avatar" class="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-indigo-50 border border-slate-200 flex items-center justify-center text-sm sm:text-xl overflow-hidden relative flex-shrink-0">👤</div>
+                <span id="nav-name" class="font-bold text-slate-700 pr-2 sm:pr-3 text-xs sm:text-sm truncate">User</span>
             </button>
-            <div class="absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-xl border border-slate-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 overflow-hidden origin-top-right">
-                <div class="p-4 border-b border-slate-50 bg-slate-50 space-y-2">
-                    <div id="nav-username" class="text-xs font-bold text-slate-400 truncate">@username</div>
+            <div class="absolute right-0 mt-2 w-48 sm:w-56 bg-white rounded-2xl shadow-xl border border-slate-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 overflow-hidden origin-top-right">
+                <div class="p-3 sm:p-4 border-b border-slate-50 bg-slate-50 space-y-2">
+                    <div id="nav-username" class="text-[10px] sm:text-xs font-bold text-slate-400 truncate">@username</div>
                     <!-- EXP Bar inside Nav -->
                     <div class="space-y-1">
-                        <div class="flex justify-between items-end text-[10px] font-bold text-indigo-600">
-                            <span id="nav-level-text" class="text-xs bg-indigo-100 px-1.5 rounded">Lv. 1</span>
+                        <div class="flex justify-between items-end text-[9px] sm:text-[10px] font-bold text-indigo-600">
+                            <span id="nav-level-text" class="text-[9px] sm:text-xs bg-indigo-100 px-1.5 rounded">Lv. 1</span>
                             <span id="nav-exp-text" class="text-slate-400">0 / 100 XP</span>
                         </div>
                         <div class="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden">
@@ -219,20 +219,20 @@
                         </div>
                     </div>
                 </div>
-                <button onclick="openProfileModal()" class="w-full text-left px-4 py-3 text-sm font-bold text-slate-700 hover:bg-slate-50 transition-colors border-b border-slate-50 flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 text-slate-400">
+                <button onclick="openProfileModal()" class="w-full text-left px-3 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm font-bold text-slate-700 hover:bg-slate-50 transition-colors border-b border-slate-50 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-400">
                         <path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clip-rule="evenodd" />
                     </svg>
                     Your Profile
                 </button>
-                <button onclick="openSettingsModal()" class="w-full text-left px-4 py-3 text-sm font-bold text-slate-700 hover:bg-slate-50 transition-colors border-b border-slate-50 flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 text-slate-400">
+                <button onclick="openSettingsModal()" class="w-full text-left px-3 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm font-bold text-slate-700 hover:bg-slate-50 transition-colors border-b border-slate-50 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-400">
                         <path fill-rule="evenodd" d="M11.078 2.25c-.917 0-1.699.663-1.85 1.567L9.05 4.889c-.02.12-.115.26-.297.348a7.493 7.493 0 0 0-.986.57c-.166.115-.334.126-.45.083L6.3 5.508a1.875 1.875 0 0 0-2.282.819l-.922 1.597a1.875 1.875 0 0 0 .432 2.385l.84.692c.095.078.17.229.154.43a7.598 7.598 0 0 0 0 1.139c.015.2-.059.352-.153.43l-.841.692a1.875 1.875 0 0 0-.432 2.385l.922 1.597a1.875 1.875 0 0 0 2.282.818l1.019-.382c.115-.043.283-.031.45.082.312.214.641.405.985.57.182.088.277.228.297.35l.178 1.071c.151.904.933 1.567 1.85 1.567h1.844c.916 0 1.699-.663 1.85-1.567l.178-1.072c.02-.12.114-.26.297-.349.344-.165.673-.356.985-.57.167-.114.335-.125.45-.082l1.02.382a1.875 1.875 0 0 0 2.28-.819l.923-1.597a1.875 1.875 0 0 0-.432-2.385l-.84-.692c-.095-.078-.17-.229-.154-.43a7.614 7.614 0 0 0 0-1.139c-.016-.2.059-.352.153-.43l.84-.692c.708-.582.891-1.59.433-2.385l-.922-1.597a1.875 1.875 0 0 0-2.282-.818l-1.02.382c-.114.043-.282.031-.449-.083a7.49 7.49 0 0 0-.985-.57c-.183-.087-.277-.227-.297-.348l-.179-1.072a1.875 1.875 0 0 0-1.85-1.567h-1.843ZM12 15.75a3.75 3.75 0 1 0 0-7.5 3.75 3.75 0 0 0 0 7.5Z" clip-rule="evenodd" />
                     </svg>
                     Settings
                 </button>
-                <button onclick="logout()" class="w-full text-left px-4 py-3 text-sm font-bold text-red-500 hover:bg-red-50 transition-colors flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
+                <button onclick="logout()" class="w-full text-left px-3 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm font-bold text-red-500 hover:bg-red-50 transition-colors flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-3.5 h-3.5 sm:w-4 sm:h-4">
                         <path fill-rule="evenodd" d="M16.5 3.75a1.5 1.5 0 0 1 1.5 1.5v13.5a1.5 1.5 0 0 1-1.5 1.5h-6a1.5 1.5 0 0 1-1.5-1.5V15a.75.75 0 0 0-1.5 0v3.75a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3V5.25a3 3 0 0 0-3-3h-6a3 3 0 0 0-3 3V9A.75.75 0 1 0 9 9V5.25a1.5 1.5 0 0 1 1.5-1.5h6ZM5.78 8.47a.75.75 0 0 0-1.06 0l-3 3a.75.75 0 0 0 0 1.06l3 3a.75.75 0 0 0 1.06-1.06l-1.72-1.72H15a.75.75 0 0 0 0-1.5H4.06l1.72-1.72a.75.75 0 0 0 0-1.06Z" clip-rule="evenodd" />
                     </svg>
                     Sign Out
@@ -241,288 +241,288 @@
         </div>
     </div>
 
-    <div id="game-container" class="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-md border border-slate-100 relative z-10 min-h-[600px] flex flex-col">
+    <div id="game-container" class="bg-white rounded-3xl shadow-2xl p-5 sm:p-8 w-full max-w-md border border-slate-100 relative z-10 min-h-[500px] sm:min-h-[600px] flex flex-col mt-4 sm:mt-0">
         <!-- Header -->
-        <div id="game-header" class="flex justify-between items-center mb-6">
+        <div id="game-header" class="flex justify-between items-center mb-4 sm:mb-6">
             <div class="text-slate-500 font-semibold uppercase tracking-wider text-[10px] sm:text-xs" id="mode-label">Japanese Speed Test by Jinsun</div>
-            <div id="timer-display" class="hidden text-xl font-bold text-indigo-600 tabular-nums">00:30</div>
+            <div id="timer-display" class="hidden text-lg sm:text-xl font-bold text-indigo-600 tabular-nums">00:30</div>
         </div>
 
         <!-- Mode Selection Home Page -->
         <div id="home-screen" class="space-y-4 flex-grow flex flex-col">
             <div class="text-center space-y-2 mb-2">
-                <h1 class="text-3xl font-extrabold text-slate-800">Learn Japanese</h1>
-                <p class="text-slate-500 text-sm">Pick a mode to start your speed trial</p>
+                <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-800">Learn Japanese</h1>
+                <p class="text-slate-500 text-xs sm:text-sm">Pick a mode to start your speed trial</p>
             </div>
 
-            <div class="grid gap-3">
-                <button onclick="selectMode('hiragana')" class="mode-card flex items-center p-4 bg-white border-2 border-slate-100 rounded-2xl group active:scale-95">
+            <div class="grid gap-2 sm:gap-3">
+                <button onclick="selectMode('hiragana')" class="mode-card flex items-center p-3 sm:p-4 bg-white border-2 border-slate-100 rounded-2xl group active:scale-95">
                     <div class="w-10 h-10 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center text-xl font-bold group-hover:bg-indigo-600 group-hover:text-white transition-colors">あ</div>
-                    <div class="ml-4 text-left">
-                        <div class="font-bold text-slate-800">Hiragana</div>
-                        <div class="text-xs text-slate-400">Basic phonetic script</div>
+                    <div class="ml-3 sm:ml-4 text-left">
+                        <div class="font-bold text-slate-800 text-sm sm:text-base">Hiragana</div>
+                        <div class="text-[10px] sm:text-xs text-slate-400">Basic phonetic script</div>
                     </div>
                 </button>
 
-                <button onclick="selectMode('katakana')" class="mode-card flex items-center p-4 bg-white border-2 border-slate-100 rounded-2xl group active:scale-95">
+                <button onclick="selectMode('katakana')" class="mode-card flex items-center p-3 sm:p-4 bg-white border-2 border-slate-100 rounded-2xl group active:scale-95">
                     <div class="w-10 h-10 bg-pink-50 text-pink-600 rounded-xl flex items-center justify-center text-xl font-bold group-hover:bg-pink-600 group-hover:text-white transition-colors">ア</div>
-                    <div class="ml-4 text-left">
-                        <div class="font-bold text-slate-800">Katakana</div>
-                        <div class="text-xs text-slate-400">Foreign loan words</div>
+                    <div class="ml-3 sm:ml-4 text-left">
+                        <div class="font-bold text-slate-800 text-sm sm:text-base">Katakana</div>
+                        <div class="text-[10px] sm:text-xs text-slate-400">Foreign loan words</div>
                     </div>
                 </button>
 
-                <button onclick="selectMode('kanji')" class="mode-card flex items-center p-4 bg-white border-2 border-slate-100 rounded-2xl group active:scale-95">
+                <button onclick="selectMode('kanji')" class="mode-card flex items-center p-3 sm:p-4 bg-white border-2 border-slate-100 rounded-2xl group active:scale-95">
                     <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center text-xl font-bold group-hover:bg-emerald-600 group-hover:text-white transition-colors">学</div>
-                    <div class="ml-4 text-left">
-                        <div class="font-bold text-slate-800">Kanji</div>
-                        <div class="text-xs text-slate-400">Logographic characters</div>
+                    <div class="ml-3 sm:ml-4 text-left">
+                        <div class="font-bold text-slate-800 text-sm sm:text-base">Kanji</div>
+                        <div class="text-[10px] sm:text-xs text-slate-400">Logographic characters</div>
                     </div>
                 </button>
             </div>
 
             <!-- Leaderboard Button -->
-            <button onclick="showLeaderboard()" class="mt-2 w-full py-4 bg-amber-50 text-amber-600 border-2 border-amber-100 hover:bg-amber-100 hover:border-amber-200 rounded-2xl font-bold transition-all flex items-center justify-center gap-2 transform active:scale-95">
-                <span class="text-xl">🏆</span> View Leaderboard
+            <button onclick="showLeaderboard()" class="mt-2 w-full py-3 sm:py-4 bg-amber-50 text-amber-600 border-2 border-amber-100 hover:bg-amber-100 hover:border-amber-200 rounded-2xl font-bold transition-all flex items-center justify-center gap-2 transform active:scale-95">
+                <span class="text-lg sm:text-xl">🏆</span> <span class="text-sm sm:text-base">View Leaderboard</span>
             </button>
         </div>
 
         <!-- Leaderboard Screen -->
-        <div id="leaderboard-screen" class="hidden space-y-5 flex-grow flex flex-col">
-            <div class="text-center space-y-1 mt-2 shrink-0">
-                <button onclick="showHome()" class="inline-flex items-center justify-center gap-1.5 py-1.5 px-3 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-full text-[10px] font-bold uppercase tracking-wider transition-colors mb-2 active:scale-95">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3.5 h-3.5">
+        <div id="leaderboard-screen" class="hidden space-y-4 sm:space-y-5 flex-grow flex flex-col">
+            <div class="text-center space-y-1 mt-1 sm:mt-2 shrink-0">
+                <button onclick="showHome()" class="inline-flex items-center justify-center gap-1 sm:gap-1.5 py-1 px-2 sm:py-1.5 sm:px-3 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-full text-[9px] sm:text-[10px] font-bold uppercase tracking-wider transition-colors mb-1 sm:mb-2 active:scale-95">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3 h-3 sm:w-3.5 sm:h-3.5">
                         <path fill-rule="evenodd" d="M17 10a.75.75 0 0 1-.75.75H5.612l4.158 3.96a.75.75 0 1 1-1.04 1.08l-5.5-5.25a.75.75 0 0 1 0-1.08l5.5-5.25a.75.75 0 1 1 1.04 1.08L5.612 9.25H16.25A.75.75 0 0 1 17 10Z" clip-rule="evenodd" />
                     </svg>
                     Back to Menu
                 </button>
-                <h1 class="text-2xl font-extrabold text-slate-800">High Scores</h1>
+                <h1 class="text-xl sm:text-2xl font-extrabold text-slate-800">High Scores</h1>
             </div>
 
             <!-- Tabs -->
             <div class="flex bg-slate-100 p-1 rounded-xl shrink-0">
-                <button onclick="setLeaderboardTab('hiragana')" id="tab-hiragana" class="lb-tab flex-1 py-2 text-sm font-bold rounded-lg text-slate-500">Hiragana</button>
-                <button onclick="setLeaderboardTab('katakana')" id="tab-katakana" class="lb-tab flex-1 py-2 text-sm font-bold rounded-lg text-slate-500">Katakana</button>
-                <button onclick="setLeaderboardTab('kanji')" id="tab-kanji" class="lb-tab flex-1 py-2 text-sm font-bold rounded-lg text-slate-500">Kanji</button>
+                <button onclick="setLeaderboardTab('hiragana')" id="tab-hiragana" class="lb-tab flex-1 py-1.5 sm:py-2 text-xs sm:text-sm font-bold rounded-lg text-slate-500">Hiragana</button>
+                <button onclick="setLeaderboardTab('katakana')" id="tab-katakana" class="lb-tab flex-1 py-1.5 sm:py-2 text-xs sm:text-sm font-bold rounded-lg text-slate-500">Katakana</button>
+                <button onclick="setLeaderboardTab('kanji')" id="tab-kanji" class="lb-tab flex-1 py-1.5 sm:py-2 text-xs sm:text-sm font-bold rounded-lg text-slate-500">Kanji</button>
             </div>
 
             <!-- Scrollable List (Top 99) -->
-            <div id="leaderboard-full-list" class="space-y-3 flex-grow overflow-y-auto max-h-[340px] pb-2 pr-1">
+            <div id="leaderboard-full-list" class="space-y-2 sm:space-y-3 flex-grow overflow-y-auto max-h-[300px] sm:max-h-[340px] pb-2 pr-1">
                 <!-- Scores injected here -->
             </div>
             
             <!-- Pinned User Card (Current Rank) -->
-            <div id="leaderboard-pinned-user" class="mt-2 shrink-0 bg-white p-4 rounded-2xl border border-indigo-200 shadow-md hidden transition-transform hover:-translate-y-1">
+            <div id="leaderboard-pinned-user" class="mt-1 sm:mt-2 shrink-0 bg-white p-3 sm:p-4 rounded-2xl border border-indigo-200 shadow-md hidden transition-transform hover:-translate-y-1">
                 <!-- User's own rank injected here -->
             </div>
         </div>
 
         <!-- Configuration Screen -->
-        <div id="start-screen" class="hidden space-y-5 flex-grow flex flex-col justify-center">
+        <div id="start-screen" class="hidden space-y-4 sm:space-y-5 flex-grow flex flex-col justify-center">
             <div class="text-center space-y-1">
-                <button onclick="showHome()" class="inline-flex items-center justify-center gap-1.5 py-1.5 px-3 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-full text-[10px] font-bold uppercase tracking-wider transition-colors mb-2 active:scale-95">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3.5 h-3.5">
+                <button onclick="showHome()" class="inline-flex items-center justify-center gap-1 sm:gap-1.5 py-1 px-2 sm:py-1.5 sm:px-3 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-full text-[9px] sm:text-[10px] font-bold uppercase tracking-wider transition-colors mb-1 sm:mb-2 active:scale-95">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3 h-3 sm:w-3.5 sm:h-3.5">
                         <path fill-rule="evenodd" d="M17 10a.75.75 0 0 1-.75.75H5.612l4.158 3.96a.75.75 0 1 1-1.04 1.08l-5.5-5.25a.75.75 0 0 1 0-1.08l5.5-5.25a.75.75 0 1 1 1.04 1.08L5.612 9.25H16.25A.75.75 0 0 1 17 10Z" clip-rule="evenodd" />
                     </svg>
                     Back to Menu
                 </button>
-                <h1 class="text-2xl font-extrabold text-slate-800" id="difficulty-title">Configuration</h1>
+                <h1 class="text-xl sm:text-2xl font-extrabold text-slate-800" id="difficulty-title">Configuration</h1>
             </div>
 
-            <div class="space-y-4">
+            <div class="space-y-3 sm:space-y-4">
                 <!-- JLPT N-Level Toggle -->
-                <div id="n-level-section" class="bg-slate-50 p-4 rounded-2xl border border-slate-100 space-y-3 hidden">
-                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wide">Difficulty Level (JLPT)</label>
-                    <div class="grid grid-cols-5 gap-2">
-                        <button onclick="setNLevel(5)" id="n5-btn" class="n-level-btn py-2 text-sm font-bold border-2 border-slate-200 rounded-xl bg-white text-slate-500 active">N5</button>
-                        <button onclick="setNLevel(4)" id="n4-btn" class="n-level-btn py-2 text-sm font-bold border-2 border-slate-200 rounded-xl bg-white text-slate-500">N4</button>
-                        <button onclick="setNLevel(3)" id="n3-btn" class="n-level-btn py-2 text-sm font-bold border-2 border-slate-200 rounded-xl bg-white text-slate-500">N3</button>
-                        <button onclick="setNLevel(2)" id="n2-btn" class="n-level-btn py-2 text-sm font-bold border-2 border-slate-200 rounded-xl bg-white text-slate-500">N2</button>
-                        <button onclick="setNLevel(1)" id="n1-btn" class="n-level-btn py-2 text-sm font-bold border-2 border-slate-200 rounded-xl bg-white text-slate-500">N1</button>
+                <div id="n-level-section" class="bg-slate-50 p-3 sm:p-4 rounded-2xl border border-slate-100 space-y-2 sm:space-y-3 hidden">
+                    <label class="block text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wide">Difficulty Level (JLPT)</label>
+                    <div class="grid grid-cols-5 gap-1 sm:gap-2">
+                        <button onclick="setNLevel(5)" id="n5-btn" class="n-level-btn py-1.5 sm:py-2 text-xs sm:text-sm font-bold border-2 border-slate-200 rounded-xl bg-white text-slate-500 active">N5</button>
+                        <button onclick="setNLevel(4)" id="n4-btn" class="n-level-btn py-1.5 sm:py-2 text-xs sm:text-sm font-bold border-2 border-slate-200 rounded-xl bg-white text-slate-500">N4</button>
+                        <button onclick="setNLevel(3)" id="n3-btn" class="n-level-btn py-1.5 sm:py-2 text-xs sm:text-sm font-bold border-2 border-slate-200 rounded-xl bg-white text-slate-500">N3</button>
+                        <button onclick="setNLevel(2)" id="n2-btn" class="n-level-btn py-1.5 sm:py-2 text-xs sm:text-sm font-bold border-2 border-slate-200 rounded-xl bg-white text-slate-500">N2</button>
+                        <button onclick="setNLevel(1)" id="n1-btn" class="n-level-btn py-1.5 sm:py-2 text-xs sm:text-sm font-bold border-2 border-slate-200 rounded-xl bg-white text-slate-500">N1</button>
                     </div>
                 </div>
 
                 <!-- Word Type Toggle -->
-                <div id="word-type-section" class="bg-slate-50 p-4 rounded-2xl border border-slate-100 space-y-3">
-                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wide">Word Type</label>
+                <div id="word-type-section" class="bg-slate-50 p-3 sm:p-4 rounded-2xl border border-slate-100 space-y-2 sm:space-y-3">
+                    <label class="block text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wide">Word Type</label>
                     <div class="grid grid-cols-2 gap-2">
-                        <button onclick="setWordType('random')" id="type-random-btn" class="word-type-btn py-2 text-sm font-bold border-2 border-slate-200 rounded-xl bg-white text-slate-500 active">Random</button>
-                        <button onclick="setWordType('real')" id="type-real-btn" class="word-type-btn py-2 text-sm font-bold border-2 border-slate-200 rounded-xl bg-white text-slate-500">Real Words</button>
+                        <button onclick="setWordType('random')" id="type-random-btn" class="word-type-btn py-1.5 sm:py-2 text-xs sm:text-sm font-bold border-2 border-slate-200 rounded-xl bg-white text-slate-500 active">Random</button>
+                        <button onclick="setWordType('real')" id="type-real-btn" class="word-type-btn py-1.5 sm:py-2 text-xs sm:text-sm font-bold border-2 border-slate-200 rounded-xl bg-white text-slate-500">Real Words</button>
                     </div>
                 </div>
 
-                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 space-y-3">
-                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wide">Round Time: <span id="time-val" class="text-indigo-600">30</span>s</label>
+                <div class="bg-slate-50 p-3 sm:p-4 rounded-2xl border border-slate-100 space-y-2 sm:space-y-3">
+                    <label class="block text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wide">Round Time: <span id="time-val" class="text-indigo-600">30</span>s</label>
                     <input type="range" id="time-slider" min="10" max="120" step="10" value="30" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600">
                 </div>
 
-                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 space-y-3">
+                <div class="bg-slate-50 p-3 sm:p-4 rounded-2xl border border-slate-100 space-y-2 sm:space-y-3">
                     <div class="flex justify-between items-center">
-                        <label class="block text-xs font-bold text-slate-400 uppercase tracking-wide">Word Length</label>
-                        <span class="text-[10px] text-slate-400 font-bold uppercase">Max: 15</span>
+                        <label class="block text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wide">Word Length</label>
+                        <span class="text-[8px] sm:text-[10px] text-slate-400 font-bold uppercase">Max: 15</span>
                     </div>
                     <input type="number" id="length-input" min="1" max="15" value="1" 
-                           class="w-full bg-white border border-slate-200 rounded-xl py-2 px-4 text-center text-xl font-bold text-slate-700 focus:border-indigo-500 outline-none">
+                           class="w-full bg-white border border-slate-200 rounded-xl py-1.5 sm:py-2 px-3 sm:px-4 text-center text-lg sm:text-xl font-bold text-slate-700 focus:border-indigo-500 outline-none">
                 </div>
             </div>
             
-            <button onclick="startGame()" class="w-full py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl font-bold transition-all transform active:scale-95 shadow-lg shadow-indigo-200">
+            <button onclick="startGame()" class="w-full py-3 sm:py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl font-bold transition-all transform active:scale-95 shadow-lg shadow-indigo-200 text-sm sm:text-base">
                 Start Blitz
             </button>
         </div>
 
         <!-- Quiz Screen -->
-        <div id="quiz-screen" class="hidden text-center space-y-6 flex-grow relative pt-8">
+        <div id="quiz-screen" class="hidden text-center space-y-4 sm:space-y-6 flex-grow relative pt-6 sm:pt-8">
             <button onclick="promptExit()" class="absolute -top-2 -right-2 p-2 text-slate-300 hover:text-red-500 transition-colors z-20">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
             </button>
 
-            <div class="relative h-2 w-full bg-slate-100 rounded-full overflow-hidden mb-4">
+            <div class="relative h-1.5 sm:h-2 w-full bg-slate-100 rounded-full overflow-hidden mb-2 sm:mb-4">
                 <div id="timer-bar" class="progress-bar absolute top-0 left-0 h-full bg-indigo-500 w-full"></div>
             </div>
 
-            <div class="flex flex-col items-center justify-center min-h-[140px]">
-                <div id="hint-display" class="text-indigo-400 text-sm font-semibold italic h-5 mb-1"></div>
-                <div id="word-display" class="japanese-text text-4xl font-bold text-slate-900 select-none break-all leading-tight"></div>
-                <div id="level-badge" class="mt-2 text-[10px] font-bold bg-slate-100 px-2 py-1 rounded text-slate-400 uppercase tracking-widest"></div>
+            <div class="flex flex-col items-center justify-center min-h-[120px] sm:min-h-[140px]">
+                <div id="hint-display" class="text-indigo-400 text-xs sm:text-sm font-semibold italic h-4 sm:h-5 mb-1"></div>
+                <div id="word-display" class="japanese-text text-3xl sm:text-4xl font-bold text-slate-900 select-none break-all leading-tight px-2"></div>
+                <div id="level-badge" class="mt-2 text-[8px] sm:text-[10px] font-bold bg-slate-100 px-2 py-1 rounded text-slate-400 uppercase tracking-widest"></div>
             </div>
 
-            <div class="space-y-4">
+            <div class="space-y-3 sm:space-y-4">
                 <input 
                     type="text" 
                     id="answer-input" 
                     autocomplete="off" 
                     spellcheck="false"
                     placeholder="Type romaji..."
-                    class="w-full text-center text-xl py-4 bg-slate-50 border-2 border-slate-200 rounded-2xl focus:border-indigo-500 focus:ring-0 outline-none transition-all placeholder:text-slate-300"
+                    class="w-full text-center text-lg sm:text-xl py-3 sm:py-4 bg-slate-50 border-2 border-slate-200 rounded-2xl focus:border-indigo-500 focus:ring-0 outline-none transition-all placeholder:text-slate-300"
                 >
                 <div class="flex justify-center items-center gap-2">
-                    <span class="text-sm font-medium text-slate-400">Score:</span>
-                    <span id="score-display" class="text-xl font-bold text-slate-800">0</span>
+                    <span class="text-xs sm:text-sm font-medium text-slate-400">Score:</span>
+                    <span id="score-display" class="text-lg sm:text-xl font-bold text-slate-800">0</span>
                 </div>
             </div>
         </div>
 
         <!-- End Screen -->
-        <div id="end-screen" class="hidden text-center space-y-6 flex-grow flex flex-col justify-center">
-            <div class="py-4">
-                <div class="text-5xl mb-2" id="end-emoji">🏆</div>
-                <h2 class="text-2xl font-extrabold text-slate-800" id="end-title">Time's Up!</h2>
+        <div id="end-screen" class="hidden text-center space-y-4 sm:space-y-6 flex-grow flex flex-col justify-center">
+            <div class="py-2 sm:py-4">
+                <div class="text-4xl sm:text-5xl mb-2" id="end-emoji">🏆</div>
+                <h2 class="text-xl sm:text-2xl font-extrabold text-slate-800" id="end-title">Time's Up!</h2>
                 
-                <div class="mt-6 w-full max-w-xs mx-auto bg-slate-50 rounded-2xl p-5 text-left space-y-3 border border-slate-100 shadow-inner">
-                    <div class="flex justify-between text-sm text-slate-500 font-medium">
+                <div class="mt-4 sm:mt-6 w-full max-w-xs mx-auto bg-slate-50 rounded-2xl p-4 sm:p-5 text-left space-y-2 sm:space-y-3 border border-slate-100 shadow-inner">
+                    <div class="flex justify-between text-xs sm:text-sm text-slate-500 font-medium">
                         <span>Words Typed</span>
                         <span id="end-raw-score" class="font-bold text-slate-800">0</span>
                     </div>
-                    <div class="flex justify-between text-sm text-slate-500 font-medium">
+                    <div class="flex justify-between text-xs sm:text-sm text-slate-500 font-medium">
                         <span>Length Bonus (<span id="end-length-val">1</span>)</span>
                         <span id="end-length-bonus" class="font-bold text-emerald-500">+0</span>
                     </div>
-                    <div class="flex justify-between text-sm text-slate-500 font-medium">
+                    <div class="flex justify-between text-xs sm:text-sm text-slate-500 font-medium">
                         <span>Time Bonus (<span id="end-time-val">30</span>s)</span>
                         <span id="end-time-bonus" class="font-bold text-emerald-500">+0</span>
                     </div>
-                    <div class="h-px w-full bg-slate-200 my-3"></div>
-                    <div class="flex justify-between items-center text-lg font-bold text-indigo-600">
+                    <div class="h-px w-full bg-slate-200 my-2 sm:my-3"></div>
+                    <div class="flex justify-between items-center text-base sm:text-lg font-bold text-indigo-600">
                         <span>Final Score</span>
-                        <span id="final-score" class="text-2xl">0</span>
+                        <span id="final-score" class="text-xl sm:text-2xl">0</span>
                     </div>
                     
                     <!-- EXP Notification -->
-                    <div id="exp-notification" class="hidden text-center text-xs font-bold text-amber-500 bg-amber-50 py-1.5 rounded-lg border border-amber-100 mt-2">
+                    <div id="exp-notification" class="hidden text-center text-[10px] sm:text-xs font-bold text-amber-500 bg-amber-50 py-1.5 rounded-lg border border-amber-100 mt-2">
                         +0 EXP
                     </div>
                 </div>
 
-                <div class="mt-4 text-slate-400 font-bold uppercase text-[10px] tracking-widest flex justify-center gap-4">
+                <div class="mt-3 sm:mt-4 text-slate-400 font-bold uppercase text-[8px] sm:text-[10px] tracking-widest flex justify-center gap-3 sm:gap-4">
                     <span>Level: <span id="final-level" class="text-slate-600">N5</span></span>
                     <span>Time: <span id="final-duration" class="text-slate-600">30s</span></span>
                 </div>
             </div>
             
-            <div class="text-sm font-bold px-4" id="feedback-msg"></div>
+            <div class="text-xs sm:text-sm font-bold px-4" id="feedback-msg"></div>
 
             <!-- Guest Login Prompt -->
-            <div id="guest-login-prompt" class="hidden mt-2 p-4 bg-indigo-50 border border-indigo-100 rounded-2xl">
-                <p class="text-xs text-indigo-600 font-bold mb-2">Want to claim your spot on the leaderboard?</p>
-                <button onclick="openAuthModal()" class="w-full py-2 bg-indigo-600 text-white rounded-xl font-bold text-sm hover:bg-indigo-700 transition-all shadow-sm active:scale-95">Log in to save your score</button>
+            <div id="guest-login-prompt" class="hidden mt-1 sm:mt-2 p-3 sm:p-4 bg-indigo-50 border border-indigo-100 rounded-2xl">
+                <p class="text-[10px] sm:text-xs text-indigo-600 font-bold mb-2">Want to claim your spot on the leaderboard?</p>
+                <button onclick="openAuthModal()" class="w-full py-2 bg-indigo-600 text-white rounded-xl font-bold text-xs sm:text-sm hover:bg-indigo-700 transition-all shadow-sm active:scale-95">Log in to save your score</button>
             </div>
 
-            <button onclick="showHome()" class="w-full py-4 bg-slate-800 hover:bg-slate-900 text-white rounded-2xl font-bold transition-all transform active:scale-95">
+            <button onclick="showHome()" class="w-full py-3 sm:py-4 bg-slate-800 hover:bg-slate-900 text-white rounded-2xl font-bold transition-all transform active:scale-95 text-sm sm:text-base">
                 Back to Menu
             </button>
         </div>
     </div>
 
     <!-- Exit Confirmation Modal -->
-    <div id="exit-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay">
-        <div class="bg-white rounded-3xl p-6 w-full max-w-xs shadow-2xl text-center space-y-6 modal-content">
-            <div class="space-y-2">
-                <div class="text-3xl">🛑</div>
-                <h3 class="text-xl font-bold text-slate-800">Wait!</h3>
-                <p class="text-slate-500 text-sm">Are you sure you want to exit?</p>
+    <div id="exit-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 modal-overlay">
+        <div class="bg-white rounded-3xl p-5 sm:p-6 w-full max-w-xs shadow-2xl text-center space-y-4 sm:space-y-6 modal-content">
+            <div class="space-y-1 sm:space-y-2">
+                <div class="text-2xl sm:text-3xl">🛑</div>
+                <h3 class="text-lg sm:text-xl font-bold text-slate-800">Wait!</h3>
+                <p class="text-slate-500 text-xs sm:text-sm">Are you sure you want to exit?</p>
             </div>
             <div class="flex flex-col gap-2">
-                <button onclick="confirmExit()" class="py-3 bg-red-500 text-white rounded-xl font-bold hover:bg-red-600 active:scale-95 transition-transform">Yes, Exit</button>
-                <button onclick="cancelExit()" class="py-3 bg-slate-100 text-slate-600 rounded-xl font-bold hover:bg-slate-200 active:scale-95 transition-transform">Cancel</button>
+                <button onclick="confirmExit()" class="py-2.5 sm:py-3 bg-red-500 text-white rounded-xl font-bold hover:bg-red-600 active:scale-95 transition-transform text-sm sm:text-base">Yes, Exit</button>
+                <button onclick="cancelExit()" class="py-2.5 sm:py-3 bg-slate-100 text-slate-600 rounded-xl font-bold hover:bg-slate-200 active:scale-95 transition-transform text-sm sm:text-base">Cancel</button>
             </div>
         </div>
     </div>
 
     <!-- Dynamic Profile Modal -->
-    <div id="profile-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 modal-overlay">
-        <div class="bg-white rounded-3xl p-8 w-full max-w-sm shadow-2xl relative max-h-[90vh] overflow-y-auto modal-content">
+    <div id="profile-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 sm:p-6 modal-overlay">
+        <div class="bg-white rounded-3xl p-6 sm:p-8 w-full max-w-sm shadow-2xl relative max-h-[90vh] overflow-y-auto modal-content">
             <button onclick="closeProfileModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-2xl leading-none">&times;</button>
             
-            <div class="flex flex-col items-center mt-2 space-y-3">
-                <div id="profile-modal-avatar" class="w-24 h-24 rounded-full bg-slate-100 border-4 border-white shadow-lg flex items-center justify-center text-5xl overflow-hidden relative">👤</div>
+            <div class="flex flex-col items-center mt-2 space-y-2 sm:space-y-3">
+                <div id="profile-modal-avatar" class="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-slate-100 border-4 border-white shadow-lg flex items-center justify-center text-4xl sm:text-5xl overflow-hidden relative dark:border-slate-800">👤</div>
                 <div class="text-center">
-                    <h3 id="profile-modal-dn" class="text-2xl font-extrabold text-slate-800 leading-tight">Player</h3>
-                    <p id="profile-modal-un" class="text-slate-400 text-sm font-medium">@username</p>
+                    <h3 id="profile-modal-dn" class="text-xl sm:text-2xl font-extrabold text-slate-800 leading-tight">Player</h3>
+                    <p id="profile-modal-un" class="text-slate-400 text-xs sm:text-sm font-medium">@username</p>
                 </div>
             </div>
 
-            <div class="grid grid-cols-2 gap-3 mt-6">
-                <div class="bg-indigo-50 p-3 rounded-2xl text-center border border-indigo-100">
-                    <div class="text-[10px] text-indigo-400 font-bold uppercase tracking-widest mb-1">Current Level</div>
-                    <div id="profile-modal-level" class="text-2xl font-black text-indigo-600">1</div>
+            <div class="grid grid-cols-2 gap-2 sm:gap-3 mt-4 sm:mt-6">
+                <div class="bg-indigo-50 p-2 sm:p-3 rounded-2xl text-center border border-indigo-100">
+                    <div class="text-[8px] sm:text-[10px] text-indigo-400 font-bold uppercase tracking-widest mb-0.5 sm:mb-1">Current Level</div>
+                    <div id="profile-modal-level" class="text-xl sm:text-2xl font-black text-indigo-600">1</div>
                 </div>
-                <div class="bg-slate-50 p-3 rounded-2xl text-center border border-slate-100">
-                    <div class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-1">Games Played</div>
-                    <div id="profile-modal-games" class="text-2xl font-black text-slate-600">0</div>
+                <div class="bg-slate-50 p-2 sm:p-3 rounded-2xl text-center border border-slate-100">
+                    <div class="text-[8px] sm:text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-0.5 sm:mb-1">Games Played</div>
+                    <div id="profile-modal-games" class="text-xl sm:text-2xl font-black text-slate-600">0</div>
                 </div>
             </div>
 
-            <div class="mt-4">
-                <div class="flex justify-between text-[10px] font-bold text-slate-500 mb-1">
+            <div class="mt-3 sm:mt-4">
+                <div class="flex justify-between text-[8px] sm:text-[10px] font-bold text-slate-500 mb-1">
                     <span>Total EXP</span>
                     <span id="profile-modal-exp">0</span>
                 </div>
             </div>
 
             <!-- Milestone Badges -->
-            <div class="mt-4">
-                <div class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-2 text-center">Milestone Badges</div>
-                <div id="profile-badges" class="grid grid-cols-2 gap-3">
+            <div class="mt-3 sm:mt-4">
+                <div class="text-[8px] sm:text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-1.5 sm:mb-2 text-center">Milestone Badges</div>
+                <div id="profile-badges" class="grid grid-cols-2 gap-2 sm:gap-3">
                     <!-- Badges injected here -->
                 </div>
             </div>
 
             <!-- My Bio (Editable) -->
-            <div id="bio-edit-section" class="mt-6 space-y-2 hidden">
-                <label class="text-xs font-bold text-slate-400 uppercase">About Me (Bio)</label>
-                <textarea id="profile-modal-bio" placeholder="Write something about yourself..." class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm font-medium text-slate-700 focus:border-indigo-500 outline-none resize-none h-20"></textarea>
-                <button onclick="saveBio()" class="w-full py-2.5 bg-slate-800 text-white rounded-xl font-bold text-sm hover:bg-slate-900 transition-all active:scale-95">Save Bio</button>
-                <div id="bio-msg" class="hidden text-center text-xs font-bold text-emerald-500 mt-1">Bio saved!</div>
+            <div id="bio-edit-section" class="mt-4 sm:mt-6 space-y-1.5 sm:space-y-2 hidden">
+                <label class="text-[10px] sm:text-xs font-bold text-slate-400 uppercase">About Me (Bio)</label>
+                <textarea id="profile-modal-bio" placeholder="Write something about yourself..." class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 sm:p-3 text-xs sm:text-sm font-medium text-slate-700 focus:border-indigo-500 outline-none resize-none h-16 sm:h-20"></textarea>
+                <button onclick="saveBio()" class="w-full py-2 sm:py-2.5 bg-slate-800 text-white rounded-xl font-bold text-xs sm:text-sm hover:bg-slate-900 transition-all active:scale-95">Save Bio</button>
+                <div id="bio-msg" class="hidden text-center text-[10px] sm:text-xs font-bold text-emerald-500 mt-1">Bio saved!</div>
             </div>
 
             <!-- Read Only Bio (Viewing Others) -->
-            <div id="bio-view-section" class="mt-6 space-y-2 hidden">
-                <label class="text-xs font-bold text-slate-400 uppercase">Bio</label>
-                <p id="profile-modal-bio-text" class="text-sm font-medium text-slate-700 bg-slate-50 p-3 rounded-xl border border-slate-100 min-h-[3rem]">No bio yet.</p>
-                <button id="profile-modal-friend-btn" class="hidden w-full py-2.5 bg-indigo-600 text-white rounded-xl font-bold text-sm hover:bg-indigo-700 transition-all mt-4 active:scale-95">
+            <div id="bio-view-section" class="mt-4 sm:mt-6 space-y-1.5 sm:space-y-2 hidden">
+                <label class="text-[10px] sm:text-xs font-bold text-slate-400 uppercase">Bio</label>
+                <p id="profile-modal-bio-text" class="text-xs sm:text-sm font-medium text-slate-700 bg-slate-50 p-2.5 sm:p-3 rounded-xl border border-slate-100 min-h-[2.5rem] sm:min-h-[3rem]">No bio yet.</p>
+                <button id="profile-modal-friend-btn" class="hidden w-full py-2 sm:py-2.5 bg-indigo-600 text-white rounded-xl font-bold text-xs sm:text-sm hover:bg-indigo-700 transition-all mt-3 sm:mt-4 active:scale-95">
                     Send Friend Request
                 </button>
             </div>
@@ -530,78 +530,78 @@
     </div>
 
     <!-- Friends Modal -->
-    <div id="friends-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay">
-        <div class="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl relative max-h-[85vh] flex flex-col modal-content">
-            <button onclick="closeFriendsModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-2xl leading-none">&times;</button>
+    <div id="friends-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 modal-overlay">
+        <div class="bg-white rounded-3xl p-5 sm:p-6 w-full max-w-sm shadow-2xl relative max-h-[85vh] flex flex-col modal-content">
+            <button onclick="closeFriendsModal()" class="absolute top-3 sm:top-4 right-3 sm:right-4 text-slate-400 hover:text-slate-600 text-2xl leading-none">&times;</button>
             
-            <div class="text-center space-y-1 mb-4 shrink-0">
-                <h3 class="text-xl font-extrabold text-slate-800">Friends</h3>
-                <p class="text-slate-500 text-xs">Search by username to send request</p>
+            <div class="text-center space-y-1 mb-3 sm:mb-4 shrink-0">
+                <h3 class="text-lg sm:text-xl font-extrabold text-slate-800">Friends</h3>
+                <p class="text-slate-500 text-[10px] sm:text-xs">Search by username to send request</p>
             </div>
 
             <div class="flex gap-2 shrink-0">
                 <div class="relative flex-grow">
-                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 font-bold">@</span>
-                    <input type="text" id="friend-search-input" placeholder="username" class="w-full bg-slate-50 border border-slate-200 rounded-xl py-2 pl-7 pr-3 text-sm font-medium text-slate-700 focus:border-indigo-500 outline-none">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 font-bold text-sm">@</span>
+                    <input type="text" id="friend-search-input" placeholder="username" class="w-full bg-slate-50 border border-slate-200 rounded-xl py-1.5 sm:py-2 pl-7 pr-3 text-xs sm:text-sm font-medium text-slate-700 focus:border-indigo-500 outline-none">
                 </div>
-                <button onclick="searchAndAddFriend()" class="px-4 py-2 bg-indigo-600 text-white text-sm font-bold rounded-xl hover:bg-indigo-700 transition-colors active:scale-95">Add</button>
+                <button onclick="searchAndAddFriend()" class="px-3 sm:px-4 py-1.5 sm:py-2 bg-indigo-600 text-white text-xs sm:text-sm font-bold rounded-xl hover:bg-indigo-700 transition-colors active:scale-95">Add</button>
             </div>
             
-            <div id="friend-search-msg" class="hidden text-center text-xs font-bold mt-2 mb-2 shrink-0"></div>
+            <div id="friend-search-msg" class="hidden text-center text-[10px] sm:text-xs font-bold mt-2 mb-1 sm:mb-2 shrink-0"></div>
 
             <!-- Scrollable Friends List -->
-            <div id="friends-list" class="space-y-2 overflow-y-auto flex-grow pr-1 mt-2 min-h-[200px]">
-                <div class="text-center text-slate-400 py-10 text-xs font-bold bg-slate-50 rounded-xl border border-slate-100">Loading...</div>
+            <div id="friends-list" class="space-y-2 overflow-y-auto flex-grow pr-1 mt-2 min-h-[150px] sm:min-h-[200px]">
+                <div class="text-center text-slate-400 py-10 text-[10px] sm:text-xs font-bold bg-slate-50 rounded-xl border border-slate-100">Loading...</div>
             </div>
         </div>
     </div>
 
     <!-- Notifications Modal -->
-    <div id="notifications-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 modal-overlay">
-        <div class="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl relative max-h-[85vh] flex flex-col modal-content">
-            <button onclick="closeNotificationsModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-2xl leading-none">&times;</button>
+    <div id="notifications-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 sm:p-6 modal-overlay">
+        <div class="bg-white rounded-3xl p-5 sm:p-6 w-full max-w-sm shadow-2xl relative max-h-[85vh] flex flex-col modal-content">
+            <button onclick="closeNotificationsModal()" class="absolute top-3 sm:top-4 right-3 sm:right-4 text-slate-400 hover:text-slate-600 text-2xl leading-none">&times;</button>
             
-            <div class="text-center space-y-1 mb-4 shrink-0">
-                <h3 class="text-xl font-extrabold text-slate-800">Notifications</h3>
-                <p class="text-slate-500 text-xs">Alerts and Friend Requests</p>
+            <div class="text-center space-y-1 mb-3 sm:mb-4 shrink-0">
+                <h3 class="text-lg sm:text-xl font-extrabold text-slate-800">Notifications</h3>
+                <p class="text-slate-500 text-[10px] sm:text-xs">Alerts and Friend Requests</p>
             </div>
 
-            <div id="notifications-list" class="space-y-4 overflow-y-auto flex-grow pr-1 min-h-[200px]">
-                <div class="text-center text-slate-400 py-10 text-xs font-bold bg-slate-50 rounded-xl border border-slate-100">Loading...</div>
+            <div id="notifications-list" class="space-y-3 sm:space-y-4 overflow-y-auto flex-grow pr-1 min-h-[150px] sm:min-h-[200px]">
+                <div class="text-center text-slate-400 py-10 text-[10px] sm:text-xs font-bold bg-slate-50 rounded-xl border border-slate-100">Loading...</div>
             </div>
         </div>
     </div>
 
     <!-- Auth Modal -->
-    <div id="auth-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay">
-        <div class="bg-white rounded-3xl p-8 w-full max-w-sm shadow-2xl space-y-6 relative modal-content">
-            <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-2xl leading-none">&times;</button>
+    <div id="auth-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 modal-overlay">
+        <div class="bg-white rounded-3xl p-6 sm:p-8 w-full max-w-sm shadow-2xl space-y-5 sm:space-y-6 relative modal-content">
+            <button onclick="closeAuthModal()" class="absolute top-3 sm:top-4 right-3 sm:right-4 text-slate-400 hover:text-slate-600 text-2xl leading-none">&times;</button>
             
-            <div class="text-center space-y-2">
-                <h3 class="text-2xl font-extrabold text-slate-800">Welcome</h3>
-                <p class="text-slate-500 text-sm">Sign in to save your high scores</p>
+            <div class="text-center space-y-1 sm:space-y-2">
+                <h3 class="text-xl sm:text-2xl font-extrabold text-slate-800">Welcome</h3>
+                <p class="text-slate-500 text-xs sm:text-sm">Sign in to save your high scores</p>
             </div>
 
-            <div id="auth-error" class="hidden bg-red-50 text-red-500 text-xs font-bold p-3 rounded-xl border border-red-100 text-center"></div>
+            <div id="auth-error" class="hidden bg-red-50 text-red-500 text-[10px] sm:text-xs font-bold p-2 sm:p-3 rounded-xl border border-red-100 text-center"></div>
 
-            <div class="space-y-3">
-                <input type="email" id="auth-email" placeholder="Email address" class="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 font-medium text-slate-700 focus:border-indigo-500 outline-none transition-colors placeholder:text-slate-400">
-                <input type="password" id="auth-password" placeholder="Password" class="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 font-medium text-slate-700 focus:border-indigo-500 outline-none transition-colors placeholder:text-slate-400">
+            <div class="space-y-2 sm:space-y-3">
+                <input type="email" id="auth-email" placeholder="Email address" class="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 sm:py-3 px-3 sm:px-4 text-sm sm:text-base font-medium text-slate-700 focus:border-indigo-500 outline-none transition-colors placeholder:text-slate-400">
+                <input type="password" id="auth-password" placeholder="Password" class="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 sm:py-3 px-3 sm:px-4 text-sm sm:text-base font-medium text-slate-700 focus:border-indigo-500 outline-none transition-colors placeholder:text-slate-400">
             </div>
 
             <div class="flex gap-2">
-                <button onclick="handleEmailLogin()" class="flex-1 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold transition-all shadow-md shadow-indigo-200 active:scale-95">Sign In</button>
-                <button onclick="handleEmailSignUp()" class="flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold transition-all border border-slate-200 active:scale-95">Sign Up</button>
+                <button onclick="handleEmailLogin()" class="flex-1 py-2.5 sm:py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold transition-all shadow-md shadow-indigo-200 active:scale-95 text-sm sm:text-base">Sign In</button>
+                <button onclick="handleEmailSignUp()" class="flex-1 py-2.5 sm:py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold transition-all border border-slate-200 active:scale-95 text-sm sm:text-base">Sign Up</button>
             </div>
 
-            <div class="relative flex items-center py-2">
+            <div class="relative flex items-center py-1 sm:py-2">
                 <div class="flex-grow border-t border-slate-200"></div>
-                <span class="flex-shrink-0 mx-4 text-slate-400 text-xs font-bold uppercase">Or</span>
+                <span class="flex-shrink-0 mx-3 sm:mx-4 text-slate-400 text-[10px] sm:text-xs font-bold uppercase">Or</span>
                 <div class="flex-grow border-t border-slate-200"></div>
             </div>
 
-            <button onclick="handleGoogleLogin()" class="w-full py-3 bg-white border-2 border-slate-100 hover:bg-slate-50 text-slate-700 rounded-xl font-bold transition-all flex items-center justify-center gap-3 active:scale-95">
-                <svg class="w-5 h-5" viewBox="0 0 24 24">
+            <button onclick="handleGoogleLogin()" class="w-full py-2.5 sm:py-3 bg-white border-2 border-slate-100 hover:bg-slate-50 text-slate-700 rounded-xl font-bold transition-all flex items-center justify-center gap-2 sm:gap-3 active:scale-95 text-sm sm:text-base">
+                <svg class="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24">
                     <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
                     <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
                     <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
@@ -613,300 +613,300 @@
     </div>
 
     <!-- Account Setup Modal -->
-    <div id="setup-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay">
-        <div class="bg-white rounded-3xl p-8 w-full max-w-sm shadow-2xl space-y-6 modal-content">
-            <div class="text-center space-y-2">
-                <div class="text-4xl mb-2">✨</div>
-                <h3 class="text-xl font-extrabold text-slate-800">Setup your profile</h3>
-                <p class="text-slate-500 text-sm">Choose how you appear on the leaderboard</p>
+    <div id="setup-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 modal-overlay">
+        <div class="bg-white rounded-3xl p-6 sm:p-8 w-full max-w-sm shadow-2xl space-y-5 sm:space-y-6 modal-content max-h-[90vh] overflow-y-auto">
+            <div class="text-center space-y-1 sm:space-y-2">
+                <div class="text-3xl sm:text-4xl mb-1 sm:mb-2">✨</div>
+                <h3 class="text-lg sm:text-xl font-extrabold text-slate-800">Setup your profile</h3>
+                <p class="text-slate-500 text-[10px] sm:text-sm">Choose how you appear on the leaderboard</p>
             </div>
 
-            <div class="space-y-4">
-                <div class="space-y-2">
-                    <label class="text-xs font-bold text-slate-400 uppercase">Select Avatar</label>
-                    <div class="grid grid-cols-5 gap-3" id="avatar-grid">
-                        <button onclick="triggerCustomAvatarUpload()" class="avatar-option h-12 text-xl bg-slate-50 border-2 border-slate-100 rounded-xl flex items-center justify-center hover:bg-indigo-50 hover:border-indigo-200 relative overflow-hidden group" id="setup-custom-avatar-btn">
+            <div class="space-y-3 sm:space-y-4">
+                <div class="space-y-1.5 sm:space-y-2">
+                    <label class="text-[10px] sm:text-xs font-bold text-slate-400 uppercase">Select Avatar</label>
+                    <div class="grid grid-cols-5 gap-2 sm:gap-3" id="avatar-grid">
+                        <button onclick="triggerCustomAvatarUpload()" class="avatar-option h-10 sm:h-12 text-lg sm:text-xl bg-slate-50 border-2 border-slate-100 rounded-xl flex items-center justify-center hover:bg-indigo-50 hover:border-indigo-200 relative overflow-hidden group active:scale-95" id="setup-custom-avatar-btn">
                             <span class="z-10 group-hover:hidden">📷</span>
-                            <span class="z-10 hidden group-hover:block text-xs font-bold text-indigo-600">Up</span>
+                            <span class="z-10 hidden group-hover:block text-[8px] sm:text-xs font-bold text-indigo-600">Up</span>
                         </button>
-                        <button onclick="selectAvatar('🦊', this)" class="avatar-option h-12 text-2xl bg-slate-50 border-2 border-slate-100 rounded-xl flex items-center justify-center hover:bg-indigo-50 hover:border-indigo-200">🦊</button>
-                        <button onclick="selectAvatar('🐱', this)" class="avatar-option h-12 text-2xl bg-slate-50 border-2 border-slate-100 rounded-xl flex items-center justify-center hover:bg-indigo-50 hover:border-indigo-200">🐱</button>
-                        <button onclick="selectAvatar('🐼', this)" class="avatar-option h-12 text-2xl bg-slate-50 border-2 border-slate-100 rounded-xl flex items-center justify-center hover:bg-indigo-50 hover:border-indigo-200">🐼</button>
-                        <button onclick="selectAvatar('🐸', this)" class="avatar-option h-12 text-2xl bg-slate-50 border-2 border-slate-100 rounded-xl flex items-center justify-center hover:bg-indigo-50 hover:border-indigo-200">🐸</button>
-                        <button onclick="selectAvatar('🦉', this)" class="avatar-option h-12 text-2xl bg-slate-50 border-2 border-slate-100 rounded-xl flex items-center justify-center hover:bg-indigo-50 hover:border-indigo-200">🦉</button>
-                        <button onclick="selectAvatar('🐲', this)" class="avatar-option h-12 text-2xl bg-slate-50 border-2 border-slate-100 rounded-xl flex items-center justify-center hover:bg-indigo-50 hover:border-indigo-200">🐲</button>
-                        <button onclick="selectAvatar('🦄', this)" class="avatar-option h-12 text-2xl bg-slate-50 border-2 border-slate-100 rounded-xl flex items-center justify-center hover:bg-indigo-50 hover:border-indigo-200">🦄</button>
-                        <button onclick="selectAvatar('🐙', this)" class="avatar-option h-12 text-2xl bg-slate-50 border-2 border-slate-100 rounded-xl flex items-center justify-center hover:bg-indigo-50 hover:border-indigo-200">🐙</button>
-                        <button onclick="selectAvatar('👻', this)" class="avatar-option h-12 text-2xl bg-slate-50 border-2 border-slate-100 rounded-xl flex items-center justify-center hover:bg-indigo-50 hover:border-indigo-200">👻</button>
+                        <button onclick="selectAvatar('🦊', this)" class="avatar-option h-10 sm:h-12 text-xl sm:text-2xl bg-slate-50 border-2 border-slate-100 rounded-xl flex items-center justify-center hover:bg-indigo-50 hover:border-indigo-200 active:scale-95">🦊</button>
+                        <button onclick="selectAvatar('🐱', this)" class="avatar-option h-10 sm:h-12 text-xl sm:text-2xl bg-slate-50 border-2 border-slate-100 rounded-xl flex items-center justify-center hover:bg-indigo-50 hover:border-indigo-200 active:scale-95">🐱</button>
+                        <button onclick="selectAvatar('🐼', this)" class="avatar-option h-10 sm:h-12 text-xl sm:text-2xl bg-slate-50 border-2 border-slate-100 rounded-xl flex items-center justify-center hover:bg-indigo-50 hover:border-indigo-200 active:scale-95">🐼</button>
+                        <button onclick="selectAvatar('🐸', this)" class="avatar-option h-10 sm:h-12 text-xl sm:text-2xl bg-slate-50 border-2 border-slate-100 rounded-xl flex items-center justify-center hover:bg-indigo-50 hover:border-indigo-200 active:scale-95">🐸</button>
+                        <button onclick="selectAvatar('🦉', this)" class="avatar-option h-10 sm:h-12 text-xl sm:text-2xl bg-slate-50 border-2 border-slate-100 rounded-xl flex items-center justify-center hover:bg-indigo-50 hover:border-indigo-200 active:scale-95">🦉</button>
+                        <button onclick="selectAvatar('🐲', this)" class="avatar-option h-10 sm:h-12 text-xl sm:text-2xl bg-slate-50 border-2 border-slate-100 rounded-xl flex items-center justify-center hover:bg-indigo-50 hover:border-indigo-200 active:scale-95">🐲</button>
+                        <button onclick="selectAvatar('🦄', this)" class="avatar-option h-10 sm:h-12 text-xl sm:text-2xl bg-slate-50 border-2 border-slate-100 rounded-xl flex items-center justify-center hover:bg-indigo-50 hover:border-indigo-200 active:scale-95">🦄</button>
+                        <button onclick="selectAvatar('🐙', this)" class="avatar-option h-10 sm:h-12 text-xl sm:text-2xl bg-slate-50 border-2 border-slate-100 rounded-xl flex items-center justify-center hover:bg-indigo-50 hover:border-indigo-200 active:scale-95">🐙</button>
+                        <button onclick="selectAvatar('👻', this)" class="avatar-option h-10 sm:h-12 text-xl sm:text-2xl bg-slate-50 border-2 border-slate-100 rounded-xl flex items-center justify-center hover:bg-indigo-50 hover:border-indigo-200 active:scale-95">👻</button>
                     </div>
                 </div>
 
-                <div class="space-y-3">
-                    <input type="text" id="setup-username" placeholder="Username (e.g. jinsun_b)" class="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 font-medium text-slate-700 focus:border-indigo-500 outline-none transition-colors placeholder:text-slate-400">
-                    <input type="text" id="setup-displayname" placeholder="Display Name (e.g. Jinsun)" class="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 font-medium text-slate-700 focus:border-indigo-500 outline-none transition-colors placeholder:text-slate-400">
+                <div class="space-y-2 sm:space-y-3">
+                    <input type="text" id="setup-username" placeholder="Username (e.g. jinsun_b)" class="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 sm:py-3 px-3 sm:px-4 text-sm sm:text-base font-medium text-slate-700 focus:border-indigo-500 outline-none transition-colors placeholder:text-slate-400">
+                    <input type="text" id="setup-displayname" placeholder="Display Name (e.g. Jinsun)" class="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 sm:py-3 px-3 sm:px-4 text-sm sm:text-base font-medium text-slate-700 focus:border-indigo-500 outline-none transition-colors placeholder:text-slate-400">
                 </div>
             </div>
 
-            <button onclick="saveSetupProfile()" class="w-full py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl font-bold transition-all shadow-lg shadow-indigo-200 active:scale-95">
+            <button onclick="saveSetupProfile()" class="w-full py-3 sm:py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl font-bold transition-all shadow-lg shadow-indigo-200 active:scale-95 text-sm sm:text-base">
                 Complete Setup
             </button>
         </div>
     </div>
 
     <!-- Settings Modal -->
-    <div id="settings-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 modal-overlay">
-        <div class="bg-white rounded-3xl p-8 w-full max-w-sm shadow-2xl space-y-6 relative max-h-[90vh] overflow-y-auto modal-content">
-            <button onclick="closeSettingsModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-2xl leading-none">&times;</button>
+    <div id="settings-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 sm:p-6 modal-overlay">
+        <div class="bg-white rounded-3xl p-6 sm:p-8 w-full max-w-sm shadow-2xl space-y-5 sm:space-y-6 relative max-h-[90vh] overflow-y-auto modal-content">
+            <button onclick="closeSettingsModal()" class="absolute top-3 sm:top-4 right-3 sm:right-4 text-slate-400 hover:text-slate-600 text-2xl leading-none">&times;</button>
             
             <div class="text-center space-y-1">
-                <h3 class="text-2xl font-extrabold text-slate-800">Settings</h3>
-                <p class="text-slate-500 text-xs">Manage your profile</p>
+                <h3 class="text-xl sm:text-2xl font-extrabold text-slate-800">Settings</h3>
+                <p class="text-slate-500 text-[10px] sm:text-xs">Manage your profile</p>
             </div>
 
             <!-- Dark Mode Toggle -->
-            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 flex items-center justify-between">
+            <div class="bg-slate-50 p-3 sm:p-4 rounded-2xl border border-slate-100 flex items-center justify-between">
                 <div>
-                    <div class="text-sm font-bold text-slate-700">Dark Mode</div>
-                    <div class="text-[10px] text-slate-400 uppercase tracking-wide">Change appearance</div>
+                    <div class="text-xs sm:text-sm font-bold text-slate-700">Dark Mode</div>
+                    <div class="text-[8px] sm:text-[10px] text-slate-400 uppercase tracking-wide">Change appearance</div>
                 </div>
                 <label class="relative inline-flex items-center cursor-pointer">
                     <input type="checkbox" id="dark-mode-toggle" class="sr-only peer" onchange="toggleDarkMode()">
-                    <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                    <div class="w-10 sm:w-11 h-5 sm:h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 sm:after:h-5 after:w-4 sm:after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
                 </label>
             </div>
 
             <!-- Change Avatar -->
-            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                    <div id="settings-avatar-preview" class="w-12 h-12 rounded-full bg-white border border-slate-200 flex items-center justify-center text-2xl overflow-hidden">👤</div>
+            <div class="bg-slate-50 p-3 sm:p-4 rounded-2xl border border-slate-100 flex items-center justify-between">
+                <div class="flex items-center gap-2 sm:gap-3">
+                    <div id="settings-avatar-preview" class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white border border-slate-200 flex items-center justify-center text-lg sm:text-2xl overflow-hidden">👤</div>
                     <div>
-                        <div class="text-sm font-bold text-slate-700">Profile Picture</div>
-                        <div class="text-[10px] text-slate-400 uppercase tracking-wide">Change anytime</div>
+                        <div class="text-xs sm:text-sm font-bold text-slate-700">Profile Picture</div>
+                        <div class="text-[8px] sm:text-[10px] text-slate-400 uppercase tracking-wide">Change anytime</div>
                     </div>
                 </div>
-                <button onclick="triggerCustomAvatarUpload()" class="px-3 py-1.5 bg-indigo-100 text-indigo-700 text-xs font-bold rounded-lg hover:bg-indigo-200 transition-colors active:scale-95">Edit</button>
+                <button onclick="triggerCustomAvatarUpload()" class="px-2.5 sm:px-3 py-1 sm:py-1.5 bg-indigo-100 text-indigo-700 text-[10px] sm:text-xs font-bold rounded-lg hover:bg-indigo-200 transition-colors active:scale-95">Edit</button>
             </div>
 
             <!-- Change Display Name -->
-            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 space-y-3">
+            <div class="bg-slate-50 p-3 sm:p-4 rounded-2xl border border-slate-100 space-y-2 sm:space-y-3">
                 <div class="flex justify-between items-start">
-                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wide">Display Name</label>
-                    <span id="dn-cooldown-text" class="text-[10px] text-amber-500 font-bold bg-amber-50 px-2 py-0.5 rounded hidden">Cooldown</span>
+                    <label class="block text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wide">Display Name</label>
+                    <span id="dn-cooldown-text" class="text-[8px] sm:text-[10px] text-amber-500 font-bold bg-amber-50 px-1.5 sm:px-2 py-0.5 rounded hidden">Cooldown</span>
                 </div>
                 <div class="flex gap-2">
-                    <input type="text" id="settings-displayname" class="flex-grow bg-white border border-slate-200 rounded-xl py-2 px-3 text-sm font-medium text-slate-700 focus:border-indigo-500 outline-none">
-                    <button id="save-dn-btn" onclick="saveNewDisplayName()" class="px-4 py-2 bg-indigo-600 text-white text-sm font-bold rounded-xl hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed active:scale-95">Save</button>
+                    <input type="text" id="settings-displayname" class="flex-grow bg-white border border-slate-200 rounded-xl py-1.5 sm:py-2 px-2.5 sm:px-3 text-xs sm:text-sm font-medium text-slate-700 focus:border-indigo-500 outline-none">
+                    <button id="save-dn-btn" onclick="saveNewDisplayName()" class="px-3 sm:px-4 py-1.5 sm:py-2 bg-indigo-600 text-white text-xs sm:text-sm font-bold rounded-xl hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed active:scale-95">Save</button>
                 </div>
-                <p class="text-[10px] text-slate-400">Can be changed once every hour.</p>
+                <p class="text-[8px] sm:text-[10px] text-slate-400">Can be changed once every hour.</p>
             </div>
 
             <!-- Change Username -->
-            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 space-y-3">
+            <div class="bg-slate-50 p-3 sm:p-4 rounded-2xl border border-slate-100 space-y-2 sm:space-y-3">
                 <div class="flex justify-between items-start">
-                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wide">Username</label>
-                    <span id="un-cooldown-text" class="text-[10px] text-amber-500 font-bold bg-amber-50 px-2 py-0.5 rounded hidden">Cooldown</span>
+                    <label class="block text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wide">Username</label>
+                    <span id="un-cooldown-text" class="text-[8px] sm:text-[10px] text-amber-500 font-bold bg-amber-50 px-1.5 sm:px-2 py-0.5 rounded hidden">Cooldown</span>
                 </div>
                 <div class="flex gap-2">
-                    <input type="text" id="settings-username" class="flex-grow bg-white border border-slate-200 rounded-xl py-2 px-3 text-sm font-medium text-slate-700 focus:border-indigo-500 outline-none">
-                    <button id="save-un-btn" onclick="saveNewUsername()" class="px-4 py-2 bg-indigo-600 text-white text-sm font-bold rounded-xl hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed active:scale-95">Save</button>
+                    <input type="text" id="settings-username" class="flex-grow bg-white border border-slate-200 rounded-xl py-1.5 sm:py-2 px-2.5 sm:px-3 text-xs sm:text-sm font-medium text-slate-700 focus:border-indigo-500 outline-none">
+                    <button id="save-un-btn" onclick="saveNewUsername()" class="px-3 sm:px-4 py-1.5 sm:py-2 bg-indigo-600 text-white text-xs sm:text-sm font-bold rounded-xl hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed active:scale-95">Save</button>
                 </div>
-                <p class="text-[10px] text-slate-400">Can be changed once every 7 days.</p>
+                <p class="text-[8px] sm:text-[10px] text-slate-400">Can be changed once every 7 days.</p>
             </div>
             
-            <div id="settings-msg" class="hidden text-center text-xs font-bold p-2 rounded-lg"></div>
+            <div id="settings-msg" class="hidden text-center text-[10px] sm:text-xs font-bold p-2 rounded-lg"></div>
         </div>
     </div>
 
-    <!-- Hidden File Input for Avatar -->
+    <!-- Hidden File Inputs -->
     <input type="file" id="avatar-upload-input" accept="image/png, image/jpeg, image/webp" class="hidden">
     <input type="file" id="badge-upload-input" accept="image/png, image/jpeg, image/webp" class="hidden">
 
     <!-- Custom Image Cropper Modal -->
-    <div id="cropper-modal" class="hidden fixed inset-0 z-[70] flex items-center justify-center p-4 modal-overlay">
-        <div class="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl space-y-6 modal-content">
+    <div id="cropper-modal" class="hidden fixed inset-0 z-[70] flex items-center justify-center p-4 sm:p-6 modal-overlay">
+        <div class="bg-white rounded-3xl p-5 sm:p-6 w-full max-w-sm shadow-2xl space-y-5 sm:space-y-6 modal-content">
             <div class="text-center space-y-1">
-                <h3 class="text-xl font-extrabold text-slate-800">Adjust Avatar</h3>
-                <p class="text-slate-500 text-xs">Drag to pan, slider to zoom</p>
+                <h3 class="text-lg sm:text-xl font-extrabold text-slate-800">Adjust Avatar</h3>
+                <p class="text-slate-500 text-[10px] sm:text-xs">Drag to pan, slider to zoom</p>
             </div>
 
-            <div class="relative w-64 h-64 mx-auto bg-slate-900 rounded-lg overflow-hidden flex items-center justify-center select-none" id="cropper-container">
+            <div class="relative w-full aspect-square max-w-[256px] mx-auto bg-slate-900 rounded-lg overflow-hidden flex items-center justify-center select-none" id="cropper-container">
                 <img id="cropper-img" class="absolute origin-center cursor-grab active:cursor-grabbing max-w-none" draggable="false" style="transform: translate(0px, 0px) scale(1);">
                 <div class="absolute inset-0 crop-mask"></div>
             </div>
 
-            <div class="flex items-center gap-3">
-                <span class="text-slate-400 text-sm">➖</span>
-                <input type="range" id="cropper-zoom" min="0.5" max="3" step="0.05" value="1" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600">
-                <span class="text-slate-400 text-sm">➕</span>
+            <div class="flex items-center gap-2 sm:gap-3">
+                <span class="text-slate-400 text-xs sm:text-sm">➖</span>
+                <input type="range" id="cropper-zoom" min="0.5" max="3" step="0.05" value="1" class="w-full h-1.5 sm:h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600">
+                <span class="text-slate-400 text-xs sm:text-sm">➕</span>
             </div>
 
             <div class="flex gap-2">
-                <button onclick="saveCroppedImage()" class="flex-1 py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 active:scale-95">Crop & Save</button>
-                <button onclick="closeCropper()" class="flex-1 py-3 bg-slate-100 text-slate-600 rounded-xl font-bold hover:bg-slate-200 active:scale-95">Cancel</button>
+                <button onclick="saveCroppedImage()" class="flex-1 py-2.5 sm:py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 active:scale-95 text-sm sm:text-base">Crop & Save</button>
+                <button onclick="closeCropper()" class="flex-1 py-2.5 sm:py-3 bg-slate-100 text-slate-600 rounded-xl font-bold hover:bg-slate-200 active:scale-95 text-sm sm:text-base">Cancel</button>
             </div>
         </div>
     </div>
 
     <!-- Admin Edit Modal -->
-    <div id="admin-edit-modal" class="hidden fixed inset-0 z-[70] flex items-center justify-center p-4 modal-overlay">
-        <div class="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl space-y-4 border-2 border-indigo-500 relative max-h-[90vh] overflow-y-auto modal-content">
-            <button onclick="closeAdminEditModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-2xl leading-none">&times;</button>
-            <div class="text-center space-y-1 mb-4">
-                <h3 class="text-xl font-extrabold text-indigo-700">Admin Edit</h3>
-                <p class="text-slate-500 text-xs">Override player statistics & cooldowns</p>
+    <div id="admin-edit-modal" class="hidden fixed inset-0 z-[70] flex items-center justify-center p-4 sm:p-6 modal-overlay">
+        <div class="bg-white rounded-3xl p-5 sm:p-6 w-full max-w-sm shadow-2xl space-y-3 sm:space-y-4 border-2 border-indigo-500 relative max-h-[90vh] overflow-y-auto modal-content">
+            <button onclick="closeAdminEditModal()" class="absolute top-3 sm:top-4 right-3 sm:right-4 text-slate-400 hover:text-slate-600 text-2xl leading-none">&times;</button>
+            <div class="text-center space-y-1 mb-3 sm:mb-4">
+                <h3 class="text-lg sm:text-xl font-extrabold text-indigo-700">Admin Edit</h3>
+                <p class="text-slate-500 text-[10px] sm:text-xs">Override player statistics & cooldowns</p>
             </div>
             
-            <div class="space-y-3 pb-4 border-b border-slate-100">
+            <div class="space-y-2 sm:space-y-3 pb-3 sm:pb-4 border-b border-slate-100">
                 <div>
-                    <label class="block text-xs font-bold text-slate-400 uppercase">Best Score</label>
-                    <input type="number" id="admin-edit-score" class="w-full bg-slate-50 border border-slate-200 rounded-xl py-2 px-3 text-slate-700 font-bold focus:border-indigo-500 outline-none">
+                    <label class="block text-[10px] sm:text-xs font-bold text-slate-400 uppercase">Best Score</label>
+                    <input type="number" id="admin-edit-score" class="w-full bg-slate-50 border border-slate-200 rounded-xl py-1.5 sm:py-2 px-2.5 sm:px-3 text-sm sm:text-base text-slate-700 font-bold focus:border-indigo-500 outline-none">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-slate-400 uppercase">Level (Recalculates EXP)</label>
-                    <input type="number" id="admin-edit-level" min="1" class="w-full bg-slate-50 border border-slate-200 rounded-xl py-2 px-3 text-slate-700 font-bold focus:border-indigo-500 outline-none">
+                    <label class="block text-[10px] sm:text-xs font-bold text-slate-400 uppercase">Level (Recalculates EXP)</label>
+                    <input type="number" id="admin-edit-level" min="1" class="w-full bg-slate-50 border border-slate-200 rounded-xl py-1.5 sm:py-2 px-2.5 sm:px-3 text-sm sm:text-base text-slate-700 font-bold focus:border-indigo-500 outline-none">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-slate-400 uppercase">Games Played</label>
-                    <input type="number" id="admin-edit-games" class="w-full bg-slate-50 border border-slate-200 rounded-xl py-2 px-3 text-slate-700 font-bold focus:border-indigo-500 outline-none">
+                    <label class="block text-[10px] sm:text-xs font-bold text-slate-400 uppercase">Games Played</label>
+                    <input type="number" id="admin-edit-games" class="w-full bg-slate-50 border border-slate-200 rounded-xl py-1.5 sm:py-2 px-2.5 sm:px-3 text-sm sm:text-base text-slate-700 font-bold focus:border-indigo-500 outline-none">
                 </div>
-                <button onclick="saveAdminEdit()" class="w-full py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 active:scale-95">Save Changes</button>
+                <button onclick="saveAdminEdit()" class="w-full py-2.5 sm:py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 active:scale-95 text-sm sm:text-base mt-2">Save Changes</button>
             </div>
             
-            <div class="space-y-3 pt-2">
-                <div class="text-xs font-bold text-slate-400 uppercase text-center">Account Controls</div>
-                <button onclick="adminResetCooldown('username')" class="w-full py-2 bg-amber-50 text-amber-600 border border-amber-200 rounded-xl font-bold text-sm hover:bg-amber-100 transition-colors active:scale-95">Reset Username Cooldown</button>
-                <button onclick="adminResetCooldown('displayName')" class="w-full py-2 bg-amber-50 text-amber-600 border border-amber-200 rounded-xl font-bold text-sm hover:bg-amber-100 transition-colors active:scale-95">Reset Display Name Cooldown</button>
+            <div class="space-y-2 sm:space-y-3 pt-1 sm:pt-2">
+                <div class="text-[10px] sm:text-xs font-bold text-slate-400 uppercase text-center">Account Controls</div>
+                <button onclick="adminResetCooldown('username')" class="w-full py-1.5 sm:py-2 bg-amber-50 text-amber-600 border border-amber-200 rounded-xl font-bold text-[10px] sm:text-sm hover:bg-amber-100 transition-colors active:scale-95">Reset Username Cooldown</button>
+                <button onclick="adminResetCooldown('displayName')" class="w-full py-1.5 sm:py-2 bg-amber-50 text-amber-600 border border-amber-200 rounded-xl font-bold text-[10px] sm:text-sm hover:bg-amber-100 transition-colors active:scale-95">Reset Display Name Cooldown</button>
             </div>
         </div>
     </div>
 
     <!-- Admin Add Score Modal -->
-    <div id="admin-add-modal" class="hidden fixed inset-0 z-[70] flex items-center justify-center p-4 modal-overlay">
-        <div class="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl space-y-3 border-2 border-emerald-500 relative max-h-[90vh] overflow-y-auto modal-content">
-            <div class="text-center space-y-1 mb-2">
-                <h3 class="text-xl font-extrabold text-emerald-600">Add / Restore Score</h3>
-                <p class="text-slate-500 text-xs">Inject a score manually into the DB</p>
+    <div id="admin-add-modal" class="hidden fixed inset-0 z-[70] flex items-center justify-center p-4 sm:p-6 modal-overlay">
+        <div class="bg-white rounded-3xl p-5 sm:p-6 w-full max-w-sm shadow-2xl space-y-2 sm:space-y-3 border-2 border-emerald-500 relative max-h-[90vh] overflow-y-auto modal-content">
+            <div class="text-center space-y-1 mb-1 sm:mb-2">
+                <h3 class="text-lg sm:text-xl font-extrabold text-emerald-600">Add / Restore Score</h3>
+                <p class="text-slate-500 text-[10px] sm:text-xs">Inject a score manually into the DB</p>
             </div>
             
-            <div class="space-y-2">
+            <div class="space-y-1.5 sm:space-y-2">
                 <div>
-                    <label class="block text-[10px] font-bold text-slate-400 uppercase">Username</label>
-                    <input type="text" id="admin-add-username" placeholder="e.g. pocialj" class="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 px-3 text-sm font-bold focus:border-emerald-500 outline-none">
+                    <label class="block text-[8px] sm:text-[10px] font-bold text-slate-400 uppercase">Username</label>
+                    <input type="text" id="admin-add-username" placeholder="e.g. pocialj" class="w-full bg-slate-50 border border-slate-200 rounded-lg py-1.5 sm:py-2 px-2 sm:px-3 text-xs sm:text-sm font-bold focus:border-emerald-500 outline-none">
                 </div>
-                <div class="grid grid-cols-2 gap-2">
+                <div class="grid grid-cols-2 gap-1 sm:gap-2">
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase">Category</label>
-                        <select id="admin-add-category" class="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 px-2 text-sm font-bold focus:border-emerald-500 outline-none">
+                        <label class="block text-[8px] sm:text-[10px] font-bold text-slate-400 uppercase">Category</label>
+                        <select id="admin-add-category" class="w-full bg-slate-50 border border-slate-200 rounded-lg py-1.5 sm:py-2 px-1.5 sm:px-2 text-xs sm:text-sm font-bold focus:border-emerald-500 outline-none">
                             <option value="hiragana">Hiragana</option>
                             <option value="katakana">Katakana</option>
                             <option value="kanji">Kanji</option>
                         </select>
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase">Mode Label</label>
-                        <input type="text" id="admin-add-mode" placeholder="e.g. Kanji N5" class="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 px-2 text-sm font-bold focus:border-emerald-500 outline-none">
+                        <label class="block text-[8px] sm:text-[10px] font-bold text-slate-400 uppercase">Mode Label</label>
+                        <input type="text" id="admin-add-mode" placeholder="e.g. Kanji N5" class="w-full bg-slate-50 border border-slate-200 rounded-lg py-1.5 sm:py-2 px-1.5 sm:px-2 text-xs sm:text-sm font-bold focus:border-emerald-500 outline-none">
                     </div>
                 </div>
-                <div class="grid grid-cols-3 gap-2">
+                <div class="grid grid-cols-3 gap-1 sm:gap-2">
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase">Score</label>
-                        <input type="number" id="admin-add-score" value="0" class="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 px-2 text-sm font-bold focus:border-emerald-500 outline-none">
+                        <label class="block text-[8px] sm:text-[10px] font-bold text-slate-400 uppercase">Score</label>
+                        <input type="number" id="admin-add-score" value="0" class="w-full bg-slate-50 border border-slate-200 rounded-lg py-1.5 sm:py-2 px-1.5 sm:px-2 text-xs sm:text-sm font-bold focus:border-emerald-500 outline-none">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase">Time(s)</label>
-                        <input type="number" id="admin-add-time" value="30" class="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 px-2 text-sm font-bold focus:border-emerald-500 outline-none">
+                        <label class="block text-[8px] sm:text-[10px] font-bold text-slate-400 uppercase">Time(s)</label>
+                        <input type="number" id="admin-add-time" value="30" class="w-full bg-slate-50 border border-slate-200 rounded-lg py-1.5 sm:py-2 px-1.5 sm:px-2 text-xs sm:text-sm font-bold focus:border-emerald-500 outline-none">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase">Length</label>
-                        <input type="number" id="admin-add-length" value="1" class="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 px-2 text-sm font-bold focus:border-emerald-500 outline-none">
+                        <label class="block text-[8px] sm:text-[10px] font-bold text-slate-400 uppercase">Length</label>
+                        <input type="number" id="admin-add-length" value="1" class="w-full bg-slate-50 border border-slate-200 rounded-lg py-1.5 sm:py-2 px-1.5 sm:px-2 text-xs sm:text-sm font-bold focus:border-emerald-500 outline-none">
                     </div>
                 </div>
             </div>
 
-            <div class="flex gap-2 mt-4">
-                <button onclick="saveAdminAdd()" class="flex-1 py-3 bg-emerald-500 text-white rounded-xl font-bold hover:bg-emerald-600 active:scale-95">Inject Score</button>
-                <button onclick="closeAdminAddModal()" class="flex-1 py-3 bg-slate-100 text-slate-600 rounded-xl font-bold hover:bg-slate-200 active:scale-95">Cancel</button>
+            <div class="flex gap-2 mt-3 sm:mt-4">
+                <button onclick="saveAdminAdd()" class="flex-1 py-2 sm:py-3 bg-emerald-500 text-white rounded-xl font-bold hover:bg-emerald-600 active:scale-95 text-xs sm:text-sm">Inject Score</button>
+                <button onclick="closeAdminAddModal()" class="flex-1 py-2 sm:py-3 bg-slate-100 text-slate-600 rounded-xl font-bold hover:bg-slate-200 active:scale-95 text-xs sm:text-sm">Cancel</button>
             </div>
         </div>
     </div>
 
     <!-- Admin Badges Modal -->
-    <div id="admin-badges-modal" class="hidden fixed inset-0 z-[70] flex items-center justify-center p-4 modal-overlay">
-        <div class="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl space-y-4 border-2 border-purple-500 relative modal-content">
-            <button onclick="closeAdminBadgesModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-2xl leading-none">&times;</button>
-            <div class="text-center space-y-1 mb-4">
-                <h3 class="text-xl font-extrabold text-purple-700">Customize Badges</h3>
-                <p class="text-slate-500 text-xs">Upload custom images for badges</p>
+    <div id="admin-badges-modal" class="hidden fixed inset-0 z-[70] flex items-center justify-center p-4 sm:p-6 modal-overlay">
+        <div class="bg-white rounded-3xl p-5 sm:p-6 w-full max-w-sm shadow-2xl space-y-3 sm:space-y-4 border-2 border-purple-500 relative modal-content">
+            <button onclick="closeAdminBadgesModal()" class="absolute top-3 sm:top-4 right-3 sm:right-4 text-slate-400 hover:text-slate-600 text-2xl leading-none">&times;</button>
+            <div class="text-center space-y-1 mb-3 sm:mb-4">
+                <h3 class="text-lg sm:text-xl font-extrabold text-purple-700">Customize Badges</h3>
+                <p class="text-slate-500 text-[10px] sm:text-xs">Upload custom images for badges</p>
             </div>
             
-            <div class="space-y-3">
-                <button onclick="editBadgeIcon('gettingStarted')" class="w-full py-3 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl font-bold text-slate-700 flex justify-between items-center px-4 active:scale-95 transition-transform">
-                    <span>Getting Started</span> <span id="preview-badge-gettingStarted" class="text-2xl">🌱</span>
+            <div class="space-y-2 sm:space-y-3">
+                <button onclick="editBadgeIcon('gettingStarted')" class="w-full py-2 sm:py-3 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl font-bold text-slate-700 flex justify-between items-center px-3 sm:px-4 active:scale-95 transition-transform text-xs sm:text-sm">
+                    <span>Getting Started</span> <span id="preview-badge-gettingStarted" class="text-xl sm:text-2xl">🌱</span>
                 </button>
-                <button onclick="editBadgeIcon('top3')" class="w-full py-3 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl font-bold text-slate-700 flex justify-between items-center px-4 active:scale-95 transition-transform">
-                    <span>Top Ranker</span> <span id="preview-badge-top3" class="text-2xl">🏆</span>
+                <button onclick="editBadgeIcon('top3')" class="w-full py-2 sm:py-3 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl font-bold text-slate-700 flex justify-between items-center px-3 sm:px-4 active:scale-95 transition-transform text-xs sm:text-sm">
+                    <span>Top Ranker</span> <span id="preview-badge-top3" class="text-xl sm:text-2xl">🏆</span>
                 </button>
-                <button onclick="editBadgeIcon('veteran')" class="w-full py-3 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl font-bold text-slate-700 flex justify-between items-center px-4 active:scale-95 transition-transform">
-                    <span>Veteran</span> <span id="preview-badge-veteran" class="text-2xl">⚔️</span>
+                <button onclick="editBadgeIcon('veteran')" class="w-full py-2 sm:py-3 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl font-bold text-slate-700 flex justify-between items-center px-3 sm:px-4 active:scale-95 transition-transform text-xs sm:text-sm">
+                    <span>Veteran</span> <span id="preview-badge-veteran" class="text-xl sm:text-2xl">⚔️</span>
                 </button>
-                <button onclick="editBadgeIcon('developer')" class="w-full py-3 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl font-bold text-slate-700 flex justify-between items-center px-4 active:scale-95 transition-transform">
-                    <span>Developer</span> <span id="preview-badge-developer" class="text-2xl">👑</span>
+                <button onclick="editBadgeIcon('developer')" class="w-full py-2 sm:py-3 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl font-bold text-slate-700 flex justify-between items-center px-3 sm:px-4 active:scale-95 transition-transform text-xs sm:text-sm">
+                    <span>Developer</span> <span id="preview-badge-developer" class="text-xl sm:text-2xl">👑</span>
                 </button>
             </div>
         </div>
     </div>
 
     <!-- Admin Delete User Modal -->
-    <div id="admin-delete-user-modal" class="hidden fixed inset-0 z-[70] flex items-center justify-center p-4 modal-overlay">
-        <div class="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl space-y-4 border-2 border-red-500 relative modal-content">
-            <button onclick="closeAdminDeleteUserModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-2xl leading-none">&times;</button>
-            <div class="text-center space-y-1 mb-4">
-                <h3 class="text-xl font-extrabold text-red-600">Delete User Data</h3>
-                <p class="text-slate-500 text-xs">Purge a user from the database</p>
+    <div id="admin-delete-user-modal" class="hidden fixed inset-0 z-[70] flex items-center justify-center p-4 sm:p-6 modal-overlay">
+        <div class="bg-white rounded-3xl p-5 sm:p-6 w-full max-w-sm shadow-2xl space-y-3 sm:space-y-4 border-2 border-red-500 relative modal-content">
+            <button onclick="closeAdminDeleteUserModal()" class="absolute top-3 sm:top-4 right-3 sm:right-4 text-slate-400 hover:text-slate-600 text-2xl leading-none">&times;</button>
+            <div class="text-center space-y-1 mb-3 sm:mb-4">
+                <h3 class="text-lg sm:text-xl font-extrabold text-red-600">Delete User Data</h3>
+                <p class="text-slate-500 text-[10px] sm:text-xs">Purge a user from the database</p>
             </div>
             
-            <div class="space-y-3 pb-4">
+            <div class="space-y-2 sm:space-y-3 pb-3 sm:pb-4">
                 <div>
-                    <label class="block text-[10px] font-bold text-slate-400 uppercase">User ID (UID)</label>
-                    <input type="text" id="admin-delete-uid" placeholder="Enter UID to delete..." class="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 px-3 text-sm font-bold text-slate-700 focus:border-red-500 outline-none">
+                    <label class="block text-[8px] sm:text-[10px] font-bold text-slate-400 uppercase">User ID (UID)</label>
+                    <input type="text" id="admin-delete-uid" placeholder="Enter UID to delete..." class="w-full bg-slate-50 border border-slate-200 rounded-lg py-1.5 sm:py-2 px-2 sm:px-3 text-xs sm:text-sm font-bold text-slate-700 focus:border-red-500 outline-none">
                 </div>
-                <button onclick="adminDeleteUser()" class="w-full py-3 bg-red-600 text-white rounded-xl font-bold hover:bg-red-700 active:scale-95 transition-transform">Permanently Delete User</button>
+                <button onclick="adminDeleteUser()" class="w-full py-2 sm:py-3 bg-red-600 text-white rounded-xl font-bold hover:bg-red-700 active:scale-95 transition-transform text-xs sm:text-sm">Permanently Delete User</button>
             </div>
-            <div id="admin-delete-msg" class="hidden text-center text-xs font-bold mt-2"></div>
+            <div id="admin-delete-msg" class="hidden text-center text-[10px] sm:text-xs font-bold mt-1 sm:mt-2"></div>
         </div>
     </div>
 
     <!-- Admin Manage Developers Modal -->
-    <div id="admin-dev-modal" class="hidden fixed inset-0 z-[70] flex items-center justify-center p-4 modal-overlay">
-        <div class="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl space-y-4 border-2 border-blue-500 relative modal-content">
-            <button onclick="closeAdminDevModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-2xl leading-none">&times;</button>
-            <div class="text-center space-y-1 mb-4">
-                <h3 class="text-xl font-extrabold text-blue-600">Manage Developers</h3>
-                <p class="text-slate-500 text-xs">Grant or revoke the Developer Badge</p>
+    <div id="admin-dev-modal" class="hidden fixed inset-0 z-[70] flex items-center justify-center p-4 sm:p-6 modal-overlay">
+        <div class="bg-white rounded-3xl p-5 sm:p-6 w-full max-w-sm shadow-2xl space-y-3 sm:space-y-4 border-2 border-blue-500 relative modal-content">
+            <button onclick="closeAdminDevModal()" class="absolute top-3 sm:top-4 right-3 sm:right-4 text-slate-400 hover:text-slate-600 text-2xl leading-none">&times;</button>
+            <div class="text-center space-y-1 mb-3 sm:mb-4">
+                <h3 class="text-lg sm:text-xl font-extrabold text-blue-600">Manage Developers</h3>
+                <p class="text-slate-500 text-[10px] sm:text-xs">Grant or revoke the Developer Badge</p>
             </div>
             
-            <div class="space-y-3 pb-4">
+            <div class="space-y-2 sm:space-y-3 pb-3 sm:pb-4">
                 <div>
-                    <label class="block text-[10px] font-bold text-slate-400 uppercase">Username</label>
-                    <input type="text" id="admin-dev-username" placeholder="Enter username..." class="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 px-3 text-sm font-bold text-slate-700 focus:border-blue-500 outline-none">
+                    <label class="block text-[8px] sm:text-[10px] font-bold text-slate-400 uppercase">Username</label>
+                    <input type="text" id="admin-dev-username" placeholder="Enter username..." class="w-full bg-slate-50 border border-slate-200 rounded-lg py-1.5 sm:py-2 px-2 sm:px-3 text-xs sm:text-sm font-bold text-slate-700 focus:border-blue-500 outline-none">
                 </div>
                 <div class="flex gap-2">
-                    <button onclick="toggleDeveloperStatus(true)" class="flex-1 py-3 bg-emerald-500 text-white rounded-xl font-bold hover:bg-emerald-600 active:scale-95 transition-transform text-xs">Grant Badge</button>
-                    <button onclick="toggleDeveloperStatus(false)" class="flex-1 py-3 bg-red-500 text-white rounded-xl font-bold hover:bg-red-600 active:scale-95 transition-transform text-xs">Revoke Badge</button>
+                    <button onclick="toggleDeveloperStatus(true)" class="flex-1 py-2 sm:py-3 bg-emerald-500 text-white rounded-xl font-bold hover:bg-emerald-600 active:scale-95 transition-transform text-[10px] sm:text-xs">Grant Badge</button>
+                    <button onclick="toggleDeveloperStatus(false)" class="flex-1 py-2 sm:py-3 bg-red-500 text-white rounded-xl font-bold hover:bg-red-600 active:scale-95 transition-transform text-[10px] sm:text-xs">Revoke Badge</button>
                 </div>
             </div>
-            <div id="admin-dev-msg" class="hidden text-center text-xs font-bold mt-2"></div>
+            <div id="admin-dev-msg" class="hidden text-center text-[10px] sm:text-xs font-bold mt-1 sm:mt-2"></div>
         </div>
     </div>
 
     <!-- Footer -->
-    <div class="w-full max-w-4xl mt-8 flex flex-col md:flex-row justify-between items-center md:items-end gap-6 px-4 pb-8">
-        <footer class="text-slate-400 text-sm font-medium tracking-wide">
+    <div class="w-full max-w-4xl mt-6 sm:mt-8 flex flex-col md:flex-row justify-between items-center md:items-end gap-4 sm:gap-6 px-4 pb-6 sm:pb-8">
+        <footer class="text-slate-400 text-xs sm:text-sm font-medium tracking-wide text-center md:text-left">
             © 2026 じんせいかいはつ
         </footer>
-        <div class="flex flex-col items-center md:items-end gap-2">
-            <div class="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-300 mb-1">Developer Links</div>
-            <div class="flex flex-wrap justify-center md:justify-end gap-x-4 gap-y-2 text-xs font-semibold text-slate-400">
+        <div class="flex flex-col items-center md:items-end gap-1.5 sm:gap-2">
+            <div class="text-[8px] sm:text-[10px] font-bold uppercase tracking-[0.2em] text-slate-300 mb-0.5 sm:mb-1">Developer Links</div>
+            <div class="flex flex-wrap justify-center md:justify-end gap-x-3 sm:gap-x-4 gap-y-1.5 sm:gap-y-2 text-[10px] sm:text-xs font-semibold text-slate-400">
                 <a href="https://jinsunb.github.io/Jinsun/" target="_blank" class="social-link">Website</a>
                 <a href="https://www.facebook.com/jinsun.bautista" target="_blank" class="social-link">Facebook</a>
                 <a href="https://www.youtube.com/@PocialJ" target="_blank" class="social-link">YouTube (PocialJ)</a>
@@ -1496,7 +1496,7 @@
             
             if (!uid) {
                 msgEl.innerText = "Please enter a User ID.";
-                msgEl.className = "text-center text-xs font-bold mt-2 text-red-500";
+                msgEl.className = "text-center text-xs font-bold mt-1 sm:mt-2 text-red-500";
                 msgEl.classList.remove('hidden');
                 return;
             }
@@ -1505,7 +1505,7 @@
 
             try {
                 msgEl.innerText = "Deleting user data & leaderboard scores...";
-                msgEl.className = "text-center text-xs font-bold mt-2 text-indigo-500";
+                msgEl.className = "text-center text-[10px] sm:text-xs font-bold mt-1 sm:mt-2 text-indigo-500";
                 msgEl.classList.remove('hidden');
 
                 // 1. Delete user from 'users' collection (Frees up their username)
@@ -1521,7 +1521,7 @@
                 await Promise.all(deletePromises);
 
                 msgEl.innerText = "User and all associated scores deleted successfully!";
-                msgEl.className = "text-center text-xs font-bold mt-2 text-emerald-500";
+                msgEl.className = "text-center text-[10px] sm:text-xs font-bold mt-1 sm:mt-2 text-emerald-500";
                 
                 // Refresh UI
                 await fetchLeaderboard();
@@ -1531,7 +1531,7 @@
             } catch (error) {
                 console.error(error);
                 msgEl.innerText = "Error deleting user. Check console/permissions.";
-                msgEl.className = "text-center text-xs font-bold mt-2 text-red-500";
+                msgEl.className = "text-center text-[10px] sm:text-xs font-bold mt-1 sm:mt-2 text-red-500";
             }
         }
 
@@ -1549,14 +1549,14 @@
             
             try {
                 msgEl.innerText = "Updating...";
-                msgEl.className = "text-center text-xs font-bold mt-2 text-slate-500";
+                msgEl.className = "text-center text-[10px] sm:text-xs font-bold mt-1 sm:mt-2 text-slate-500";
                 msgEl.classList.remove('hidden');
 
                 const q = query(collection(db, "users"), where("username", "==", un));
                 const snap = await getDocs(q);
                 if (snap.empty) {
                     msgEl.innerText = "User not found!";
-                    msgEl.className = "text-center text-xs font-bold mt-2 text-red-500";
+                    msgEl.className = "text-center text-[10px] sm:text-xs font-bold mt-1 sm:mt-2 text-red-500";
                     return;
                 }
                 
@@ -1580,13 +1580,13 @@
                 });
                 
                 msgEl.innerText = `Developer badge ${status ? 'granted to' : 'revoked from'} ${un}!`;
-                msgEl.className = "text-center text-xs font-bold mt-2 text-emerald-500";
+                msgEl.className = "text-center text-[10px] sm:text-xs font-bold mt-1 sm:mt-2 text-emerald-500";
                 
                 if (!leaderboardScreen.classList.contains('hidden')) updateLeaderboardUI();
             } catch(e) {
                 console.error(e);
                 msgEl.innerText = "Error updating developer status.";
-                msgEl.className = "text-center text-xs font-bold mt-2 text-red-500";
+                msgEl.className = "text-center text-[10px] sm:text-xs font-bold mt-1 sm:mt-2 text-red-500";
             }
         }
 
@@ -1643,7 +1643,7 @@
         // Heartbeat for Online Status
         function getOnlineStatusDot(lastActive) {
             if (Date.now() - (lastActive || 0) < 5 * 60 * 1000) { // 5 mins
-                return `<div class="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 border-2 border-white rounded-full z-10 shadow-sm"></div>`;
+                return `<div class="absolute bottom-0 right-0 w-2.5 h-2.5 sm:w-3 sm:h-3 bg-emerald-500 border-2 border-white rounded-full z-10 shadow-sm dark:border-slate-800"></div>`;
             }
             return '';
         }
@@ -1747,12 +1747,12 @@
 
         // --- PROFILE MODAL (Viewing Self or Others & Badges) ---
         function renderBadgeCard(iconData, title, desc, customClass = '') {
-            const iconHtml = (iconData && iconData.startsWith('data:image')) ? `<img src="${iconData}" class="w-10 h-10 object-contain"/>` : `<span class="text-3xl">${iconData}</span>`;
+            const iconHtml = (iconData && iconData.startsWith('data:image')) ? `<img src="${iconData}" class="w-8 h-8 sm:w-10 sm:h-10 object-contain"/>` : `<span class="text-2xl sm:text-3xl">${iconData}</span>`;
             return `
-            <div class="badge-card flex flex-col items-center justify-center bg-white border border-slate-200 rounded-2xl p-3 w-full text-center shadow-sm relative group cursor-help ${customClass}">
-                <div class="mb-1 flex items-center justify-center h-12 w-12">${iconHtml}</div>
-                <div class="text-[10px] font-extrabold text-slate-700 leading-tight tracking-wide uppercase">${title}</div>
-                <div class="hidden group-hover:block absolute bottom-full mb-2 w-max max-w-[120px] bg-slate-800 text-white text-[9px] py-1.5 px-2 rounded-lg shadow-xl z-50 pointer-events-none">${desc}</div>
+            <div class="badge-card flex flex-col items-center justify-center bg-white border border-slate-200 rounded-2xl p-2 sm:p-3 w-full text-center shadow-sm relative group cursor-help ${customClass}">
+                <div class="mb-0.5 sm:mb-1 flex items-center justify-center h-10 w-10 sm:h-12 sm:w-12">${iconHtml}</div>
+                <div class="text-[8px] sm:text-[10px] font-extrabold text-slate-700 leading-tight tracking-wide uppercase">${title}</div>
+                <div class="hidden group-hover:block absolute bottom-full mb-1 sm:mb-2 w-max max-w-[100px] sm:max-w-[120px] bg-slate-800 text-white text-[8px] sm:text-[9px] py-1 sm:py-1.5 px-1.5 sm:px-2 rounded-lg shadow-xl z-50 pointer-events-none">${desc}</div>
             </div>`;
         }
 
@@ -1825,15 +1825,15 @@
                     friendBtn.classList.remove('hidden');
                     if (isFriend) {
                         friendBtn.innerText = 'Remove Friend';
-                        friendBtn.className = "w-full py-2.5 bg-red-100 text-red-600 rounded-xl font-bold text-sm hover:bg-red-200 transition-all mt-4 active:scale-95";
+                        friendBtn.className = "w-full py-2 sm:py-2.5 bg-red-100 text-red-600 rounded-xl font-bold text-xs sm:text-sm hover:bg-red-200 transition-all mt-3 sm:mt-4 active:scale-95";
                         friendBtn.onclick = () => removeFriend(uid);
                     } else if (hasSentRequest) {
                         friendBtn.innerText = 'Request Sent';
-                        friendBtn.className = "w-full py-2.5 bg-slate-200 text-slate-500 rounded-xl font-bold text-sm cursor-not-allowed mt-4";
+                        friendBtn.className = "w-full py-2 sm:py-2.5 bg-slate-200 text-slate-500 rounded-xl font-bold text-xs sm:text-sm cursor-not-allowed mt-3 sm:mt-4";
                         friendBtn.onclick = null;
                     } else {
                         friendBtn.innerText = 'Send Friend Request';
-                        friendBtn.className = "w-full py-2.5 bg-indigo-600 text-white rounded-xl font-bold text-sm hover:bg-indigo-700 transition-all mt-4 active:scale-95";
+                        friendBtn.className = "w-full py-2 sm:py-2.5 bg-indigo-600 text-white rounded-xl font-bold text-xs sm:text-sm hover:bg-indigo-700 transition-all mt-3 sm:mt-4 active:scale-95";
                         friendBtn.onclick = () => sendFriendRequest(uid);
                     }
                 }
@@ -1843,6 +1843,7 @@
 
         function openProfileModal() {
             if (!currentUser) return;
+            userProfileMenu.classList.add('hidden');
             viewProfile(currentUser.uid);
         }
         function closeProfileModal() { profileModal.classList.add('hidden'); }
@@ -1873,7 +1874,7 @@
             
             if (loadedUserData && input.toLowerCase() === loadedUserData.username.toLowerCase()) {
                 msgEl.innerText = "You can't add yourself!";
-                msgEl.className = "text-center text-xs font-bold mt-2 text-amber-500";
+                msgEl.className = "text-center text-[10px] sm:text-xs font-bold mt-1 sm:mt-2 text-amber-500";
                 msgEl.classList.remove('hidden');
                 return;
             }
@@ -1883,7 +1884,7 @@
                 const snap = await getDocs(q);
                 if (snap.empty) {
                     msgEl.innerText = "User not found!";
-                    msgEl.className = "text-center text-xs font-bold mt-2 text-red-500";
+                    msgEl.className = "text-center text-[10px] sm:text-xs font-bold mt-1 sm:mt-2 text-red-500";
                     msgEl.classList.remove('hidden');
                     return;
                 }
@@ -1903,7 +1904,7 @@
                 
                 if (msgEl) {
                     msgEl.innerText = "Friend request sent successfully!";
-                    msgEl.className = "text-center text-xs font-bold mt-2 text-emerald-500";
+                    msgEl.className = "text-center text-[10px] sm:text-xs font-bold mt-1 sm:mt-2 text-emerald-500";
                     msgEl.classList.remove('hidden');
                     setTimeout(() => msgEl.classList.add('hidden'), 3000);
                 }
@@ -1911,7 +1912,7 @@
                 console.error(e); 
                 if (msgEl) {
                     msgEl.innerText = "Error: Please ask Owner to update Firestore Rules.";
-                    msgEl.className = "text-center text-xs font-bold mt-2 text-red-500";
+                    msgEl.className = "text-center text-[10px] sm:text-xs font-bold mt-1 sm:mt-2 text-red-500";
                     msgEl.classList.remove('hidden');
                 }
             }
@@ -1948,7 +1949,7 @@
         async function loadFriendsList() {
             if (!currentUser) return;
             const listEl = document.getElementById('friends-list');
-            listEl.innerHTML = '<div class="text-center text-slate-400 py-6 text-xs font-bold">Loading...</div>';
+            listEl.innerHTML = '<div class="text-center text-slate-400 py-6 text-[10px] sm:text-xs font-bold">Loading...</div>';
 
             try {
                 const myDoc = await getDoc(doc(db, "users", currentUser.uid));
@@ -1957,7 +1958,7 @@
 
                 let html = '';
                 if (friends.length === 0) {
-                    html += '<div class="text-center text-slate-400 py-10 text-xs font-bold bg-slate-50 rounded-xl border border-slate-100">No friends yet. Add someone!</div>';
+                    html += '<div class="text-center text-slate-400 py-10 text-[10px] sm:text-xs font-bold bg-slate-50 rounded-xl border border-slate-100">No friends yet. Add someone!</div>';
                 } else {
                     const friendPromises = friends.map(uid => getDoc(doc(db, "users", uid)));
                     const friendDocs = await Promise.all(friendPromises);
@@ -1966,19 +1967,19 @@
                             const fData = fDoc.data();
                             const fInfo = calculateLevelInfo(fData.exp);
                             html += `
-                            <div class="flex justify-between items-center bg-slate-50 p-3 rounded-xl border border-slate-100 hover:border-indigo-200 transition-colors mb-2">
-                                <div class="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity flex-grow" onclick="viewProfile('${fDoc.id}')">
-                                    <div class="w-10 h-10 rounded-full overflow-hidden bg-white border border-slate-200 text-xl flex items-center justify-center flex-shrink-0 relative">
+                            <div class="flex justify-between items-center bg-slate-50 p-2 sm:p-3 rounded-xl border border-slate-100 hover:border-indigo-200 transition-colors mb-2 min-w-0">
+                                <div class="flex items-center gap-2 sm:gap-3 cursor-pointer hover:opacity-80 transition-opacity flex-grow min-w-0" onclick="viewProfile('${fDoc.id}')">
+                                    <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full overflow-hidden bg-white border border-slate-200 text-lg sm:text-xl flex items-center justify-center flex-shrink-0 relative">
                                         ${getAvatarHTML(fData.avatar)}
                                         ${getOnlineStatusDot(fData.lastActive)}
                                     </div>
-                                    <div>
-                                        <div class="font-bold text-slate-700 text-sm leading-tight">${fData.displayName || 'Player'}</div>
-                                        <div class="text-[10px] text-slate-400 font-medium">@${fData.username || 'user'} <span class="mx-1">•</span> <span class="text-indigo-500 font-bold">Lv.${fInfo.level}</span></div>
+                                    <div class="min-w-0 pr-2">
+                                        <div class="font-bold text-slate-700 text-xs sm:text-sm leading-tight truncate">${fData.displayName || 'Player'}</div>
+                                        <div class="text-[8px] sm:text-[10px] text-slate-400 font-medium truncate">@${fData.username || 'user'} <span class="mx-0.5 sm:mx-1">•</span> <span class="text-indigo-500 font-bold">Lv.${fInfo.level}</span></div>
                                     </div>
                                 </div>
-                                <button onclick="removeFriend('${fDoc.id}')" class="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors ml-2 active:scale-95" title="Remove Friend">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+                                <button onclick="removeFriend('${fDoc.id}')" class="p-1.5 sm:p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors ml-1 sm:ml-2 active:scale-95 flex-shrink-0" title="Remove Friend">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 sm:w-5 sm:h-5">
                                       <path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM2.615 16.428a1.224 1.224 0 0 1-.569-1.175 6.002 6.002 0 0 1 11.908 0c.058.467-.172.92-.57 1.174A9.953 9.953 0 0 1 8 18a9.953 9.953 0 0 1-5.385-1.572ZM16.25 5.75a.75.75 0 0 0-1.5 0v2.5h-2.5a.75.75 0 0 0 0 1.5h2.5v2.5a.75.75 0 0 0 1.5 0v-2.5h2.5a.75.75 0 0 0 0-1.5h-2.5v-2.5Z" />
                                     </svg>
                                 </button>
@@ -1989,7 +1990,7 @@
                 listEl.innerHTML = html;
             } catch(e) {
                 console.error(e);
-                listEl.innerHTML = '<div class="text-center text-red-400 py-4 text-xs font-bold">Failed to load friends.</div>';
+                listEl.innerHTML = '<div class="text-center text-red-400 py-4 text-[10px] sm:text-xs font-bold">Failed to load friends.</div>';
             }
         }
 
@@ -1997,7 +1998,7 @@
         async function openNotificationsModal() {
             notifsModal.classList.remove('hidden');
             const listEl = document.getElementById('notifications-list');
-            listEl.innerHTML = '<div class="text-center text-slate-400 py-6 text-xs font-bold">Loading alerts...</div>';
+            listEl.innerHTML = '<div class="text-center text-slate-400 py-6 text-[10px] sm:text-xs font-bold">Loading alerts...</div>';
 
             try {
                 if(!currentUser) return;
@@ -2008,27 +2009,27 @@
                 let html = '';
 
                 if (requests.length > 0) {
-                    html += `<div class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-2 mt-2">Friend Requests</div>`;
+                    html += `<div class="text-[8px] sm:text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-1 sm:mb-2 mt-1 sm:mt-2">Friend Requests</div>`;
                     const reqPromises = requests.map(uid => getDoc(doc(db, "users", uid)));
                     const reqDocs = await Promise.all(reqPromises);
                     reqDocs.forEach(rDoc => {
                         if (rDoc.exists()) {
                             const rData = rDoc.data();
                             html += `
-                            <div class="flex justify-between items-center bg-amber-50 p-3 rounded-xl border border-amber-200 mb-2">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-10 h-10 rounded-full overflow-hidden bg-white border border-amber-300 text-xl flex items-center justify-center flex-shrink-0 cursor-pointer relative" onclick="viewProfile('${rDoc.id}')">
+                            <div class="flex justify-between items-center bg-amber-50 p-2 sm:p-3 rounded-xl border border-amber-200 mb-2 min-w-0">
+                                <div class="flex items-center gap-2 sm:gap-3 min-w-0">
+                                    <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full overflow-hidden bg-white border border-amber-300 text-lg sm:text-xl flex items-center justify-center flex-shrink-0 cursor-pointer relative" onclick="viewProfile('${rDoc.id}')">
                                         ${getAvatarHTML(rData.avatar)}
                                         ${getOnlineStatusDot(rData.lastActive)}
                                     </div>
-                                    <div>
-                                        <div class="font-bold text-slate-800 text-sm leading-tight">${rData.displayName || 'Player'}</div>
-                                        <div class="text-[10px] text-slate-500 font-medium">@${rData.username || 'user'}</div>
+                                    <div class="min-w-0 pr-1 sm:pr-2">
+                                        <div class="font-bold text-slate-800 text-xs sm:text-sm leading-tight truncate">${rData.displayName || 'Player'}</div>
+                                        <div class="text-[8px] sm:text-[10px] text-slate-500 font-medium truncate">@${rData.username || 'user'}</div>
                                     </div>
                                 </div>
-                                <div class="flex gap-1">
-                                    <button onclick="acceptRequest('${rDoc.id}')" class="px-3 py-1.5 bg-indigo-600 text-white text-[10px] font-bold rounded-lg hover:bg-indigo-700 transition-colors active:scale-95">Accept</button>
-                                    <button onclick="declineRequest('${rDoc.id}')" class="px-3 py-1.5 bg-slate-200 text-slate-600 text-[10px] font-bold rounded-lg hover:bg-slate-300 transition-colors active:scale-95">Ignore</button>
+                                <div class="flex gap-1 flex-shrink-0">
+                                    <button onclick="acceptRequest('${rDoc.id}')" class="px-2 sm:px-3 py-1 sm:py-1.5 bg-indigo-600 text-white text-[8px] sm:text-[10px] font-bold rounded-lg hover:bg-indigo-700 transition-colors active:scale-95">Accept</button>
+                                    <button onclick="declineRequest('${rDoc.id}')" class="px-2 sm:px-3 py-1 sm:py-1.5 bg-slate-200 text-slate-600 text-[8px] sm:text-[10px] font-bold rounded-lg hover:bg-slate-300 transition-colors active:scale-95">Ignore</button>
                                 </div>
                             </div>`;
                         }
@@ -2036,18 +2037,18 @@
                 }
 
                 if (notifs.length > 0) {
-                    html += `<div class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-2 mt-4">System Alerts</div>`;
+                    html += `<div class="text-[8px] sm:text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-1 sm:mb-2 mt-3 sm:mt-4">System Alerts</div>`;
                     [...notifs].reverse().forEach(n => {
                         html += `
-                        <div class="flex justify-between items-center bg-indigo-50 p-3 rounded-xl border border-indigo-100 mb-2">
-                            <div class="text-sm font-bold text-indigo-700">${n.text}</div>
-                            <button onclick="clearNotification('${n.id}'); this.parentElement.remove();" class="text-indigo-400 hover:text-indigo-600 text-lg leading-none active:scale-95">&times;</button>
+                        <div class="flex justify-between items-center bg-indigo-50 p-2 sm:p-3 rounded-xl border border-indigo-100 mb-2 min-w-0">
+                            <div class="text-xs sm:text-sm font-bold text-indigo-700 truncate pr-2">${n.text}</div>
+                            <button onclick="clearNotification('${n.id}'); this.parentElement.remove();" class="text-indigo-400 hover:text-indigo-600 text-lg leading-none active:scale-95 flex-shrink-0">&times;</button>
                         </div>`;
                     });
                 }
 
                 if (!html) {
-                    html = '<div class="text-center text-slate-400 py-10 text-xs font-bold bg-slate-50 rounded-xl border border-slate-100">You are all caught up!</div>';
+                    html = '<div class="text-center text-slate-400 py-10 text-[10px] sm:text-xs font-bold bg-slate-50 rounded-xl border border-slate-100">You are all caught up!</div>';
                 }
                 listEl.innerHTML = html;
             } catch(e) { console.error(e); }
@@ -2194,6 +2195,7 @@
 
         async function openSettingsModal() {
             if (!currentUser) return;
+            userProfileMenu.classList.add('hidden');
             try {
                 const userDoc = await getDoc(doc(db, "users", currentUser.uid));
                 if (userDoc.exists()) {
@@ -2233,7 +2235,7 @@
         function showSettingsMessage(msg, type) {
             const msgEl = document.getElementById('settings-msg');
             msgEl.innerText = msg;
-            msgEl.className = `text-xs font-bold p-2 rounded-lg mt-4 ${type === 'error' ? 'bg-red-50 text-red-600 border border-red-100' : 'bg-emerald-50 text-emerald-600 border border-emerald-100'}`;
+            msgEl.className = `text-[10px] sm:text-xs font-bold p-2 rounded-lg mt-3 sm:mt-4 ${type === 'error' ? 'bg-red-50 text-red-600 border border-red-100' : 'bg-emerald-50 text-emerald-600 border border-emerald-100'}`;
             msgEl.classList.remove('hidden');
             setTimeout(() => msgEl.classList.add('hidden'), 3000);
         }
@@ -2485,7 +2487,7 @@
             homeScreen.classList.add('hidden');
             leaderboardScreen.classList.remove('hidden');
             
-            leaderboardFullList.innerHTML = `<div class="text-center text-slate-400 py-10 text-sm font-medium">Loading scores...</div>`;
+            leaderboardFullList.innerHTML = `<div class="text-center text-slate-400 py-10 text-[10px] sm:text-xs font-bold">Loading scores...</div>`;
             await fetchLeaderboard();
             setLeaderboardTab(selectedCategory); 
         }
@@ -2519,7 +2521,7 @@
             filteredLeaderboard.sort((a, b) => b.score - a.score);
 
             if (filteredLeaderboard.length === 0) {
-                leaderboardFullList.innerHTML = `<div class="text-center text-slate-400 py-10 text-sm font-medium bg-slate-50 rounded-2xl border border-slate-100 mt-4">No scores yet in this category. Be the first to rank up!</div>`;
+                leaderboardFullList.innerHTML = `<div class="text-center text-slate-400 py-10 text-[10px] sm:text-xs font-bold bg-slate-50 rounded-xl border border-slate-100 mt-2 sm:mt-4">No scores yet in this category. Be the first to rank up!</div>`;
                 document.getElementById('leaderboard-pinned-user').classList.add('hidden');
                 return;
             }
@@ -2540,41 +2542,41 @@
                                      (entry.email && entry.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) || 
                                      (isMe && currentUser.email && currentUser.email.toLowerCase() === ADMIN_EMAIL.toLowerCase());
                 
-                let containerClass = 'bg-white p-4 rounded-2xl border border-slate-100 transition-transform transform hover:-translate-y-1 hover:shadow-md cursor-pointer';
-                if (i === 0) containerClass = 'bg-white p-4 rounded-2xl border border-amber-200 shadow-sm transition-transform transform hover:-translate-y-1 hover:shadow-md cursor-pointer';
-                if (isMe && !isOwnerEntry) containerClass = 'bg-indigo-50/30 p-4 rounded-2xl border border-indigo-300 transition-transform transform hover:-translate-y-1 hover:shadow-md cursor-pointer';
-                if (isOwnerEntry) containerClass = 'owner-bg p-4 rounded-2xl border-none shadow-sm transition-transform transform hover:-translate-y-1 hover:shadow-md cursor-pointer';
+                let containerClass = 'bg-white p-2.5 sm:p-4 rounded-xl sm:rounded-2xl border border-slate-100 transition-transform transform hover:-translate-y-1 hover:shadow-md cursor-pointer';
+                if (i === 0) containerClass = 'bg-white p-2.5 sm:p-4 rounded-xl sm:rounded-2xl border border-amber-200 shadow-sm transition-transform transform hover:-translate-y-1 hover:shadow-md cursor-pointer';
+                if (isMe && !isOwnerEntry) containerClass = 'bg-indigo-50/30 p-2.5 sm:p-4 rounded-xl sm:rounded-2xl border border-indigo-300 transition-transform transform hover:-translate-y-1 hover:shadow-md cursor-pointer';
+                if (isOwnerEntry) containerClass = 'owner-bg p-2.5 sm:p-4 rounded-xl sm:rounded-2xl border-none shadow-sm transition-transform transform hover:-translate-y-1 hover:shadow-md cursor-pointer';
 
                 let adminControlsHtml = '';
                 if (isAdminMode && currentUser?.email && currentUser.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
                     adminControlsHtml = `
-                        <button onclick="event.stopPropagation(); openAdminEditModal('${entry.id}', '${entry.userId}', ${entry.score}, ${entry.level || 1})" class="text-xs bg-indigo-100 hover:bg-indigo-200 text-indigo-700 px-2 py-1 rounded font-bold ml-2 transition-colors active:scale-95">Edit</button>
-                        <button onclick="event.stopPropagation(); deleteScore('${entry.id}')" class="text-xs bg-red-100 hover:bg-red-200 text-red-600 px-2 py-1 rounded font-bold ml-1 transition-colors active:scale-95">Del</button>
+                        <button onclick="event.stopPropagation(); openAdminEditModal('${entry.id}', '${entry.userId}', ${entry.score}, ${entry.level || 1})" class="text-[10px] sm:text-xs bg-indigo-100 hover:bg-indigo-200 text-indigo-700 px-1.5 sm:px-2 py-1 rounded font-bold ml-1 sm:ml-2 transition-colors active:scale-95">Edit</button>
+                        <button onclick="event.stopPropagation(); deleteScore('${entry.id}')" class="text-[10px] sm:text-xs bg-red-100 hover:bg-red-200 text-red-600 px-1.5 sm:px-2 py-1 rounded font-bold ml-1 transition-colors active:scale-95">Del</button>
                     `;
                 }
 
                 return `
-                <div class="flex justify-between items-center ${containerClass} relative group" onclick="viewProfile('${entry.userId}')">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-full flex-shrink-0 ${rankClass} flex items-center justify-center font-bold">
+                <div class="flex justify-between items-center ${containerClass} relative group min-w-0" onclick="viewProfile('${entry.userId}')">
+                    <div class="flex items-center gap-2 sm:gap-3 min-w-0">
+                        <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex-shrink-0 ${rankClass} flex items-center justify-center font-bold text-xs sm:text-base">
                             ${rankDisplay}
                         </div>
-                        <div class="flex items-center gap-3">
-                            <div class="text-2xl w-11 h-11 rounded-full border border-slate-200 flex items-center justify-center bg-slate-50 flex-shrink-0 ${isOwnerEntry ? 'owner-aura p-0 overflow-hidden' : 'overflow-hidden'}">
+                        <div class="flex items-center gap-2 sm:gap-3 min-w-0">
+                            <div class="text-xl sm:text-2xl w-9 h-9 sm:w-11 sm:h-11 rounded-full border border-slate-200 flex items-center justify-center bg-slate-50 flex-shrink-0 ${isOwnerEntry ? 'owner-aura p-0 overflow-hidden' : 'overflow-hidden'}">
                                 ${getAvatarHTML(entry.avatar)}
                             </div>
-                            <div>
-                                <div class="font-bold text-slate-700 flex items-center gap-1.5 flex-wrap group-hover:text-indigo-600 transition-colors">
-                                    <span class="${isOwnerEntry ? 'owner-badge px-1.5 py-0.5 rounded text-[10px] uppercase font-black tracking-widest' : ''}">${isOwnerEntry ? '[OWNER]' : ''}</span>
-                                    <span class="${isOwnerEntry ? 'font-extrabold text-slate-900' : ''}">${entry.displayName || 'Player'}</span>
-                                    <span class="text-[10px] bg-indigo-50 text-indigo-500 border border-indigo-100 px-1.5 py-0.5 rounded font-bold ml-1 tracking-wider">Lv.${entry.level || 1}</span>
+                            <div class="min-w-0">
+                                <div class="font-bold text-slate-700 flex items-center gap-1 sm:gap-1.5 flex-wrap group-hover:text-indigo-600 transition-colors truncate">
+                                    <span class="${isOwnerEntry ? 'owner-badge px-1.5 py-0.5 rounded text-[8px] sm:text-[10px] uppercase font-black tracking-widest' : ''}">${isOwnerEntry ? '[OWNER]' : ''}</span>
+                                    <span class="truncate ${isOwnerEntry ? 'font-extrabold text-slate-900' : ''} text-xs sm:text-base">${entry.displayName || 'Player'}</span>
+                                    <span class="text-[8px] sm:text-[10px] bg-indigo-50 text-indigo-500 border border-indigo-100 px-1.5 py-0.5 rounded font-bold ml-0.5 sm:ml-1 tracking-wider">Lv.${entry.level || 1}</span>
                                 </div>
-                                <div class="text-[10px] text-slate-400 uppercase tracking-wider mt-0.5">${entry.mode} • ${entry.time}s • Len: ${entry.length}</div>
+                                <div class="text-[8px] sm:text-[10px] text-slate-400 uppercase tracking-wider mt-0.5 truncate">${entry.mode} • ${entry.time}s • Len: ${entry.length}</div>
                             </div>
                         </div>
                     </div>
-                    <div class="flex items-center gap-1">
-                        <div class="text-indigo-600 font-black text-xl ml-2 group-hover:scale-110 transition-transform">${entry.score}</div>
+                    <div class="flex items-center gap-1 flex-shrink-0">
+                        <div class="text-indigo-600 font-black text-lg sm:text-xl ml-1 sm:ml-2 group-hover:scale-110 transition-transform">${entry.score}</div>
                         ${adminControlsHtml}
                     </div>
                 </div>
@@ -2597,26 +2599,26 @@
                                          (currentUser.email && currentUser.email.toLowerCase() === ADMIN_EMAIL.toLowerCase());
                     
                     pinnedContainer.innerHTML = `
-                    <div class="flex justify-between items-center cursor-pointer" onclick="viewProfile('${myEntry.userId}')">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-full flex-shrink-0 ${rankClass} flex items-center justify-center font-bold">
+                    <div class="flex justify-between items-center cursor-pointer min-w-0" onclick="viewProfile('${myEntry.userId}')">
+                        <div class="flex items-center gap-2 sm:gap-3 min-w-0">
+                            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex-shrink-0 ${rankClass} flex items-center justify-center font-bold text-xs sm:text-base">
                                 ${rankDisplay}
                             </div>
-                            <div class="flex items-center gap-3">
-                                <div class="text-2xl w-11 h-11 rounded-full border border-slate-200 flex items-center justify-center bg-slate-50 flex-shrink-0 ${isOwnerEntry ? 'owner-aura p-0 overflow-hidden' : 'overflow-hidden'}">
+                            <div class="flex items-center gap-2 sm:gap-3 min-w-0">
+                                <div class="text-xl sm:text-2xl w-9 h-9 sm:w-11 sm:h-11 rounded-full border border-slate-200 flex items-center justify-center bg-slate-50 flex-shrink-0 ${isOwnerEntry ? 'owner-aura p-0 overflow-hidden' : 'overflow-hidden'}">
                                     ${getAvatarHTML(myEntry.avatar)}
                                 </div>
-                                <div>
-                                    <div class="font-bold text-indigo-600 flex items-center gap-1.5 flex-wrap">
+                                <div class="min-w-0">
+                                    <div class="font-bold text-indigo-600 flex items-center gap-1 sm:gap-1.5 flex-wrap truncate text-xs sm:text-base">
                                         Your Rank
-                                        <span class="text-[10px] bg-indigo-50 text-indigo-500 border border-indigo-100 px-1.5 py-0.5 rounded font-bold ml-1 tracking-wider">Lv.${myEntry.level || 1}</span>
+                                        <span class="text-[8px] sm:text-[10px] bg-indigo-50 text-indigo-500 border border-indigo-100 px-1.5 py-0.5 rounded font-bold ml-0.5 sm:ml-1 tracking-wider">Lv.${myEntry.level || 1}</span>
                                     </div>
-                                    <div class="text-[10px] text-slate-400 uppercase tracking-wider mt-0.5">${myEntry.mode}</div>
+                                    <div class="text-[8px] sm:text-[10px] text-slate-400 uppercase tracking-wider mt-0.5 truncate">${myEntry.mode}</div>
                                 </div>
                             </div>
                         </div>
-                        <div class="flex items-center gap-1">
-                            <div class="text-indigo-600 font-black text-xl ml-2">${myEntry.score}</div>
+                        <div class="flex items-center gap-1 flex-shrink-0">
+                            <div class="text-indigo-600 font-black text-lg sm:text-xl ml-1 sm:ml-2">${myEntry.score}</div>
                         </div>
                     </div>`;
                     pinnedContainer.classList.remove('hidden');
@@ -2763,10 +2765,10 @@
                 guestLoginPrompt.classList.remove('hidden');
                 expNotif.classList.add('hidden');
                 feedbackMsg.innerText = score === 0 ? "You didn't type any words! No points awarded." : "Great effort! Log in to save it.";
-                feedbackMsg.className = "text-sm font-bold px-4 text-slate-500";
+                feedbackMsg.className = "text-xs sm:text-sm font-bold px-4 text-slate-500";
                 endEmoji.innerText = '🏆';
                 endTitle.innerText = "Time's Up!";
-                endTitle.className = "text-2xl font-extrabold text-slate-800";
+                endTitle.className = "text-xl sm:text-2xl font-extrabold text-slate-800";
             } else {
                 guestLoginPrompt.classList.add('hidden');
                 
@@ -2839,17 +2841,17 @@
                 if (isHighScore && score > 0) {
                     endEmoji.innerText = '👑';
                     endTitle.innerText = "New High Score!";
-                    endTitle.className = "text-2xl font-extrabold text-amber-500";
+                    endTitle.className = "text-xl sm:text-2xl font-extrabold text-amber-500";
                     feedbackMsg.innerText = "Your score was saved to the leaderboard!";
-                    feedbackMsg.className = "text-sm font-bold px-4 text-amber-500";
+                    feedbackMsg.className = "text-xs sm:text-sm font-bold px-4 text-amber-500";
                 } else {
                     endEmoji.innerText = '🏆';
                     endTitle.innerText = "Time's Up!";
-                    endTitle.className = "text-2xl font-extrabold text-slate-800";
+                    endTitle.className = "text-xl sm:text-2xl font-extrabold text-slate-800";
                     const wpm = (score / totalTime) * 60;
                     feedbackMsg.innerText = score === 0 ? "You didn't type any words! No points awarded." : 
                                             (wpm > 30 ? "Amazing speed!" : "Great effort, keep practicing!");
-                    feedbackMsg.className = "text-sm font-bold px-4 text-slate-500";
+                    feedbackMsg.className = "text-xs sm:text-sm font-bold px-4 text-slate-500";
                 }
             }
         }
