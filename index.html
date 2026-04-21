@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Japanese Speed Test by Jinsun</title>
+    <title>Japanese Speed Test</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Sans+JP:wght@700&display=swap');
@@ -11,11 +11,18 @@
         body {
             font-family: 'Inter', sans-serif;
             background-color: #f8fafc;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         .japanese-text {
             font-family: 'Noto Sans JP', sans-serif;
         }
+
+        /* Beautiful Scrollbar Polish */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; border: 2px solid transparent; background-clip: padding-box; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; border: 2px solid transparent; background-clip: padding-box; }
 
         .shake {
             animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
@@ -28,8 +35,17 @@
             40%, 60% { transform: translate3d(4px, 0, 0); }
         }
 
+        @keyframes modal-pop {
+            0% { transform: scale(0.95); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-content {
+            animation: modal-pop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
         .progress-bar {
-            transition: width 0.1s linear;
+            transition: width 0.1s linear, background-color 0.3s ease;
         }
 
         .mode-card {
@@ -101,13 +117,39 @@
             background: linear-gradient(to right, #a855f7, #ec4899, #ef4444);
             color: white;
         }
+        
+        .badge-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .badge-card:hover { transform: translateY(-4px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+
+        /* SMART DARK MODE ENGINE */
+        html.dark { background-color: #0f172a; color: #f8fafc; }
+        html.dark body { background-color: #0f172a; color: #f8fafc; }
+        html.dark .bg-white { background-color: #1e293b !important; border-color: #334155 !important; }
+        html.dark .bg-slate-50 { background-color: #0f172a !important; border-color: #1e293b !important; }
+        html.dark .bg-slate-100 { background-color: #334155 !important; border-color: #475569 !important; color: #cbd5e1 !important; }
+        html.dark .bg-slate-200 { background-color: #475569 !important; }
+        html.dark .text-slate-900, html.dark .text-slate-800 { color: #f8fafc !important; }
+        html.dark .text-slate-700 { color: #e2e8f0 !important; }
+        html.dark .text-slate-600 { color: #cbd5e1 !important; }
+        html.dark .text-slate-500 { color: #94a3b8 !important; }
+        html.dark .text-slate-400 { color: #64748b !important; }
+        html.dark .border-slate-100 { border-color: #1e293b !important; }
+        html.dark .border-slate-200 { border-color: #334155 !important; }
+        html.dark .border-slate-300 { border-color: #475569 !important; }
+        html.dark input, html.dark textarea, html.dark select { background-color: #0f172a !important; color: #f8fafc !important; border-color: #334155 !important; }
+        html.dark .hover\:bg-slate-50:hover { background-color: #1e293b !important; }
+        html.dark .hover\:bg-slate-100:hover, html.dark .hover\:bg-slate-200:hover { background-color: #334155 !important; }
+        html.dark .shadow-2xl { box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7) !important; }
+        html.dark .shadow-sm, html.dark .shadow-md, html.dark .shadow-lg { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5) !important; }
+        html.dark ::-webkit-scrollbar-thumb { background: #475569; }
+        html.dark ::-webkit-scrollbar-thumb:hover { background: #64748b; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-x-hidden">
 
     <!-- Top Left Controls (Friends & Admin) -->
     <div class="absolute top-4 left-4 z-50 flex flex-col gap-2 items-start">
-        <button id="friends-btn" onclick="openFriendsModal()" class="hidden px-4 py-2 bg-white text-indigo-600 font-bold rounded-xl shadow-sm border border-slate-200 hover:border-indigo-300 hover:shadow-md transition-all flex items-center gap-2">
+        <button id="friends-btn" onclick="openFriendsModal()" class="hidden px-4 py-2 bg-white text-indigo-600 font-bold rounded-xl shadow-sm border border-slate-200 hover:border-indigo-300 hover:shadow-md transition-all flex items-center gap-2 active:scale-95">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
               <path d="M4.5 6.375a4.125 4.125 0 1 1 8.25 0 4.125 4.125 0 0 1-8.25 0ZM14.25 8.625a3.375 3.375 0 1 1 6.75 0 3.375 3.375 0 0 1-6.75 0ZM1.5 19.125a7.125 7.125 0 0 1 14.25 0v.003l-.001.119a.75.75 0 0 1-.363.63 13.067 13.067 0 0 1-6.761 1.873c-2.472 0-4.786-.684-6.76-1.873a.75.75 0 0 1-.364-.63l-.001-.122ZM17.25 19.128l-.001.144a2.25 2.25 0 0 1-.233.96 10.088 10.088 0 0 0 5.06-1.01.75.75 0 0 0 .42-.643 4.875 4.875 0 0 0-6.957-4.611 8.586 8.586 0 0 1 1.71 5.157v.003Z" />
             </svg>
@@ -123,16 +165,34 @@
                     <div class="w-7 h-4 bg-slate-600 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-emerald-500"></div>
                 </label>
             </div>
-            <button id="admin-add-btn" onclick="openAdminAddModal()" class="hidden w-full text-xs bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-1.5 px-3 rounded-full shadow-lg transition-all text-center border border-indigo-500">
+            <button id="admin-add-btn" onclick="openAdminAddModal()" class="hidden w-full text-xs bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-1.5 px-3 rounded-full shadow-lg transition-all text-center border border-indigo-500 active:scale-95">
                 + Add Score
+            </button>
+            <button id="admin-badge-btn" onclick="openAdminBadgesModal()" class="hidden w-full text-xs bg-purple-600 hover:bg-purple-700 text-white font-bold py-1.5 px-3 rounded-full shadow-lg transition-all text-center border border-purple-500 active:scale-95">
+                Customize Badges
+            </button>
+            <button id="admin-dev-btn" onclick="openAdminDevModal()" class="hidden w-full text-xs bg-blue-600 hover:bg-blue-700 text-white font-bold py-1.5 px-3 rounded-full shadow-lg transition-all text-center border border-blue-500 active:scale-95">
+                Manage Developers
+            </button>
+            <button id="admin-delete-user-btn" onclick="openAdminDeleteUserModal()" class="hidden w-full text-xs bg-red-600 hover:bg-red-700 text-white font-bold py-1.5 px-3 rounded-full shadow-lg transition-all text-center border border-red-500 active:scale-95">
+                Delete User Data
             </button>
         </div>
     </div>
 
     <!-- Top Right Auth Section -->
-    <div class="absolute top-4 right-4 z-50">
+    <div class="absolute top-4 right-4 z-50 flex items-center gap-2">
+        
+        <!-- Notifications Bell -->
+        <div id="notif-btn" class="hidden relative flex items-center justify-center cursor-pointer p-2 rounded-full hover:bg-slate-200 transition-colors active:scale-95" onclick="openNotificationsModal()">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 text-slate-500">
+                <path fill-rule="evenodd" d="M5.25 9a6.75 6.75 0 0 1 13.5 0v.75c0 2.123.8 4.057 2.118 5.52a.75.75 0 0 1-.297 1.206c-1.544.57-3.16.99-4.831 1.243a3.75 3.75 0 1 1-7.48 0 24.585 24.585 0 0 1-4.831-1.244.75.75 0 0 1-.298-1.205A8.217 8.217 0 0 0 5.25 9.75V9Zm4.502 8.9a2.25 2.25 0 1 0 4.496 0 25.057 25.057 0 0 1-4.496 0Z" clip-rule="evenodd" />
+            </svg>
+            <div id="notif-badge" class="hidden absolute top-1 right-1 w-4 h-4 bg-red-500 rounded-full border-2 border-white flex items-center justify-center text-[8px] font-black text-white">0</div>
+        </div>
+
         <!-- Logged Out View -->
-        <button id="login-btn" onclick="openAuthModal()" class="px-4 py-2 bg-white text-indigo-600 font-bold rounded-xl shadow-sm border border-slate-200 hover:border-indigo-300 hover:shadow-md transition-all flex items-center gap-2">
+        <button id="login-btn" onclick="openAuthModal()" class="px-4 py-2 bg-white text-indigo-600 font-bold rounded-xl shadow-sm border border-slate-200 hover:border-indigo-300 hover:shadow-md transition-all flex items-center gap-2 active:scale-95">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
                 <path fill-rule="evenodd" d="M7.5 3.75A1.5 1.5 0 0 0 6 5.25v13.5a1.5 1.5 0 0 0 1.5 1.5h6a1.5 1.5 0 0 0 1.5-1.5V15a.75.75 0 0 1 1.5 0v3.75a3 3 0 0 1-3 3h-6a3 3 0 0 1-3-3V5.25a3 3 0 0 1 3-3h6a3 3 0 0 1 3 3V9A.75.75 0 0 1 15 9V5.25a1.5 1.5 0 0 0-1.5-1.5h-6Zm10.72 4.72a.75.75 0 0 1 1.06 0l3 3a.75.75 0 0 1 0 1.06l-3 3a.75.75 0 1 1-1.06-1.06l1.72-1.72H9a.75.75 0 0 1 0-1.5h10.94l-1.72-1.72a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
             </svg>
@@ -141,8 +201,8 @@
 
         <!-- Logged In View -->
         <div id="user-profile-menu" class="hidden relative group">
-            <button class="flex items-center gap-3 p-1.5 bg-white rounded-full shadow-sm border border-slate-200 hover:border-indigo-300 hover:shadow-md transition-all">
-                <div id="nav-avatar" class="w-8 h-8 rounded-full bg-indigo-50 border border-slate-200 flex items-center justify-center text-xl overflow-hidden">👤</div>
+            <button class="flex items-center gap-3 p-1.5 bg-white rounded-full shadow-sm border border-slate-200 hover:border-indigo-300 hover:shadow-md transition-all active:scale-95">
+                <div id="nav-avatar" class="w-8 h-8 rounded-full bg-indigo-50 border border-slate-200 flex items-center justify-center text-xl overflow-hidden relative">👤</div>
                 <span id="nav-name" class="font-bold text-slate-700 pr-3 text-sm">User</span>
             </button>
             <div class="absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-xl border border-slate-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 overflow-hidden origin-top-right">
@@ -159,7 +219,7 @@
                         </div>
                     </div>
                 </div>
-                <button onclick="viewProfile(currentUser.uid)" class="w-full text-left px-4 py-3 text-sm font-bold text-slate-700 hover:bg-slate-50 transition-colors border-b border-slate-50 flex items-center gap-2">
+                <button onclick="openProfileModal()" class="w-full text-left px-4 py-3 text-sm font-bold text-slate-700 hover:bg-slate-50 transition-colors border-b border-slate-50 flex items-center gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 text-slate-400">
                         <path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clip-rule="evenodd" />
                     </svg>
@@ -196,7 +256,7 @@
             </div>
 
             <div class="grid gap-3">
-                <button onclick="selectMode('hiragana')" class="mode-card flex items-center p-4 bg-white border-2 border-slate-100 rounded-2xl group">
+                <button onclick="selectMode('hiragana')" class="mode-card flex items-center p-4 bg-white border-2 border-slate-100 rounded-2xl group active:scale-95">
                     <div class="w-10 h-10 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center text-xl font-bold group-hover:bg-indigo-600 group-hover:text-white transition-colors">あ</div>
                     <div class="ml-4 text-left">
                         <div class="font-bold text-slate-800">Hiragana</div>
@@ -204,7 +264,7 @@
                     </div>
                 </button>
 
-                <button onclick="selectMode('katakana')" class="mode-card flex items-center p-4 bg-white border-2 border-slate-100 rounded-2xl group">
+                <button onclick="selectMode('katakana')" class="mode-card flex items-center p-4 bg-white border-2 border-slate-100 rounded-2xl group active:scale-95">
                     <div class="w-10 h-10 bg-pink-50 text-pink-600 rounded-xl flex items-center justify-center text-xl font-bold group-hover:bg-pink-600 group-hover:text-white transition-colors">ア</div>
                     <div class="ml-4 text-left">
                         <div class="font-bold text-slate-800">Katakana</div>
@@ -212,7 +272,7 @@
                     </div>
                 </button>
 
-                <button onclick="selectMode('kanji')" class="mode-card flex items-center p-4 bg-white border-2 border-slate-100 rounded-2xl group">
+                <button onclick="selectMode('kanji')" class="mode-card flex items-center p-4 bg-white border-2 border-slate-100 rounded-2xl group active:scale-95">
                     <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center text-xl font-bold group-hover:bg-emerald-600 group-hover:text-white transition-colors">学</div>
                     <div class="ml-4 text-left">
                         <div class="font-bold text-slate-800">Kanji</div>
@@ -222,15 +282,15 @@
             </div>
 
             <!-- Leaderboard Button -->
-            <button onclick="showLeaderboard()" class="mt-2 w-full py-4 bg-amber-50 text-amber-600 border-2 border-amber-100 hover:bg-amber-100 hover:border-amber-200 rounded-2xl font-bold transition-all flex items-center justify-center gap-2 transform hover:scale-[1.02] active:scale-95">
+            <button onclick="showLeaderboard()" class="mt-2 w-full py-4 bg-amber-50 text-amber-600 border-2 border-amber-100 hover:bg-amber-100 hover:border-amber-200 rounded-2xl font-bold transition-all flex items-center justify-center gap-2 transform active:scale-95">
                 <span class="text-xl">🏆</span> View Leaderboard
             </button>
         </div>
 
         <!-- Leaderboard Screen -->
         <div id="leaderboard-screen" class="hidden space-y-5 flex-grow flex flex-col">
-            <div class="text-center space-y-1 mt-2">
-                <button onclick="showHome()" class="inline-flex items-center justify-center gap-1.5 py-1.5 px-3 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-full text-[10px] font-bold uppercase tracking-wider transition-colors mb-2">
+            <div class="text-center space-y-1 mt-2 shrink-0">
+                <button onclick="showHome()" class="inline-flex items-center justify-center gap-1.5 py-1.5 px-3 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-full text-[10px] font-bold uppercase tracking-wider transition-colors mb-2 active:scale-95">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3.5 h-3.5">
                         <path fill-rule="evenodd" d="M17 10a.75.75 0 0 1-.75.75H5.612l4.158 3.96a.75.75 0 1 1-1.04 1.08l-5.5-5.25a.75.75 0 0 1 0-1.08l5.5-5.25a.75.75 0 1 1 1.04 1.08L5.612 9.25H16.25A.75.75 0 0 1 17 10Z" clip-rule="evenodd" />
                     </svg>
@@ -240,21 +300,27 @@
             </div>
 
             <!-- Tabs -->
-            <div class="flex bg-slate-100 p-1 rounded-xl">
+            <div class="flex bg-slate-100 p-1 rounded-xl shrink-0">
                 <button onclick="setLeaderboardTab('hiragana')" id="tab-hiragana" class="lb-tab flex-1 py-2 text-sm font-bold rounded-lg text-slate-500">Hiragana</button>
                 <button onclick="setLeaderboardTab('katakana')" id="tab-katakana" class="lb-tab flex-1 py-2 text-sm font-bold rounded-lg text-slate-500">Katakana</button>
                 <button onclick="setLeaderboardTab('kanji')" id="tab-kanji" class="lb-tab flex-1 py-2 text-sm font-bold rounded-lg text-slate-500">Kanji</button>
             </div>
 
-            <div id="leaderboard-full-list" class="space-y-3 flex-grow overflow-y-auto max-h-[400px] pb-4 pr-1">
+            <!-- Scrollable List (Top 99) -->
+            <div id="leaderboard-full-list" class="space-y-3 flex-grow overflow-y-auto max-h-[340px] pb-2 pr-1">
                 <!-- Scores injected here -->
+            </div>
+            
+            <!-- Pinned User Card (Current Rank) -->
+            <div id="leaderboard-pinned-user" class="mt-2 shrink-0 bg-white p-4 rounded-2xl border border-indigo-200 shadow-md hidden transition-transform hover:-translate-y-1">
+                <!-- User's own rank injected here -->
             </div>
         </div>
 
         <!-- Configuration Screen -->
         <div id="start-screen" class="hidden space-y-5 flex-grow flex flex-col justify-center">
             <div class="text-center space-y-1">
-                <button onclick="showHome()" class="inline-flex items-center justify-center gap-1.5 py-1.5 px-3 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-full text-[10px] font-bold uppercase tracking-wider transition-colors mb-2">
+                <button onclick="showHome()" class="inline-flex items-center justify-center gap-1.5 py-1.5 px-3 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-full text-[10px] font-bold uppercase tracking-wider transition-colors mb-2 active:scale-95">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-3.5 h-3.5">
                         <path fill-rule="evenodd" d="M17 10a.75.75 0 0 1-.75.75H5.612l4.158 3.96a.75.75 0 1 1-1.04 1.08l-5.5-5.25a.75.75 0 0 1 0-1.08l5.5-5.25a.75.75 0 1 1 1.04 1.08L5.612 9.25H16.25A.75.75 0 0 1 17 10Z" clip-rule="evenodd" />
                     </svg>
@@ -300,7 +366,7 @@
                 </div>
             </div>
             
-            <button onclick="startGame()" class="w-full py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl font-bold transition-all transform hover:scale-[1.02] active:scale-95 shadow-lg shadow-indigo-200">
+            <button onclick="startGame()" class="w-full py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl font-bold transition-all transform active:scale-95 shadow-lg shadow-indigo-200">
                 Start Blitz
             </button>
         </div>
@@ -381,10 +447,10 @@
             <!-- Guest Login Prompt -->
             <div id="guest-login-prompt" class="hidden mt-2 p-4 bg-indigo-50 border border-indigo-100 rounded-2xl">
                 <p class="text-xs text-indigo-600 font-bold mb-2">Want to claim your spot on the leaderboard?</p>
-                <button onclick="openAuthModal()" class="w-full py-2 bg-indigo-600 text-white rounded-xl font-bold text-sm hover:bg-indigo-700 transition-all shadow-sm">Log in to save your score</button>
+                <button onclick="openAuthModal()" class="w-full py-2 bg-indigo-600 text-white rounded-xl font-bold text-sm hover:bg-indigo-700 transition-all shadow-sm active:scale-95">Log in to save your score</button>
             </div>
 
-            <button onclick="showHome()" class="w-full py-4 bg-slate-800 hover:bg-slate-900 text-white rounded-2xl font-bold transition-all transform hover:scale-[1.02]">
+            <button onclick="showHome()" class="w-full py-4 bg-slate-800 hover:bg-slate-900 text-white rounded-2xl font-bold transition-all transform active:scale-95">
                 Back to Menu
             </button>
         </div>
@@ -392,26 +458,26 @@
 
     <!-- Exit Confirmation Modal -->
     <div id="exit-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay">
-        <div class="bg-white rounded-3xl p-6 w-full max-w-xs shadow-2xl text-center space-y-6">
+        <div class="bg-white rounded-3xl p-6 w-full max-w-xs shadow-2xl text-center space-y-6 modal-content">
             <div class="space-y-2">
                 <div class="text-3xl">🛑</div>
                 <h3 class="text-xl font-bold text-slate-800">Wait!</h3>
                 <p class="text-slate-500 text-sm">Are you sure you want to exit?</p>
             </div>
             <div class="flex flex-col gap-2">
-                <button onclick="confirmExit()" class="py-3 bg-red-500 text-white rounded-xl font-bold hover:bg-red-600">Yes, Exit</button>
-                <button onclick="cancelExit()" class="py-3 bg-slate-100 text-slate-600 rounded-xl font-bold hover:bg-slate-200">Cancel</button>
+                <button onclick="confirmExit()" class="py-3 bg-red-500 text-white rounded-xl font-bold hover:bg-red-600 active:scale-95 transition-transform">Yes, Exit</button>
+                <button onclick="cancelExit()" class="py-3 bg-slate-100 text-slate-600 rounded-xl font-bold hover:bg-slate-200 active:scale-95 transition-transform">Cancel</button>
             </div>
         </div>
     </div>
 
-    <!-- Dynamic Profile Modal (Reusable for viewing self or others) -->
+    <!-- Dynamic Profile Modal -->
     <div id="profile-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 modal-overlay">
-        <div class="bg-white rounded-3xl p-8 w-full max-w-sm shadow-2xl relative">
+        <div class="bg-white rounded-3xl p-8 w-full max-w-sm shadow-2xl relative max-h-[90vh] overflow-y-auto modal-content">
             <button onclick="closeProfileModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-2xl leading-none">&times;</button>
             
             <div class="flex flex-col items-center mt-2 space-y-3">
-                <div id="profile-modal-avatar" class="w-24 h-24 rounded-full bg-slate-100 border-4 border-white shadow-lg flex items-center justify-center text-5xl overflow-hidden">👤</div>
+                <div id="profile-modal-avatar" class="w-24 h-24 rounded-full bg-slate-100 border-4 border-white shadow-lg flex items-center justify-center text-5xl overflow-hidden relative">👤</div>
                 <div class="text-center">
                     <h3 id="profile-modal-dn" class="text-2xl font-extrabold text-slate-800 leading-tight">Player</h3>
                     <p id="profile-modal-un" class="text-slate-400 text-sm font-medium">@username</p>
@@ -436,11 +502,19 @@
                 </div>
             </div>
 
+            <!-- Milestone Badges -->
+            <div class="mt-4">
+                <div class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-2 text-center">Milestone Badges</div>
+                <div id="profile-badges" class="grid grid-cols-2 gap-3">
+                    <!-- Badges injected here -->
+                </div>
+            </div>
+
             <!-- My Bio (Editable) -->
             <div id="bio-edit-section" class="mt-6 space-y-2 hidden">
                 <label class="text-xs font-bold text-slate-400 uppercase">About Me (Bio)</label>
                 <textarea id="profile-modal-bio" placeholder="Write something about yourself..." class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm font-medium text-slate-700 focus:border-indigo-500 outline-none resize-none h-20"></textarea>
-                <button onclick="saveBio()" class="w-full py-2.5 bg-slate-800 text-white rounded-xl font-bold text-sm hover:bg-slate-900 transition-all">Save Bio</button>
+                <button onclick="saveBio()" class="w-full py-2.5 bg-slate-800 text-white rounded-xl font-bold text-sm hover:bg-slate-900 transition-all active:scale-95">Save Bio</button>
                 <div id="bio-msg" class="hidden text-center text-xs font-bold text-emerald-500 mt-1">Bio saved!</div>
             </div>
 
@@ -448,8 +522,8 @@
             <div id="bio-view-section" class="mt-6 space-y-2 hidden">
                 <label class="text-xs font-bold text-slate-400 uppercase">Bio</label>
                 <p id="profile-modal-bio-text" class="text-sm font-medium text-slate-700 bg-slate-50 p-3 rounded-xl border border-slate-100 min-h-[3rem]">No bio yet.</p>
-                <button id="profile-modal-friend-btn" class="hidden w-full py-2.5 bg-indigo-600 text-white rounded-xl font-bold text-sm hover:bg-indigo-700 transition-all mt-4">
-                    Add Friend
+                <button id="profile-modal-friend-btn" class="hidden w-full py-2.5 bg-indigo-600 text-white rounded-xl font-bold text-sm hover:bg-indigo-700 transition-all mt-4 active:scale-95">
+                    Send Friend Request
                 </button>
             </div>
         </div>
@@ -457,24 +531,42 @@
 
     <!-- Friends Modal -->
     <div id="friends-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay">
-        <div class="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl relative max-h-[85vh] flex flex-col">
+        <div class="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl relative max-h-[85vh] flex flex-col modal-content">
             <button onclick="closeFriendsModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-2xl leading-none">&times;</button>
             
             <div class="text-center space-y-1 mb-4 shrink-0">
-                <h3 class="text-xl font-extrabold text-slate-800">Your Friends</h3>
-                <p class="text-slate-500 text-xs">Search by username to add them</p>
+                <h3 class="text-xl font-extrabold text-slate-800">Friends</h3>
+                <p class="text-slate-500 text-xs">Search by username to send request</p>
             </div>
 
-            <div class="flex gap-2 mb-4 shrink-0">
+            <div class="flex gap-2 shrink-0">
                 <div class="relative flex-grow">
                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 font-bold">@</span>
                     <input type="text" id="friend-search-input" placeholder="username" class="w-full bg-slate-50 border border-slate-200 rounded-xl py-2 pl-7 pr-3 text-sm font-medium text-slate-700 focus:border-indigo-500 outline-none">
                 </div>
-                <button onclick="searchAndAddFriend()" class="px-4 py-2 bg-indigo-600 text-white text-sm font-bold rounded-xl hover:bg-indigo-700 transition-colors">Add</button>
+                <button onclick="searchAndAddFriend()" class="px-4 py-2 bg-indigo-600 text-white text-sm font-bold rounded-xl hover:bg-indigo-700 transition-colors active:scale-95">Add</button>
             </div>
+            
+            <div id="friend-search-msg" class="hidden text-center text-xs font-bold mt-2 mb-2 shrink-0"></div>
 
             <!-- Scrollable Friends List -->
-            <div id="friends-list" class="space-y-2 overflow-y-auto flex-grow pr-1 min-h-[200px]">
+            <div id="friends-list" class="space-y-2 overflow-y-auto flex-grow pr-1 mt-2 min-h-[200px]">
+                <div class="text-center text-slate-400 py-10 text-xs font-bold bg-slate-50 rounded-xl border border-slate-100">Loading...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notifications Modal -->
+    <div id="notifications-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 modal-overlay">
+        <div class="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl relative max-h-[85vh] flex flex-col modal-content">
+            <button onclick="closeNotificationsModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-2xl leading-none">&times;</button>
+            
+            <div class="text-center space-y-1 mb-4 shrink-0">
+                <h3 class="text-xl font-extrabold text-slate-800">Notifications</h3>
+                <p class="text-slate-500 text-xs">Alerts and Friend Requests</p>
+            </div>
+
+            <div id="notifications-list" class="space-y-4 overflow-y-auto flex-grow pr-1 min-h-[200px]">
                 <div class="text-center text-slate-400 py-10 text-xs font-bold bg-slate-50 rounded-xl border border-slate-100">Loading...</div>
             </div>
         </div>
@@ -482,7 +574,7 @@
 
     <!-- Auth Modal -->
     <div id="auth-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay">
-        <div class="bg-white rounded-3xl p-8 w-full max-w-sm shadow-2xl space-y-6 relative">
+        <div class="bg-white rounded-3xl p-8 w-full max-w-sm shadow-2xl space-y-6 relative modal-content">
             <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-2xl leading-none">&times;</button>
             
             <div class="text-center space-y-2">
@@ -498,8 +590,8 @@
             </div>
 
             <div class="flex gap-2">
-                <button onclick="handleEmailLogin()" class="flex-1 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold transition-all shadow-md shadow-indigo-200">Sign In</button>
-                <button onclick="handleEmailSignUp()" class="flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold transition-all border border-slate-200">Sign Up</button>
+                <button onclick="handleEmailLogin()" class="flex-1 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold transition-all shadow-md shadow-indigo-200 active:scale-95">Sign In</button>
+                <button onclick="handleEmailSignUp()" class="flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold transition-all border border-slate-200 active:scale-95">Sign Up</button>
             </div>
 
             <div class="relative flex items-center py-2">
@@ -508,7 +600,7 @@
                 <div class="flex-grow border-t border-slate-200"></div>
             </div>
 
-            <button onclick="handleGoogleLogin()" class="w-full py-3 bg-white border-2 border-slate-100 hover:bg-slate-50 text-slate-700 rounded-xl font-bold transition-all flex items-center justify-center gap-3">
+            <button onclick="handleGoogleLogin()" class="w-full py-3 bg-white border-2 border-slate-100 hover:bg-slate-50 text-slate-700 rounded-xl font-bold transition-all flex items-center justify-center gap-3 active:scale-95">
                 <svg class="w-5 h-5" viewBox="0 0 24 24">
                     <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
                     <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
@@ -522,7 +614,7 @@
 
     <!-- Account Setup Modal -->
     <div id="setup-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay">
-        <div class="bg-white rounded-3xl p-8 w-full max-w-sm shadow-2xl space-y-6">
+        <div class="bg-white rounded-3xl p-8 w-full max-w-sm shadow-2xl space-y-6 modal-content">
             <div class="text-center space-y-2">
                 <div class="text-4xl mb-2">✨</div>
                 <h3 class="text-xl font-extrabold text-slate-800">Setup your profile</h3>
@@ -555,7 +647,7 @@
                 </div>
             </div>
 
-            <button onclick="saveSetupProfile()" class="w-full py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl font-bold transition-all shadow-lg shadow-indigo-200">
+            <button onclick="saveSetupProfile()" class="w-full py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl font-bold transition-all shadow-lg shadow-indigo-200 active:scale-95">
                 Complete Setup
             </button>
         </div>
@@ -563,12 +655,24 @@
 
     <!-- Settings Modal -->
     <div id="settings-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 modal-overlay">
-        <div class="bg-white rounded-3xl p-8 w-full max-w-sm shadow-2xl space-y-6 relative max-h-[90vh] overflow-y-auto">
+        <div class="bg-white rounded-3xl p-8 w-full max-w-sm shadow-2xl space-y-6 relative max-h-[90vh] overflow-y-auto modal-content">
             <button onclick="closeSettingsModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-2xl leading-none">&times;</button>
             
             <div class="text-center space-y-1">
                 <h3 class="text-2xl font-extrabold text-slate-800">Settings</h3>
                 <p class="text-slate-500 text-xs">Manage your profile</p>
+            </div>
+
+            <!-- Dark Mode Toggle -->
+            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 flex items-center justify-between">
+                <div>
+                    <div class="text-sm font-bold text-slate-700">Dark Mode</div>
+                    <div class="text-[10px] text-slate-400 uppercase tracking-wide">Change appearance</div>
+                </div>
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" id="dark-mode-toggle" class="sr-only peer" onchange="toggleDarkMode()">
+                    <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                </label>
             </div>
 
             <!-- Change Avatar -->
@@ -580,7 +684,7 @@
                         <div class="text-[10px] text-slate-400 uppercase tracking-wide">Change anytime</div>
                     </div>
                 </div>
-                <button onclick="triggerCustomAvatarUpload()" class="px-3 py-1.5 bg-indigo-100 text-indigo-700 text-xs font-bold rounded-lg hover:bg-indigo-200 transition-colors">Edit</button>
+                <button onclick="triggerCustomAvatarUpload()" class="px-3 py-1.5 bg-indigo-100 text-indigo-700 text-xs font-bold rounded-lg hover:bg-indigo-200 transition-colors active:scale-95">Edit</button>
             </div>
 
             <!-- Change Display Name -->
@@ -591,7 +695,7 @@
                 </div>
                 <div class="flex gap-2">
                     <input type="text" id="settings-displayname" class="flex-grow bg-white border border-slate-200 rounded-xl py-2 px-3 text-sm font-medium text-slate-700 focus:border-indigo-500 outline-none">
-                    <button id="save-dn-btn" onclick="saveNewDisplayName()" class="px-4 py-2 bg-indigo-600 text-white text-sm font-bold rounded-xl hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">Save</button>
+                    <button id="save-dn-btn" onclick="saveNewDisplayName()" class="px-4 py-2 bg-indigo-600 text-white text-sm font-bold rounded-xl hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed active:scale-95">Save</button>
                 </div>
                 <p class="text-[10px] text-slate-400">Can be changed once every hour.</p>
             </div>
@@ -604,7 +708,7 @@
                 </div>
                 <div class="flex gap-2">
                     <input type="text" id="settings-username" class="flex-grow bg-white border border-slate-200 rounded-xl py-2 px-3 text-sm font-medium text-slate-700 focus:border-indigo-500 outline-none">
-                    <button id="save-un-btn" onclick="saveNewUsername()" class="px-4 py-2 bg-indigo-600 text-white text-sm font-bold rounded-xl hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">Save</button>
+                    <button id="save-un-btn" onclick="saveNewUsername()" class="px-4 py-2 bg-indigo-600 text-white text-sm font-bold rounded-xl hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed active:scale-95">Save</button>
                 </div>
                 <p class="text-[10px] text-slate-400">Can be changed once every 7 days.</p>
             </div>
@@ -615,10 +719,11 @@
 
     <!-- Hidden File Input for Avatar -->
     <input type="file" id="avatar-upload-input" accept="image/png, image/jpeg, image/webp" class="hidden">
+    <input type="file" id="badge-upload-input" accept="image/png, image/jpeg, image/webp" class="hidden">
 
     <!-- Custom Image Cropper Modal -->
     <div id="cropper-modal" class="hidden fixed inset-0 z-[70] flex items-center justify-center p-4 modal-overlay">
-        <div class="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl space-y-6">
+        <div class="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl space-y-6 modal-content">
             <div class="text-center space-y-1">
                 <h3 class="text-xl font-extrabold text-slate-800">Adjust Avatar</h3>
                 <p class="text-slate-500 text-xs">Drag to pan, slider to zoom</p>
@@ -636,21 +741,22 @@
             </div>
 
             <div class="flex gap-2">
-                <button onclick="saveCroppedImage()" class="flex-1 py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700">Crop & Save</button>
-                <button onclick="closeCropper()" class="flex-1 py-3 bg-slate-100 text-slate-600 rounded-xl font-bold hover:bg-slate-200">Cancel</button>
+                <button onclick="saveCroppedImage()" class="flex-1 py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 active:scale-95">Crop & Save</button>
+                <button onclick="closeCropper()" class="flex-1 py-3 bg-slate-100 text-slate-600 rounded-xl font-bold hover:bg-slate-200 active:scale-95">Cancel</button>
             </div>
         </div>
     </div>
 
     <!-- Admin Edit Modal -->
     <div id="admin-edit-modal" class="hidden fixed inset-0 z-[70] flex items-center justify-center p-4 modal-overlay">
-        <div class="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl space-y-4 border-2 border-indigo-500 relative">
+        <div class="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl space-y-4 border-2 border-indigo-500 relative max-h-[90vh] overflow-y-auto modal-content">
+            <button onclick="closeAdminEditModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-2xl leading-none">&times;</button>
             <div class="text-center space-y-1 mb-4">
                 <h3 class="text-xl font-extrabold text-indigo-700">Admin Edit</h3>
-                <p class="text-slate-500 text-xs">Override player statistics</p>
+                <p class="text-slate-500 text-xs">Override player statistics & cooldowns</p>
             </div>
             
-            <div class="space-y-3">
+            <div class="space-y-3 pb-4 border-b border-slate-100">
                 <div>
                     <label class="block text-xs font-bold text-slate-400 uppercase">Best Score</label>
                     <input type="number" id="admin-edit-score" class="w-full bg-slate-50 border border-slate-200 rounded-xl py-2 px-3 text-slate-700 font-bold focus:border-indigo-500 outline-none">
@@ -663,18 +769,20 @@
                     <label class="block text-xs font-bold text-slate-400 uppercase">Games Played</label>
                     <input type="number" id="admin-edit-games" class="w-full bg-slate-50 border border-slate-200 rounded-xl py-2 px-3 text-slate-700 font-bold focus:border-indigo-500 outline-none">
                 </div>
+                <button onclick="saveAdminEdit()" class="w-full py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 active:scale-95">Save Changes</button>
             </div>
-
-            <div class="flex gap-2 mt-4">
-                <button onclick="saveAdminEdit()" class="flex-1 py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700">Save Changes</button>
-                <button onclick="closeAdminEditModal()" class="flex-1 py-3 bg-slate-100 text-slate-600 rounded-xl font-bold hover:bg-slate-200">Cancel</button>
+            
+            <div class="space-y-3 pt-2">
+                <div class="text-xs font-bold text-slate-400 uppercase text-center">Account Controls</div>
+                <button onclick="adminResetCooldown('username')" class="w-full py-2 bg-amber-50 text-amber-600 border border-amber-200 rounded-xl font-bold text-sm hover:bg-amber-100 transition-colors active:scale-95">Reset Username Cooldown</button>
+                <button onclick="adminResetCooldown('displayName')" class="w-full py-2 bg-amber-50 text-amber-600 border border-amber-200 rounded-xl font-bold text-sm hover:bg-amber-100 transition-colors active:scale-95">Reset Display Name Cooldown</button>
             </div>
         </div>
     </div>
 
     <!-- Admin Add Score Modal -->
     <div id="admin-add-modal" class="hidden fixed inset-0 z-[70] flex items-center justify-center p-4 modal-overlay">
-        <div class="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl space-y-3 border-2 border-emerald-500 relative max-h-[90vh] overflow-y-auto">
+        <div class="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl space-y-3 border-2 border-emerald-500 relative max-h-[90vh] overflow-y-auto modal-content">
             <div class="text-center space-y-1 mb-2">
                 <h3 class="text-xl font-extrabold text-emerald-600">Add / Restore Score</h3>
                 <p class="text-slate-500 text-xs">Inject a score manually into the DB</p>
@@ -682,8 +790,8 @@
             
             <div class="space-y-2">
                 <div>
-                    <label class="block text-[10px] font-bold text-slate-400 uppercase">User ID (UID)</label>
-                    <input type="text" id="admin-add-uid" placeholder="e.g. 8xJ9... (Get from Auth)" class="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 px-3 text-sm font-bold focus:border-emerald-500 outline-none">
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase">Username</label>
+                    <input type="text" id="admin-add-username" placeholder="e.g. pocialj" class="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 px-3 text-sm font-bold focus:border-emerald-500 outline-none">
                 </div>
                 <div class="grid grid-cols-2 gap-2">
                     <div>
@@ -716,9 +824,78 @@
             </div>
 
             <div class="flex gap-2 mt-4">
-                <button onclick="saveAdminAdd()" class="flex-1 py-3 bg-emerald-500 text-white rounded-xl font-bold hover:bg-emerald-600">Inject Score</button>
-                <button onclick="closeAdminAddModal()" class="flex-1 py-3 bg-slate-100 text-slate-600 rounded-xl font-bold hover:bg-slate-200">Cancel</button>
+                <button onclick="saveAdminAdd()" class="flex-1 py-3 bg-emerald-500 text-white rounded-xl font-bold hover:bg-emerald-600 active:scale-95">Inject Score</button>
+                <button onclick="closeAdminAddModal()" class="flex-1 py-3 bg-slate-100 text-slate-600 rounded-xl font-bold hover:bg-slate-200 active:scale-95">Cancel</button>
             </div>
+        </div>
+    </div>
+
+    <!-- Admin Badges Modal -->
+    <div id="admin-badges-modal" class="hidden fixed inset-0 z-[70] flex items-center justify-center p-4 modal-overlay">
+        <div class="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl space-y-4 border-2 border-purple-500 relative modal-content">
+            <button onclick="closeAdminBadgesModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-2xl leading-none">&times;</button>
+            <div class="text-center space-y-1 mb-4">
+                <h3 class="text-xl font-extrabold text-purple-700">Customize Badges</h3>
+                <p class="text-slate-500 text-xs">Upload custom images for badges</p>
+            </div>
+            
+            <div class="space-y-3">
+                <button onclick="editBadgeIcon('gettingStarted')" class="w-full py-3 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl font-bold text-slate-700 flex justify-between items-center px-4 active:scale-95 transition-transform">
+                    <span>Getting Started</span> <span id="preview-badge-gettingStarted" class="text-2xl">🌱</span>
+                </button>
+                <button onclick="editBadgeIcon('top3')" class="w-full py-3 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl font-bold text-slate-700 flex justify-between items-center px-4 active:scale-95 transition-transform">
+                    <span>Top Ranker</span> <span id="preview-badge-top3" class="text-2xl">🏆</span>
+                </button>
+                <button onclick="editBadgeIcon('veteran')" class="w-full py-3 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl font-bold text-slate-700 flex justify-between items-center px-4 active:scale-95 transition-transform">
+                    <span>Veteran</span> <span id="preview-badge-veteran" class="text-2xl">⚔️</span>
+                </button>
+                <button onclick="editBadgeIcon('developer')" class="w-full py-3 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl font-bold text-slate-700 flex justify-between items-center px-4 active:scale-95 transition-transform">
+                    <span>Developer</span> <span id="preview-badge-developer" class="text-2xl">👑</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Delete User Modal -->
+    <div id="admin-delete-user-modal" class="hidden fixed inset-0 z-[70] flex items-center justify-center p-4 modal-overlay">
+        <div class="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl space-y-4 border-2 border-red-500 relative modal-content">
+            <button onclick="closeAdminDeleteUserModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-2xl leading-none">&times;</button>
+            <div class="text-center space-y-1 mb-4">
+                <h3 class="text-xl font-extrabold text-red-600">Delete User Data</h3>
+                <p class="text-slate-500 text-xs">Purge a user from the database</p>
+            </div>
+            
+            <div class="space-y-3 pb-4">
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase">User ID (UID)</label>
+                    <input type="text" id="admin-delete-uid" placeholder="Enter UID to delete..." class="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 px-3 text-sm font-bold text-slate-700 focus:border-red-500 outline-none">
+                </div>
+                <button onclick="adminDeleteUser()" class="w-full py-3 bg-red-600 text-white rounded-xl font-bold hover:bg-red-700 active:scale-95 transition-transform">Permanently Delete User</button>
+            </div>
+            <div id="admin-delete-msg" class="hidden text-center text-xs font-bold mt-2"></div>
+        </div>
+    </div>
+
+    <!-- Admin Manage Developers Modal -->
+    <div id="admin-dev-modal" class="hidden fixed inset-0 z-[70] flex items-center justify-center p-4 modal-overlay">
+        <div class="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl space-y-4 border-2 border-blue-500 relative modal-content">
+            <button onclick="closeAdminDevModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-2xl leading-none">&times;</button>
+            <div class="text-center space-y-1 mb-4">
+                <h3 class="text-xl font-extrabold text-blue-600">Manage Developers</h3>
+                <p class="text-slate-500 text-xs">Grant or revoke the Developer Badge</p>
+            </div>
+            
+            <div class="space-y-3 pb-4">
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase">Username</label>
+                    <input type="text" id="admin-dev-username" placeholder="Enter username..." class="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 px-3 text-sm font-bold text-slate-700 focus:border-blue-500 outline-none">
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="toggleDeveloperStatus(true)" class="flex-1 py-3 bg-emerald-500 text-white rounded-xl font-bold hover:bg-emerald-600 active:scale-95 transition-transform text-xs">Grant Badge</button>
+                    <button onclick="toggleDeveloperStatus(false)" class="flex-1 py-3 bg-red-500 text-white rounded-xl font-bold hover:bg-red-600 active:scale-95 transition-transform text-xs">Revoke Badge</button>
+                </div>
+            </div>
+            <div id="admin-dev-msg" class="hidden text-center text-xs font-bold mt-2"></div>
         </div>
     </div>
 
@@ -742,7 +919,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, collection, getDocs, query, where, updateDoc, deleteDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, getDocs, query, where, updateDoc, deleteDoc, arrayUnion, arrayRemove, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAZcZxzohW1Ije8dVdkqWMQaErGy-sXnjE",
@@ -764,6 +941,54 @@
         let currentUser = null;
         let selectedAvatarEmoji = '🦊';
         let isAdminMode = false;
+        
+        let customBadges = {
+            gettingStarted: '🌱',
+            top3: '🏆',
+            veteran: '⚔️',
+            developer: '👑'
+        };
+
+        // Audio Context setup
+        let audioCtx = null;
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        function playTick() {
+            if (!audioCtx) return;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
+            gain.gain.setValueAtTime(0.5, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.05);
+        }
+
+        function playTimeUp() {
+            if (!audioCtx) return;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.5);
+            gain.gain.setValueAtTime(0.5, audioCtx.currentTime);
+            gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.5);
+        }
 
         const HIRAGANA_BASE = {
             'あ': 'a', 'い': 'i', 'う': 'u', 'え': 'e', 'お': 'o',
@@ -898,7 +1123,7 @@
                 verbs_intransitive: [
                     {h: 'ねる', r: 'neru'}, {h: 'なく', r: 'naku'}, {h: 'おきる', r: 'okiru'},
                     {h: 'はしる', r: 'hashiru'}, {h: 'あるく', r: 'aruku'}, {h: 'あそぶ', r: 'asobu'},
-                    {h: 'いく', r: 'iku'}, {h: 'くる', r: 'kuru'}, {h: 'かえる', r: 'kaeru'},
+                    {h: 'いく', r: 'iku'}, {h: 'くる', r: 'kuru'}, {h: 'かえる', r: 'かえる'},
                     {h: 'およぐ', r: 'oyogu'}, {h: 'とぶ', r: 'tobu'}, {h: 'すわる', r: 'suwaru'},
                     {h: 'たつ', r: 'tatsu'}, {h: 'おわる', r: 'owaru'}, {h: 'はじまる', r: 'hajimaru'},
                     {h: 'わかる', r: 'wakaru'}, {h: 'やすむ', r: 'yasumu'}, {h: 'うたう', r: 'utau'},
@@ -998,6 +1223,7 @@
         let isPaused = false;
         let globalLeaderboard = [];
         let activeLeaderboardTab = 'hiragana';
+        let lastTick = -1;
 
         // Auth UI Elements
         const authModal = document.getElementById('auth-modal');
@@ -1005,7 +1231,9 @@
         const settingsModal = document.getElementById('settings-modal');
         const profileModal = document.getElementById('profile-modal');
         const friendsModal = document.getElementById('friends-modal');
+        const notifsModal = document.getElementById('notifications-modal');
         const cropperModal = document.getElementById('cropper-modal');
+        const adminBadgesModal = document.getElementById('admin-badges-modal');
         const authError = document.getElementById('auth-error');
         const loginBtn = document.getElementById('login-btn');
         const userProfileMenu = document.getElementById('user-profile-menu');
@@ -1014,6 +1242,8 @@
         const navUsername = document.getElementById('nav-username');
         const adminPanel = document.getElementById('admin-panel');
         const friendsBtn = document.getElementById('friends-btn');
+        const notifBtn = document.getElementById('notif-btn');
+        const notifBadge = document.getElementById('notif-badge');
 
         const homeScreen = document.getElementById('home-screen');
         const startScreen = document.getElementById('start-screen');
@@ -1046,6 +1276,22 @@
         const lengthInput = document.getElementById('length-input');
         const modeLabel = document.getElementById('mode-label');
 
+        // Load custom badges from DB
+        async function fetchCustomBadges() {
+            try {
+                const badgeDoc = await getDoc(doc(db, "leaderboard", "_badges"));
+                if (badgeDoc.exists()) {
+                    customBadges = { ...customBadges, ...badgeDoc.data() };
+                    // Pre-update admin UI if visible
+                    document.getElementById('preview-badge-gettingStarted').innerHTML = getAvatarHTML(customBadges.gettingStarted);
+                    document.getElementById('preview-badge-top3').innerHTML = getAvatarHTML(customBadges.top3);
+                    document.getElementById('preview-badge-veteran').innerHTML = getAvatarHTML(customBadges.veteran);
+                    document.getElementById('preview-badge-developer').innerHTML = getAvatarHTML(customBadges.developer);
+                }
+            } catch (e) { console.error(e); }
+        }
+        fetchCustomBadges();
+
         function setNLevel(level) {
             currentNLevel = level;
             document.querySelectorAll('.n-level-btn').forEach(btn => btn.classList.remove('active'));
@@ -1074,13 +1320,22 @@
         function toggleAdminMode() {
             isAdminMode = document.getElementById('admin-toggle').checked;
             const addBtn = document.getElementById('admin-add-btn');
+            const badgeBtn = document.getElementById('admin-badge-btn');
+            const delUserBtn = document.getElementById('admin-delete-user-btn');
+            const devBtn = document.getElementById('admin-dev-btn');
             
-            if (isAdminMode) addBtn.classList.remove('hidden');
-            else addBtn.classList.add('hidden');
-            
-            if (!leaderboardScreen.classList.contains('hidden')) {
-                updateLeaderboardUI();
+            if (isAdminMode) {
+                addBtn.classList.remove('hidden');
+                badgeBtn.classList.remove('hidden');
+                delUserBtn.classList.remove('hidden');
+                devBtn.classList.remove('hidden');
+            } else {
+                addBtn.classList.add('hidden');
+                badgeBtn.classList.add('hidden');
+                delUserBtn.classList.add('hidden');
+                devBtn.classList.add('hidden');
             }
+            if (!leaderboardScreen.classList.contains('hidden')) updateLeaderboardUI();
         }
 
         let editingAdminDocId = null;
@@ -1105,27 +1360,17 @@
             } catch(e) { console.error(e); }
         }
 
-        function closeAdminEditModal() {
-            document.getElementById('admin-edit-modal').classList.add('hidden');
-        }
+        function closeAdminEditModal() { document.getElementById('admin-edit-modal').classList.add('hidden'); }
 
         async function saveAdminEdit() {
             const newScore = parseInt(document.getElementById('admin-edit-score').value) || 0;
             const newLevel = parseInt(document.getElementById('admin-edit-level').value) || 1;
             const newGames = parseInt(document.getElementById('admin-edit-games').value) || 0;
-
-            // Recalculate EXP exactly to match the new level
             const newExp = Math.pow(newLevel - 1, 2) * 20;
 
             try {
-                const updatePayload = {
-                    score: newScore,
-                    level: newLevel
-                };
-                
-                if (currentUser && editingAdminUserId === currentUser.uid) {
-                    updatePayload.email = currentUser.email;
-                }
+                const updatePayload = { score: newScore, level: newLevel };
+                if (currentUser && editingAdminUserId === currentUser.uid) updatePayload.email = currentUser.email;
 
                 await updateDoc(doc(db, "leaderboard", editingAdminDocId), updatePayload);
                 await updateDoc(doc(db, "users", editingAdminUserId), { level: newLevel, exp: newExp, gamesPlayed: newGames });
@@ -1139,24 +1384,36 @@
                 alert("Failed to update user stats.");
             }
         }
+        
+        async function adminResetCooldown(type) {
+            if (!editingAdminUserId) return;
+            try {
+                if (type === 'username') await updateDoc(doc(db, "users", editingAdminUserId), { lastUsernameChange: 0 });
+                if (type === 'displayName') await updateDoc(doc(db, "users", editingAdminUserId), { lastDisplayNameChange: 0 });
+                alert("Cooldown reset successfully!");
+            } catch(e) { alert("Failed to reset cooldown."); }
+        }
 
         function openAdminAddModal() { document.getElementById('admin-add-modal').classList.remove('hidden'); }
         function closeAdminAddModal() { document.getElementById('admin-add-modal').classList.add('hidden'); }
 
         async function saveAdminAdd() {
-            const uid = document.getElementById('admin-add-uid').value.trim();
+            const un = document.getElementById('admin-add-username').value.trim();
             const category = document.getElementById('admin-add-category').value;
             const mode = document.getElementById('admin-add-mode').value.trim();
             const score = parseInt(document.getElementById('admin-add-score').value) || 0;
             const time = parseInt(document.getElementById('admin-add-time').value) || 30;
             const length = parseInt(document.getElementById('admin-add-length').value) || 1;
 
-            if (!uid || !mode) return alert("Fill out User ID and Mode Label");
+            if (!un || !mode) return alert("Fill out Username and Mode Label");
 
             try {
-                const userDoc = await getDoc(doc(db, "users", uid));
-                if (!userDoc.exists()) return alert("Error: User UID not found in database.");
-                const userData = userDoc.data();
+                const q = query(collection(db, "users"), where("username", "==", un));
+                const snap = await getDocs(q);
+                if (snap.empty) return alert("Error: Username not found in database.");
+                
+                const uid = snap.docs[0].id;
+                const userData = snap.docs[0].data();
 
                 const scoreDocId = `${uid}_${mode.replace(/[^a-zA-Z0-9]/g, '')}`;
                 let insertEmail = "restored@admin.com";
@@ -1165,6 +1422,7 @@
                 await setDoc(doc(db, "leaderboard", scoreDocId), {
                     userId: uid,
                     email: insertEmail,
+                    isDeveloper: userData.isDeveloper || false,
                     displayName: userData.displayName || 'Restored Player',
                     avatar: userData.avatar || '👤',
                     level: userData.level || 1,
@@ -1183,6 +1441,152 @@
             } catch(e) {
                 console.error(e);
                 alert("Failed to add score.");
+            }
+        }
+
+        function openAdminBadgesModal() { adminBadgesModal.classList.remove('hidden'); }
+        function closeAdminBadgesModal() { adminBadgesModal.classList.add('hidden'); }
+
+        const badgeUploadInput = document.getElementById('badge-upload-input');
+        let editingBadgeType = '';
+        function editBadgeIcon(type) {
+            editingBadgeType = type;
+            badgeUploadInput.click();
+        }
+        
+        badgeUploadInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const img = new Image();
+                img.onload = async () => {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = 100; canvas.height = 100;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, 100, 100);
+                    const b64 = canvas.toDataURL('image/png', 0.9);
+                    
+                    try {
+                        customBadges[editingBadgeType] = b64;
+                        await setDoc(doc(db, "leaderboard", "_badges"), { [editingBadgeType]: b64 }, { merge: true });
+                        document.getElementById(`preview-badge-${editingBadgeType}`).innerHTML = `<img src="${b64}" class="w-full h-full object-contain"/>`;
+                        alert("Badge icon updated!");
+                    } catch(err) { alert("Failed to upload badge."); }
+                };
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+            badgeUploadInput.value = '';
+        });
+
+        function openAdminDeleteUserModal() {
+            document.getElementById('admin-delete-uid').value = '';
+            document.getElementById('admin-delete-msg').classList.add('hidden');
+            document.getElementById('admin-delete-user-modal').classList.remove('hidden');
+        }
+        
+        function closeAdminDeleteUserModal() {
+            document.getElementById('admin-delete-user-modal').classList.add('hidden');
+        }
+
+        async function adminDeleteUser() {
+            const uid = document.getElementById('admin-delete-uid').value.trim();
+            const msgEl = document.getElementById('admin-delete-msg');
+            
+            if (!uid) {
+                msgEl.innerText = "Please enter a User ID.";
+                msgEl.className = "text-center text-xs font-bold mt-2 text-red-500";
+                msgEl.classList.remove('hidden');
+                return;
+            }
+            
+            if (!confirm(`Are you absolutely sure you want to permanently delete ALL data for User ID: ${uid}? This cannot be undone.`)) return;
+
+            try {
+                msgEl.innerText = "Deleting user data & leaderboard scores...";
+                msgEl.className = "text-center text-xs font-bold mt-2 text-indigo-500";
+                msgEl.classList.remove('hidden');
+
+                // 1. Delete user from 'users' collection (Frees up their username)
+                await deleteDoc(doc(db, "users", uid));
+                
+                // 2. Erase every score they have on the leaderboard
+                const q = query(collection(db, "leaderboard"), where("userId", "==", uid));
+                const snap = await getDocs(q);
+                const deletePromises = [];
+                snap.forEach((docSnap) => {
+                    deletePromises.push(deleteDoc(docSnap.ref));
+                });
+                await Promise.all(deletePromises);
+
+                msgEl.innerText = "User and all associated scores deleted successfully!";
+                msgEl.className = "text-center text-xs font-bold mt-2 text-emerald-500";
+                
+                // Refresh UI
+                await fetchLeaderboard();
+                if (!leaderboardScreen.classList.contains('hidden')) updateLeaderboardUI();
+                
+                setTimeout(() => closeAdminDeleteUserModal(), 2000);
+            } catch (error) {
+                console.error(error);
+                msgEl.innerText = "Error deleting user. Check console/permissions.";
+                msgEl.className = "text-center text-xs font-bold mt-2 text-red-500";
+            }
+        }
+
+        function openAdminDevModal() {
+            document.getElementById('admin-dev-username').value = '';
+            document.getElementById('admin-dev-msg').classList.add('hidden');
+            document.getElementById('admin-dev-modal').classList.remove('hidden');
+        }
+        function closeAdminDevModal() { document.getElementById('admin-dev-modal').classList.add('hidden'); }
+
+        async function toggleDeveloperStatus(status) {
+            const un = document.getElementById('admin-dev-username').value.trim();
+            const msgEl = document.getElementById('admin-dev-msg');
+            if (!un) return;
+            
+            try {
+                msgEl.innerText = "Updating...";
+                msgEl.className = "text-center text-xs font-bold mt-2 text-slate-500";
+                msgEl.classList.remove('hidden');
+
+                const q = query(collection(db, "users"), where("username", "==", un));
+                const snap = await getDocs(q);
+                if (snap.empty) {
+                    msgEl.innerText = "User not found!";
+                    msgEl.className = "text-center text-xs font-bold mt-2 text-red-500";
+                    return;
+                }
+                
+                const targetUid = snap.docs[0].id;
+                
+                // 1. Update user profile
+                await updateDoc(doc(db, "users", targetUid), { isDeveloper: status });
+                
+                // 2. Sync their leaderboard scores
+                const lbQ = query(collection(db, "leaderboard"), where("userId", "==", targetUid));
+                const lbSnap = await getDocs(lbQ);
+                const updatePromises = [];
+                lbSnap.forEach((docSnap) => {
+                    updatePromises.push(updateDoc(docSnap.ref, { isDeveloper: status }));
+                });
+                await Promise.all(updatePromises);
+
+                // 3. Update active memory
+                globalLeaderboard.forEach(entry => {
+                    if (entry.userId === targetUid) entry.isDeveloper = status;
+                });
+                
+                msgEl.innerText = `Developer badge ${status ? 'granted to' : 'revoked from'} ${un}!`;
+                msgEl.className = "text-center text-xs font-bold mt-2 text-emerald-500";
+                
+                if (!leaderboardScreen.classList.contains('hidden')) updateLeaderboardUI();
+            } catch(e) {
+                console.error(e);
+                msgEl.innerText = "Error updating developer status.";
+                msgEl.className = "text-center text-xs font-bold mt-2 text-red-500";
             }
         }
 
@@ -1214,6 +1618,38 @@
             document.getElementById('nav-exp-text').innerText = `${info.exp} / ${info.nextLevelExp} XP`;
             document.getElementById('nav-exp-bar').style.width = `${Math.min(100, Math.max(0, info.progress))}%`;
         }
+        
+        // Push notification helper
+        async function pushNotification(uid, text) {
+            try {
+                await updateDoc(doc(db, "users", uid), {
+                    notifications: arrayUnion({ text: text, time: Date.now(), id: Date.now().toString() })
+                });
+            } catch(e) { console.error(e); }
+        }
+
+        async function clearNotification(notifId) {
+            if(!currentUser) return;
+            try {
+                const myDoc = await getDoc(doc(db, "users", currentUser.uid));
+                const notifs = myDoc.data().notifications || [];
+                const toRemove = notifs.find(n => n.id === notifId);
+                if(toRemove) {
+                    await updateDoc(doc(db, "users", currentUser.uid), { notifications: arrayRemove(toRemove) });
+                }
+            } catch(e) {}
+        }
+
+        // Heartbeat for Online Status
+        function getOnlineStatusDot(lastActive) {
+            if (Date.now() - (lastActive || 0) < 5 * 60 * 1000) { // 5 mins
+                return `<div class="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 border-2 border-white rounded-full z-10 shadow-sm"></div>`;
+            }
+            return '';
+        }
+        setInterval(() => {
+            if (currentUser) updateDoc(doc(db, "users", currentUser.uid), { lastActive: Date.now() }).catch(()=>{});
+        }, 60000);
 
         // --- AUTHENTICATION LOGIC ---
         function openAuthModal() {
@@ -1254,12 +1690,15 @@
             catch (error) { showAuthError(error.message.replace("Firebase: ", "")); }
         }
 
+        let userUnsubscribe = null;
         async function logout() {
+            if (userUnsubscribe) userUnsubscribe();
             await signOut(auth);
             userProfileMenu.classList.add('hidden');
             loginBtn.classList.remove('hidden');
             adminPanel.classList.add('hidden');
             friendsBtn.classList.add('hidden');
+            notifBtn.classList.add('hidden');
         }
 
         // --- ACCOUNT SETUP LOGIC ---
@@ -1273,7 +1712,15 @@
             const username = document.getElementById('setup-username').value.trim();
             const displayName = document.getElementById('setup-displayname').value.trim();
             if(!username || !displayName) return alert("Please fill in Username and Display Name");
+            
             try {
+                // Check if username is taken
+                const q = query(collection(db, "users"), where("username", "==", username));
+                const snap = await getDocs(q);
+                if (!snap.empty && snap.docs[0].id !== auth.currentUser.uid) {
+                    return alert("Username already taken! Please choose another.");
+                }
+
                 await updateProfile(auth.currentUser, { displayName: displayName });
                 const newDocData = {
                     username: username,
@@ -1284,7 +1731,10 @@
                     lastDisplayNameChange: Date.now(),
                     exp: 0,
                     gamesPlayed: 0,
-                    friends: []
+                    friends: [],
+                    friendRequests: [],
+                    notifications: [],
+                    lastActive: Date.now()
                 };
                 await setDoc(doc(db, "users", auth.currentUser.uid), newDocData);
                 navAvatar.innerHTML = getAvatarHTML(selectedAvatarEmoji);
@@ -1295,15 +1745,20 @@
             } catch (error) { alert("Error saving profile: " + error.message); }
         }
 
-        // --- PROFILE MODAL (Viewing Self or Others) ---
+        // --- PROFILE MODAL (Viewing Self or Others & Badges) ---
+        function renderBadgeCard(iconData, title, desc, customClass = '') {
+            const iconHtml = (iconData && iconData.startsWith('data:image')) ? `<img src="${iconData}" class="w-10 h-10 object-contain"/>` : `<span class="text-3xl">${iconData}</span>`;
+            return `
+            <div class="badge-card flex flex-col items-center justify-center bg-white border border-slate-200 rounded-2xl p-3 w-full text-center shadow-sm relative group cursor-help ${customClass}">
+                <div class="mb-1 flex items-center justify-center h-12 w-12">${iconHtml}</div>
+                <div class="text-[10px] font-extrabold text-slate-700 leading-tight tracking-wide uppercase">${title}</div>
+                <div class="hidden group-hover:block absolute bottom-full mb-2 w-max max-w-[120px] bg-slate-800 text-white text-[9px] py-1.5 px-2 rounded-lg shadow-xl z-50 pointer-events-none">${desc}</div>
+            </div>`;
+        }
+
         async function viewProfile(uid) {
             if (!uid) return;
-            
-            // Check if viewing profile while logged out
-            if (!currentUser) {
-                alert("Please log in to view player profiles!");
-                return;
-            }
+            if (!currentUser) return alert("Please log in to view player profiles!");
 
             try {
                 const userDoc = await getDoc(doc(db, "users", uid));
@@ -1311,12 +1766,43 @@
                 const data = userDoc.data();
                 const info = calculateLevelInfo(data.exp);
                 
-                document.getElementById('profile-modal-avatar').innerHTML = getAvatarHTML(data.avatar);
+                document.getElementById('profile-modal-avatar').innerHTML = getAvatarHTML(data.avatar) + getOnlineStatusDot(data.lastActive);
                 document.getElementById('profile-modal-dn').innerText = data.displayName || 'Player';
                 document.getElementById('profile-modal-un').innerText = `@${data.username || 'user'}`;
                 document.getElementById('profile-modal-level').innerText = info.level;
                 document.getElementById('profile-modal-games').innerText = data.gamesPlayed || 0;
                 document.getElementById('profile-modal-exp').innerText = data.exp || 0;
+
+                // --- Calculate Milestone Badges ---
+                let badgesHtml = renderBadgeCard(customBadges.gettingStarted, 'Starter', 'Joined the speed test', 'bg-slate-50');
+                
+                const isOwnerProfile = data.isDeveloper === true || 
+                                       (data.email && data.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) || 
+                                       (data.username && data.username.toLowerCase() === "pocialj") ||
+                                       uid === "yE094Kz3wHbnkK6Svx0OovD96yT2";
+
+                if (isOwnerProfile) {
+                    badgesHtml += renderBadgeCard(customBadges.developer, 'Developer', 'Creator of the game', 'bg-gradient-to-tr from-purple-50 to-pink-50 border-purple-200 shadow-md');
+                }
+
+                let isTop3 = false;
+                ['hiragana', 'katakana', 'kanji'].forEach(cat => {
+                    const catScores = globalLeaderboard.filter(e => e.category === cat);
+                    const umap = new Map();
+                    catScores.forEach(e => { if (!umap.has(e.userId) || umap.get(e.userId).score < e.score) umap.set(e.userId, e); });
+                    const sorted = Array.from(umap.values()).sort((a,b) => b.score - a.score).slice(0, 3);
+                    if (sorted.some(e => e.userId === uid)) isTop3 = true;
+                });
+                
+                if (isTop3) {
+                    badgesHtml += renderBadgeCard(customBadges.top3, 'Top Ranker', 'Reached Top 3 on the Leaderboard', 'bg-amber-50 border-amber-200');
+                }
+
+                if (data.gamesPlayed >= 10) {
+                    badgesHtml += renderBadgeCard(customBadges.veteran, 'Veteran', 'Played 10+ games', 'bg-emerald-50 border-emerald-200');
+                }
+
+                document.getElementById('profile-badges').innerHTML = badgesHtml;
 
                 const isMe = currentUser && currentUser.uid === uid;
                 const editSec = document.getElementById('bio-edit-section');
@@ -1324,42 +1810,41 @@
                 const friendBtn = document.getElementById('profile-modal-friend-btn');
                 
                 if (isMe) {
-                    editSec.classList.remove('hidden');
-                    viewSec.classList.add('hidden');
+                    editSec.classList.remove('hidden'); viewSec.classList.add('hidden');
                     document.getElementById('profile-modal-bio').value = data.bio || '';
                     document.getElementById('bio-msg').classList.add('hidden');
                 } else {
-                    editSec.classList.add('hidden');
-                    viewSec.classList.remove('hidden');
+                    editSec.classList.add('hidden'); viewSec.classList.remove('hidden');
                     document.getElementById('profile-modal-bio-text').innerText = data.bio || 'No bio yet.';
                     
-                    // Check friend status
                     const myDoc = await getDoc(doc(db, "users", currentUser.uid));
                     const myData = myDoc.exists() ? myDoc.data() : {};
                     const isFriend = myData.friends && myData.friends.includes(uid);
+                    const hasSentRequest = data.friendRequests && data.friendRequests.includes(currentUser.uid);
                     
                     friendBtn.classList.remove('hidden');
-                    friendBtn.innerText = isFriend ? 'Remove Friend' : 'Add Friend';
-                    friendBtn.className = isFriend ? 
-                        "w-full py-2.5 bg-red-100 text-red-600 rounded-xl font-bold text-sm hover:bg-red-200 transition-all mt-4" : 
-                        "w-full py-2.5 bg-indigo-600 text-white rounded-xl font-bold text-sm hover:bg-indigo-700 transition-all mt-4";
-                    
-                    friendBtn.onclick = () => toggleFriend(uid, isFriend);
+                    if (isFriend) {
+                        friendBtn.innerText = 'Remove Friend';
+                        friendBtn.className = "w-full py-2.5 bg-red-100 text-red-600 rounded-xl font-bold text-sm hover:bg-red-200 transition-all mt-4 active:scale-95";
+                        friendBtn.onclick = () => removeFriend(uid);
+                    } else if (hasSentRequest) {
+                        friendBtn.innerText = 'Request Sent';
+                        friendBtn.className = "w-full py-2.5 bg-slate-200 text-slate-500 rounded-xl font-bold text-sm cursor-not-allowed mt-4";
+                        friendBtn.onclick = null;
+                    } else {
+                        friendBtn.innerText = 'Send Friend Request';
+                        friendBtn.className = "w-full py-2.5 bg-indigo-600 text-white rounded-xl font-bold text-sm hover:bg-indigo-700 transition-all mt-4 active:scale-95";
+                        friendBtn.onclick = () => sendFriendRequest(uid);
+                    }
                 }
-
                 profileModal.classList.remove('hidden');
-            } catch (e) {
-                console.error(e);
-            }
+            } catch (e) { console.error(e); }
         }
 
-        // Keep existing openProfileModal hooked to current user
         function openProfileModal() {
             if (!currentUser) return;
-            userProfileMenu.classList.add('hidden');
             viewProfile(currentUser.uid);
         }
-
         function closeProfileModal() { profileModal.classList.add('hidden'); }
 
         async function saveBio() {
@@ -1372,107 +1857,202 @@
             } catch (e) { console.error("Failed to save bio", e); }
         }
 
-        // --- FRIENDS LOGIC ---
+        // --- FRIENDS HUB LOGIC ---
         function openFriendsModal() {
             friendsModal.classList.remove('hidden');
             document.getElementById('friend-search-input').value = '';
+            document.getElementById('friend-search-msg').classList.add('hidden');
             loadFriendsList();
         }
-
-        function closeFriendsModal() {
-            friendsModal.classList.add('hidden');
-        }
+        function closeFriendsModal() { friendsModal.classList.add('hidden'); }
 
         async function searchAndAddFriend() {
             const input = document.getElementById('friend-search-input').value.trim().replace('@', '');
+            const msgEl = document.getElementById('friend-search-msg');
             if (!input || !currentUser) return;
             
             if (loadedUserData && input.toLowerCase() === loadedUserData.username.toLowerCase()) {
-                return alert("You can't add yourself!");
+                msgEl.innerText = "You can't add yourself!";
+                msgEl.className = "text-center text-xs font-bold mt-2 text-amber-500";
+                msgEl.classList.remove('hidden');
+                return;
             }
 
             try {
                 const q = query(collection(db, "users"), where("username", "==", input));
                 const snap = await getDocs(q);
-                if (snap.empty) return alert("User not found!");
+                if (snap.empty) {
+                    msgEl.innerText = "User not found!";
+                    msgEl.className = "text-center text-xs font-bold mt-2 text-red-500";
+                    msgEl.classList.remove('hidden');
+                    return;
+                }
                 
                 const friendUid = snap.docs[0].id;
-                await updateDoc(doc(db, "users", currentUser.uid), { friends: arrayUnion(friendUid) });
-                
+                sendFriendRequest(friendUid);
+            } catch(e) { console.error(e); }
+        }
+
+        async function sendFriendRequest(targetUid) {
+            if (!currentUser) return;
+            const msgEl = document.getElementById('friend-search-msg');
+            try {
+                await updateDoc(doc(db, "users", targetUid), { friendRequests: arrayUnion(currentUser.uid) });
                 document.getElementById('friend-search-input').value = '';
-                loadFriendsList();
-            } catch(e) {
-                console.error(e);
-                alert("Failed to add friend.");
+                if (!profileModal.classList.contains('hidden')) viewProfile(targetUid);
+                
+                if (msgEl) {
+                    msgEl.innerText = "Friend request sent successfully!";
+                    msgEl.className = "text-center text-xs font-bold mt-2 text-emerald-500";
+                    msgEl.classList.remove('hidden');
+                    setTimeout(() => msgEl.classList.add('hidden'), 3000);
+                }
+            } catch (e) { 
+                console.error(e); 
+                if (msgEl) {
+                    msgEl.innerText = "Error: Please ask Owner to update Firestore Rules.";
+                    msgEl.className = "text-center text-xs font-bold mt-2 text-red-500";
+                    msgEl.classList.remove('hidden');
+                }
             }
         }
 
-        async function toggleFriend(targetUid, isCurrentlyFriend) {
+        async function acceptRequest(targetUid) {
             if (!currentUser) return;
             try {
-                const myRef = doc(db, "users", currentUser.uid);
-                if (isCurrentlyFriend) {
-                    await updateDoc(myRef, { friends: arrayRemove(targetUid) });
-                } else {
-                    await updateDoc(myRef, { friends: arrayUnion(targetUid) });
-                }
-                
-                // Refresh views if open
+                await updateDoc(doc(db, "users", currentUser.uid), { friends: arrayUnion(targetUid), friendRequests: arrayRemove(targetUid) });
+                await updateDoc(doc(db, "users", targetUid), { friends: arrayUnion(currentUser.uid) });
+                if (!notifsModal.classList.contains('hidden')) openNotificationsModal();
+                if (!friendsModal.classList.contains('hidden')) loadFriendsList();
+            } catch (e) { console.error(e); }
+        }
+
+        async function declineRequest(targetUid) {
+            if (!currentUser) return;
+            try {
+                await updateDoc(doc(db, "users", currentUser.uid), { friendRequests: arrayRemove(targetUid) });
+                if (!notifsModal.classList.contains('hidden')) openNotificationsModal();
+            } catch (e) { console.error(e); }
+        }
+
+        async function removeFriend(targetUid) {
+            if (!currentUser) return;
+            try {
+                await updateDoc(doc(db, "users", currentUser.uid), { friends: arrayRemove(targetUid) });
+                await updateDoc(doc(db, "users", targetUid), { friends: arrayRemove(currentUser.uid) });
                 if (!profileModal.classList.contains('hidden')) viewProfile(targetUid);
                 if (!friendsModal.classList.contains('hidden')) loadFriendsList();
-                
-            } catch(e) {
-                console.error("Failed to toggle friend", e);
-            }
+            } catch (e) { console.error(e); }
         }
 
         async function loadFriendsList() {
             if (!currentUser) return;
             const listEl = document.getElementById('friends-list');
-            listEl.innerHTML = '<div class="text-center text-slate-400 py-6 text-xs font-bold">Loading friends...</div>';
+            listEl.innerHTML = '<div class="text-center text-slate-400 py-6 text-xs font-bold">Loading...</div>';
 
             try {
                 const myDoc = await getDoc(doc(db, "users", currentUser.uid));
-                const friends = myDoc.data().friends || [];
-
-                if (friends.length === 0) {
-                    listEl.innerHTML = '<div class="text-center text-slate-400 py-10 text-xs font-bold bg-slate-50 rounded-xl border border-slate-100">No friends yet. Add someone by their @username!</div>';
-                    return;
-                }
+                const myData = myDoc.data();
+                const friends = myData.friends || [];
 
                 let html = '';
-                const friendPromises = friends.map(uid => getDoc(doc(db, "users", uid)));
-                const friendDocs = await Promise.all(friendPromises);
-
-                friendDocs.forEach(fDoc => {
-                    if (fDoc.exists()) {
-                        const fData = fDoc.data();
-                        const fInfo = calculateLevelInfo(fData.exp);
-                        html += `
-                        <div class="flex justify-between items-center bg-slate-50 p-3 rounded-xl border border-slate-100 hover:border-indigo-200 transition-colors">
-                            <div class="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity flex-grow" onclick="viewProfile('${fDoc.id}')">
-                                <div class="w-10 h-10 rounded-full overflow-hidden bg-white border border-slate-200 text-xl flex items-center justify-center flex-shrink-0">
-                                    ${getAvatarHTML(fData.avatar)}
+                if (friends.length === 0) {
+                    html += '<div class="text-center text-slate-400 py-10 text-xs font-bold bg-slate-50 rounded-xl border border-slate-100">No friends yet. Add someone!</div>';
+                } else {
+                    const friendPromises = friends.map(uid => getDoc(doc(db, "users", uid)));
+                    const friendDocs = await Promise.all(friendPromises);
+                    friendDocs.forEach(fDoc => {
+                        if (fDoc.exists()) {
+                            const fData = fDoc.data();
+                            const fInfo = calculateLevelInfo(fData.exp);
+                            html += `
+                            <div class="flex justify-between items-center bg-slate-50 p-3 rounded-xl border border-slate-100 hover:border-indigo-200 transition-colors mb-2">
+                                <div class="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity flex-grow" onclick="viewProfile('${fDoc.id}')">
+                                    <div class="w-10 h-10 rounded-full overflow-hidden bg-white border border-slate-200 text-xl flex items-center justify-center flex-shrink-0 relative">
+                                        ${getAvatarHTML(fData.avatar)}
+                                        ${getOnlineStatusDot(fData.lastActive)}
+                                    </div>
+                                    <div>
+                                        <div class="font-bold text-slate-700 text-sm leading-tight">${fData.displayName || 'Player'}</div>
+                                        <div class="text-[10px] text-slate-400 font-medium">@${fData.username || 'user'} <span class="mx-1">•</span> <span class="text-indigo-500 font-bold">Lv.${fInfo.level}</span></div>
+                                    </div>
                                 </div>
-                                <div>
-                                    <div class="font-bold text-slate-700 text-sm leading-tight">${fData.displayName || 'Player'}</div>
-                                    <div class="text-[10px] text-slate-400 font-medium">@${fData.username || 'user'} <span class="mx-1">•</span> <span class="text-indigo-500 font-bold">Lv.${fInfo.level}</span></div>
-                                </div>
-                            </div>
-                            <button onclick="toggleFriend('${fDoc.id}', true)" class="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors ml-2" title="Remove Friend">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
-                                  <path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM2.615 16.428a1.224 1.224 0 0 1-.569-1.175 6.002 6.002 0 0 1 11.908 0c.058.467-.172.92-.57 1.174A9.953 9.953 0 0 1 8 18a9.953 9.953 0 0 1-5.385-1.572ZM16.25 5.75a.75.75 0 0 0-1.5 0v2.5h-2.5a.75.75 0 0 0 0 1.5h2.5v2.5a.75.75 0 0 0 1.5 0v-2.5h2.5a.75.75 0 0 0 0-1.5h-2.5v-2.5Z" />
-                                </svg>
-                            </button>
-                        </div>`;
-                    }
-                });
+                                <button onclick="removeFriend('${fDoc.id}')" class="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors ml-2 active:scale-95" title="Remove Friend">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+                                      <path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM2.615 16.428a1.224 1.224 0 0 1-.569-1.175 6.002 6.002 0 0 1 11.908 0c.058.467-.172.92-.57 1.174A9.953 9.953 0 0 1 8 18a9.953 9.953 0 0 1-5.385-1.572ZM16.25 5.75a.75.75 0 0 0-1.5 0v2.5h-2.5a.75.75 0 0 0 0 1.5h2.5v2.5a.75.75 0 0 0 1.5 0v-2.5h2.5a.75.75 0 0 0 0-1.5h-2.5v-2.5Z" />
+                                    </svg>
+                                </button>
+                            </div>`;
+                        }
+                    });
+                }
                 listEl.innerHTML = html;
             } catch(e) {
                 console.error(e);
                 listEl.innerHTML = '<div class="text-center text-red-400 py-4 text-xs font-bold">Failed to load friends.</div>';
             }
         }
+
+        // --- NOTIFICATIONS MODAL LOGIC ---
+        async function openNotificationsModal() {
+            notifsModal.classList.remove('hidden');
+            const listEl = document.getElementById('notifications-list');
+            listEl.innerHTML = '<div class="text-center text-slate-400 py-6 text-xs font-bold">Loading alerts...</div>';
+
+            try {
+                if(!currentUser) return;
+                const myDoc = await getDoc(doc(db, "users", currentUser.uid));
+                const myData = myDoc.data();
+                const requests = myData.friendRequests || [];
+                const notifs = myData.notifications || [];
+                let html = '';
+
+                if (requests.length > 0) {
+                    html += `<div class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-2 mt-2">Friend Requests</div>`;
+                    const reqPromises = requests.map(uid => getDoc(doc(db, "users", uid)));
+                    const reqDocs = await Promise.all(reqPromises);
+                    reqDocs.forEach(rDoc => {
+                        if (rDoc.exists()) {
+                            const rData = rDoc.data();
+                            html += `
+                            <div class="flex justify-between items-center bg-amber-50 p-3 rounded-xl border border-amber-200 mb-2">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-full overflow-hidden bg-white border border-amber-300 text-xl flex items-center justify-center flex-shrink-0 cursor-pointer relative" onclick="viewProfile('${rDoc.id}')">
+                                        ${getAvatarHTML(rData.avatar)}
+                                        ${getOnlineStatusDot(rData.lastActive)}
+                                    </div>
+                                    <div>
+                                        <div class="font-bold text-slate-800 text-sm leading-tight">${rData.displayName || 'Player'}</div>
+                                        <div class="text-[10px] text-slate-500 font-medium">@${rData.username || 'user'}</div>
+                                    </div>
+                                </div>
+                                <div class="flex gap-1">
+                                    <button onclick="acceptRequest('${rDoc.id}')" class="px-3 py-1.5 bg-indigo-600 text-white text-[10px] font-bold rounded-lg hover:bg-indigo-700 transition-colors active:scale-95">Accept</button>
+                                    <button onclick="declineRequest('${rDoc.id}')" class="px-3 py-1.5 bg-slate-200 text-slate-600 text-[10px] font-bold rounded-lg hover:bg-slate-300 transition-colors active:scale-95">Ignore</button>
+                                </div>
+                            </div>`;
+                        }
+                    });
+                }
+
+                if (notifs.length > 0) {
+                    html += `<div class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-2 mt-4">System Alerts</div>`;
+                    [...notifs].reverse().forEach(n => {
+                        html += `
+                        <div class="flex justify-between items-center bg-indigo-50 p-3 rounded-xl border border-indigo-100 mb-2">
+                            <div class="text-sm font-bold text-indigo-700">${n.text}</div>
+                            <button onclick="clearNotification('${n.id}'); this.parentElement.remove();" class="text-indigo-400 hover:text-indigo-600 text-lg leading-none active:scale-95">&times;</button>
+                        </div>`;
+                    });
+                }
+
+                if (!html) {
+                    html = '<div class="text-center text-slate-400 py-10 text-xs font-bold bg-slate-50 rounded-xl border border-slate-100">You are all caught up!</div>';
+                }
+                listEl.innerHTML = html;
+            } catch(e) { console.error(e); }
+        }
+        function closeNotificationsModal() { notifsModal.classList.add('hidden'); }
 
         // --- CROPPER LOGIC ---
         const avatarUploadInput = document.getElementById('avatar-upload-input');
@@ -1574,6 +2154,15 @@
         const ONE_HOUR = 60 * 60 * 1000;
         const ONE_WEEK = 7 * 24 * 60 * 60 * 1000;
 
+        async function toggleDarkMode() {
+            if (!currentUser) return;
+            const isDark = document.getElementById('dark-mode-toggle').checked;
+            document.documentElement.classList.toggle('dark', isDark);
+            try {
+                await setDoc(doc(db, "users", currentUser.uid), { darkMode: isDark }, { merge: true });
+            } catch(e) { console.error(e); }
+        }
+
         async function updateLeaderboardProfile(updates, targetUid = null) {
             const uid = targetUid || (currentUser ? currentUser.uid : null);
             if (!uid) return;
@@ -1631,6 +2220,8 @@
                         dnCooldownText.classList.remove('hidden');
                     } else { dnSaveBtn.disabled = false; dnCooldownText.classList.add('hidden'); }
                     
+                    document.getElementById('dark-mode-toggle').checked = !!loadedUserData.darkMode;
+                    
                     document.getElementById('settings-msg').classList.add('hidden');
                     settingsModal.classList.remove('hidden');
                 }
@@ -1651,7 +2242,15 @@
             const newUn = document.getElementById('settings-username').value.trim();
             if (!newUn) return;
             if (newUn === loadedUserData.username) return showSettingsMessage("Username is the same.", "error");
+            
             try {
+                // Check if username is taken
+                const q = query(collection(db, "users"), where("username", "==", newUn));
+                const snap = await getDocs(q);
+                if (!snap.empty && snap.docs[0].id !== auth.currentUser.uid) {
+                    return showSettingsMessage("Username already taken!", "error");
+                }
+
                 const now = Date.now();
                 await setDoc(doc(db, "users", currentUser.uid), { username: newUn, lastUsernameChange: now }, { merge: true });
                 loadedUserData.username = newUn; loadedUserData.lastUsernameChange = now;
@@ -1684,6 +2283,7 @@
                 loginBtn.classList.add('hidden');
                 userProfileMenu.classList.remove('hidden');
                 friendsBtn.classList.remove('hidden');
+                notifBtn.classList.remove('hidden');
                 
                 if (user.email && user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
                     adminPanel.classList.remove('hidden');
@@ -1691,26 +2291,50 @@
                     adminPanel.classList.add('hidden');
                 }
                 
-                const userDoc = await getDoc(doc(db, "users", user.uid));
-                if (userDoc.exists()) {
-                    const userData = userDoc.data();
-                    loadedUserData = userData; // Store for friend username validation
-                    navAvatar.innerHTML = getAvatarHTML(userData.avatar);
-                    navName.innerText = userData.displayName || user.displayName || 'Player';
-                    navUsername.innerText = `@${userData.username || 'user'}`;
-                    updateNavLevelUI(userData);
-                } else {
-                    setupModal.classList.remove('hidden');
-                    document.querySelectorAll('.avatar-option')[1].classList.add('selected');
-                }
+                // Update online status immediately on load
+                updateDoc(doc(db, "users", user.uid), { lastActive: Date.now() }).catch(()=>{});
+
+                if (userUnsubscribe) userUnsubscribe();
+                userUnsubscribe = onSnapshot(doc(db, "users", user.uid), (docSnap) => {
+                    if (docSnap.exists()) {
+                        const userData = docSnap.data();
+                        loadedUserData = userData;
+                        navAvatar.innerHTML = getAvatarHTML(userData.avatar);
+                        navName.innerText = userData.displayName || user.displayName || 'Player';
+                        navUsername.innerText = `@${userData.username || 'user'}`;
+                        updateNavLevelUI(userData);
+                        
+                        if (userData.darkMode) {
+                            document.documentElement.classList.add('dark');
+                        } else {
+                            document.documentElement.classList.remove('dark');
+                        }
+
+                        const reqs = userData.friendRequests || [];
+                        const notifs = userData.notifications || [];
+                        if (reqs.length > 0 || notifs.length > 0) {
+                            notifBadge.classList.remove('hidden');
+                            notifBadge.innerText = reqs.length + notifs.length;
+                        } else {
+                            notifBadge.classList.add('hidden');
+                        }
+                    } else {
+                        setupModal.classList.remove('hidden');
+                        document.querySelectorAll('.avatar-option')[1].classList.add('selected');
+                    }
+                });
+
             } else {
                 currentUser = null;
                 isAdminMode = false;
                 loadedUserData = null;
+                document.documentElement.classList.remove('dark');
+                if (userUnsubscribe) userUnsubscribe();
                 userProfileMenu.classList.add('hidden');
                 loginBtn.classList.remove('hidden');
                 adminPanel.classList.add('hidden');
                 friendsBtn.classList.add('hidden');
+                notifBtn.classList.add('hidden');
             }
         });
 
@@ -1881,14 +2505,29 @@
         }
 
         function updateLeaderboardUI() {
-            const filteredLeaderboard = globalLeaderboard.filter(entry => entry.category === activeLeaderboardTab);
+            const categoryScores = globalLeaderboard.filter(e => e.category === activeLeaderboardTab);
+
+            // Deduplicate: Only keep highest score per user for this category
+            const userMap = new Map();
+            categoryScores.forEach(e => {
+                if (!userMap.has(e.userId) || userMap.get(e.userId).score < e.score) {
+                    userMap.set(e.userId, e);
+                }
+            });
+            
+            let filteredLeaderboard = Array.from(userMap.values());
+            filteredLeaderboard.sort((a, b) => b.score - a.score);
 
             if (filteredLeaderboard.length === 0) {
                 leaderboardFullList.innerHTML = `<div class="text-center text-slate-400 py-10 text-sm font-medium bg-slate-50 rounded-2xl border border-slate-100 mt-4">No scores yet in this category. Be the first to rank up!</div>`;
+                document.getElementById('leaderboard-pinned-user').classList.add('hidden');
                 return;
             }
             
-            leaderboardFullList.innerHTML = filteredLeaderboard.map((entry, i) => {
+            // Render Top 99
+            const top99 = filteredLeaderboard.slice(0, 99);
+
+            leaderboardFullList.innerHTML = top99.map((entry, i) => {
                 let rankDisplay = i + 1;
                 let rankClass = 'bg-slate-50 text-slate-400 text-sm border border-slate-200';
                 
@@ -1897,7 +2536,8 @@
                 else if (i === 2) { rankDisplay = '🥉'; rankClass = 'bg-orange-100 text-orange-700 text-xl border-orange-200'; }
 
                 const isMe = currentUser && entry.userId === currentUser.uid;
-                const isOwnerEntry = (entry.email && entry.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) || 
+                const isOwnerEntry = entry.isDeveloper === true ||
+                                     (entry.email && entry.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) || 
                                      (isMe && currentUser.email && currentUser.email.toLowerCase() === ADMIN_EMAIL.toLowerCase());
                 
                 let containerClass = 'bg-white p-4 rounded-2xl border border-slate-100 transition-transform transform hover:-translate-y-1 hover:shadow-md cursor-pointer';
@@ -1908,12 +2548,11 @@
                 let adminControlsHtml = '';
                 if (isAdminMode && currentUser?.email && currentUser.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
                     adminControlsHtml = `
-                        <button onclick="event.stopPropagation(); openAdminEditModal('${entry.id}', '${entry.userId}', ${entry.score}, ${entry.level || 1})" class="text-xs bg-indigo-100 hover:bg-indigo-200 text-indigo-700 px-2 py-1 rounded font-bold ml-2 transition-colors">Edit</button>
-                        <button onclick="event.stopPropagation(); deleteScore('${entry.id}')" class="text-xs bg-red-100 hover:bg-red-200 text-red-600 px-2 py-1 rounded font-bold ml-1 transition-colors">Del</button>
+                        <button onclick="event.stopPropagation(); openAdminEditModal('${entry.id}', '${entry.userId}', ${entry.score}, ${entry.level || 1})" class="text-xs bg-indigo-100 hover:bg-indigo-200 text-indigo-700 px-2 py-1 rounded font-bold ml-2 transition-colors active:scale-95">Edit</button>
+                        <button onclick="event.stopPropagation(); deleteScore('${entry.id}')" class="text-xs bg-red-100 hover:bg-red-200 text-red-600 px-2 py-1 rounded font-bold ml-1 transition-colors active:scale-95">Del</button>
                     `;
                 }
 
-                // Call viewProfile when clicking the whole card. Use event.stopPropagation() on buttons inside if needed.
                 return `
                 <div class="flex justify-between items-center ${containerClass} relative group" onclick="viewProfile('${entry.userId}')">
                     <div class="flex items-center gap-3">
@@ -1941,6 +2580,52 @@
                 </div>
                 `;
             }).join('');
+
+            // Render Pinned Current User Card at bottom
+            const pinnedContainer = document.getElementById('leaderboard-pinned-user');
+            if (currentUser) {
+                const myRankIndex = filteredLeaderboard.findIndex(e => e.userId === currentUser.uid);
+                if (myRankIndex !== -1) {
+                    const myEntry = filteredLeaderboard[myRankIndex];
+                    let rankDisplay = myRankIndex + 1;
+                    let rankClass = 'bg-slate-50 text-slate-400 text-sm border border-slate-200';
+                    if (myRankIndex === 0) { rankDisplay = '🥇'; rankClass = 'bg-amber-100 text-amber-600 text-xl border-amber-200'; } 
+                    else if (myRankIndex === 1) { rankDisplay = '🥈'; rankClass = 'bg-slate-200 text-slate-600 text-xl border-slate-300'; } 
+                    else if (myRankIndex === 2) { rankDisplay = '🥉'; rankClass = 'bg-orange-100 text-orange-700 text-xl border-orange-200'; }
+
+                    const isOwnerEntry = myEntry.isDeveloper === true || 
+                                         (currentUser.email && currentUser.email.toLowerCase() === ADMIN_EMAIL.toLowerCase());
+                    
+                    pinnedContainer.innerHTML = `
+                    <div class="flex justify-between items-center cursor-pointer" onclick="viewProfile('${myEntry.userId}')">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full flex-shrink-0 ${rankClass} flex items-center justify-center font-bold">
+                                ${rankDisplay}
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="text-2xl w-11 h-11 rounded-full border border-slate-200 flex items-center justify-center bg-slate-50 flex-shrink-0 ${isOwnerEntry ? 'owner-aura p-0 overflow-hidden' : 'overflow-hidden'}">
+                                    ${getAvatarHTML(myEntry.avatar)}
+                                </div>
+                                <div>
+                                    <div class="font-bold text-indigo-600 flex items-center gap-1.5 flex-wrap">
+                                        Your Rank
+                                        <span class="text-[10px] bg-indigo-50 text-indigo-500 border border-indigo-100 px-1.5 py-0.5 rounded font-bold ml-1 tracking-wider">Lv.${myEntry.level || 1}</span>
+                                    </div>
+                                    <div class="text-[10px] text-slate-400 uppercase tracking-wider mt-0.5">${myEntry.mode}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-1">
+                            <div class="text-indigo-600 font-black text-xl ml-2">${myEntry.score}</div>
+                        </div>
+                    </div>`;
+                    pinnedContainer.classList.remove('hidden');
+                } else {
+                    pinnedContainer.classList.add('hidden');
+                }
+            } else {
+                pinnedContainer.classList.add('hidden');
+            }
         }
 
         function showHome() {
@@ -1964,6 +2649,12 @@
             score = 0;
             timeLeft = totalTime;
             isPaused = false;
+            lastTick = -1;
+            
+            timerBar.classList.remove('bg-red-500');
+            timerBar.classList.add('bg-indigo-500');
+            
+            initAudio(); // Start/resume Audio Context on user gesture
             
             startScreen.classList.add('hidden');
             quizScreen.classList.remove('hidden');
@@ -1988,12 +2679,28 @@
             timerInterval = setInterval(() => {
                 if (!isPaused) {
                     timeLeft -= 0.1;
+                    
+                    if (timeLeft <= 3.1 && timeLeft > 0) {
+                        if (!timerBar.classList.contains('bg-red-500')) {
+                            timerBar.classList.remove('bg-indigo-500');
+                            timerBar.classList.add('bg-red-500');
+                        }
+                        
+                        const currentSec = Math.ceil(timeLeft);
+                        if (currentSec !== lastTick && currentSec <= 3) {
+                            playTick();
+                            lastTick = currentSec;
+                        }
+                    }
+                    
                     if (timeLeft <= 0) {
                         timeLeft = 0;
                         updateTimer();
+                        playTimeUp();
                         endGame();
+                    } else {
+                        updateTimer();
                     }
-                    else updateTimer();
                 }
             }, 100);
         }
@@ -2071,6 +2778,11 @@
                     const earnedExp = finalScoreVal;
                     userData.exp = (userData.exp || 0) + earnedExp;
                     userData.gamesPlayed = (userData.gamesPlayed || 0) + 1;
+                    
+                    if (userData.gamesPlayed === 10) {
+                        pushNotification(currentUser.uid, `Achievement Unlocked: Veteran Badge!`);
+                    }
+
                     const levelInfo = calculateLevelInfo(userData.exp);
                     
                     if (earnedExp > 0) {
@@ -2087,11 +2799,18 @@
                         const scoreRef = doc(db, "leaderboard", scoreDocId);
                         const existingDoc = await getDoc(scoreRef);
                         
+                        await fetchLeaderboard();
+                        const catScores = globalLeaderboard.filter(e => e.category === selectedCategory);
+                        const userMap = new Map();
+                        catScores.forEach(e => { if (!userMap.has(e.userId) || userMap.get(e.userId).score < e.score) userMap.set(e.userId, e); });
+                        let oldRankIndex = Array.from(userMap.values()).sort((a, b) => b.score - a.score).findIndex(e => e.userId === currentUser.uid);
+                        
                         if (!existingDoc.exists() || finalScoreVal > existingDoc.data().score) {
                             isHighScore = true;
                             await setDoc(scoreRef, {
                                 userId: currentUser.uid,
                                 email: currentUser.email,
+                                isDeveloper: userData.isDeveloper || false,
                                 displayName: userData.displayName || currentUser.displayName || 'Player',
                                 avatar: userData.avatar || '👤',
                                 level: levelInfo.level,
@@ -2102,6 +2821,17 @@
                                 length: lengthPts,
                                 timestamp: new Date().toISOString()
                             });
+                            
+                            await fetchLeaderboard();
+                            const newCatScores = globalLeaderboard.filter(e => e.category === selectedCategory);
+                            const newUserMap = new Map();
+                            newCatScores.forEach(e => { if (!newUserMap.has(e.userId) || newUserMap.get(e.userId).score < e.score) newUserMap.set(e.userId, e); });
+                            let newRankIndex = Array.from(newUserMap.values()).sort((a, b) => b.score - a.score).findIndex(e => e.userId === currentUser.uid);
+                            
+                            if (newRankIndex !== -1) {
+                                if (oldRankIndex === -1) pushNotification(currentUser.uid, `You placed #${newRankIndex + 1} in ${selectedCategory}!`);
+                                else if (newRankIndex < oldRankIndex) pushNotification(currentUser.uid, `You ranked up to #${newRankIndex + 1} in ${selectedCategory}!`);
+                            }
                         }
                     }
                 } catch (error) { console.error("Error saving data:", error); }
@@ -2153,7 +2883,12 @@
         window.closeAdminEditModal = closeAdminEditModal; window.saveAdminEdit = saveAdminEdit; window.openAdminAddModal = openAdminAddModal;
         window.closeAdminAddModal = closeAdminAddModal; window.saveAdminAdd = saveAdminAdd; window.viewProfile = viewProfile;
         window.openFriendsModal = openFriendsModal; window.closeFriendsModal = closeFriendsModal; window.searchAndAddFriend = searchAndAddFriend;
-        window.toggleFriend = toggleFriend;
+        window.acceptRequest = acceptRequest; window.declineRequest = declineRequest; window.removeFriend = removeFriend; window.sendFriendRequest = sendFriendRequest;
+        window.openNotificationsModal = openNotificationsModal; window.closeNotificationsModal = closeNotificationsModal; window.clearNotification = clearNotification;
+        window.openAdminBadgesModal = openAdminBadgesModal; window.closeAdminBadgesModal = closeAdminBadgesModal; window.editBadgeIcon = editBadgeIcon;
+        window.adminResetCooldown = adminResetCooldown; window.toggleDarkMode = toggleDarkMode;
+        window.openAdminDeleteUserModal = openAdminDeleteUserModal; window.closeAdminDeleteUserModal = closeAdminDeleteUserModal; window.adminDeleteUser = adminDeleteUser;
+        window.openAdminDevModal = openAdminDevModal; window.closeAdminDevModal = closeAdminDevModal; window.toggleDeveloperStatus = toggleDeveloperStatus;
     </script>
 </body>
 </html>
